@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مرسل الرسالة</title>
+</head>
+<body>
+  <a href="index.html" style="margin:10px 0; display:inline-block;">&larr; العودة للرئيسية</a>
+  <h1>تشفير الرسالة</h1>
+  <form id="senderForm">
+    <label for="message">الرسالة:</label>
+    <input type="text" id="message" required />
+    <button type="submit">إرسال الرسالة</button>
+  </form>
+  <pre id="result"></pre>
+
+  <script>
+    const socket = new WebSocket('wss://' + window.location.host);
+
+    document.getElementById('senderForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const message = document.getElementById('message').value;
+      const publicKey = await fetch('/public-key').then(res => res.text());
+      const encryptedData = await encryptAndSend(message, publicKey);
+      socket.send(JSON.stringify(encryptedData));
+      document.getElementById('result').innerText = 'تم إرسال الرسالة بنجاح.';
+    });
+
+    async function encryptAndSend(message, publicKey) {
+      const aesKey = crypto.getRandomValues(new Uint8Array(32));
+      const iv = crypto.getRandomValues(new Uint8Array(16));
+      const encodedMessage = new TextEncoder().encode(message);
+
+      const cryptoKey = await window.crypto.subtle.importKey(
+        'raw', aesKey, { name: 'AES-CBC' }, false, ['encrypt']
+      );
+
+      const encrypted = await window.crypto.subtle.encrypt(
+        { name: 'AES-CBC', iv }, cryptoKey, encodedMessage
+      );
+
+      const hmacKey = await window.crypto.subtle.importKey(
+        'raw', aesKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+      );
+
+      const signature = await window.crypto.subtle.sign(
+        'HMAC', hmacKey, new TextEncoder().encode(arrayBufferToBase64(encrypted))
+      );
+
+      const serverPublicKey = await importRSAPublicKey(publicKey);
+      const encryptedAesKey = await window.crypto.subtle.encrypt(
+        { name: 'RSA-OAEP' }, serverPublicKey, aesKey
+      );
+
+      return {
+        encryptedMessage: arrayBufferToBase64(encrypted),
+        iv: arrayBufferToBase64(iv),
+        encryptedKey: arrayBufferToBase64(encryptedAesKey),
+        hmac: arrayBufferToBase64(signature)
+      };
+    }
+
+    function arrayBufferToBase64(buffer) {
+      const bytes = new Uint8Array(buffer);
+      return btoa(String.fromCharCode(...bytes));
+    }
+
+    async function importRSAPublicKey(pem) {
+      const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s/g, '');
+      const binary = atob(b64);
+      const array = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        array[i] = binary.charCodeAt(i);
+      }
+      return window.crypto.subtle.importKey(
+        'spki', array.buffer, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']
+      );
+    }
+  </script>
+</body>
+</html>
