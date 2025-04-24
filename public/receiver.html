@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مستقبل الرسالة</title>
+</head>
+<body>
+  <a href="index.html" style="margin:10px 0; display:inline-block;">&larr; العودة للرئيسية</a>
+  <h1>استقبال الرسالة</h1>
+  <p id="receivedMessage">جارٍ انتظار الرسالة...</p>
+
+  <script>
+    const socket = new WebSocket('wss://' + window.location.host);
+
+    socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      if (data.decryptedMessage) {
+        document.getElementById('receivedMessage').innerText = `الرسالة: ${data.decryptedMessage}`;
+      } else if (data.error) {
+        document.getElementById('receivedMessage').innerText = data.error;
+      }
+    };
+  </script>
+</body>
+</html>
