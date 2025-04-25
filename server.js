@@ -4,10 +4,12 @@ const fs = require('fs');
 const WebSocket = require('ws');
 const cors = require('cors');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
-// تحميل الشهادة والمفتاح الخاص
+// إعداد الشهادة والمفتاح الخاص
 const server = https.createServer({
   key: fs.readFileSync('certs/private-key.pem'),
   cert: fs.readFileSync('certs/certificate.pem')
@@ -16,10 +18,60 @@ const server = https.createServer({
 const wss = new WebSocket.Server({ server });
 
 app.use(cors());
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const users = {}; // تخزين اسم المستخدم مع معلومات الاتصال والمفتاح العام
+const registeredUsers = {}; // تخزين بيانات المستخدمين المسجلين (username, hashed password)
 
+// مفتاح التوقيع لـ JWT
+const JWT_SECRET = 'supersecretkey'; // يجب تغييره في بيئة الإنتاج
+
+// تسجيل مستخدم جديد
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (registeredUsers[username]) {
+    return res.status(400).json({ error: 'هذا المستخدم مسجل بالفعل.' });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  registeredUsers[username] = { password: hashedPassword };
+  res.json({ message: 'تم التسجيل بنجاح!' });
+});
+
+// تسجيل الدخول
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = registeredUsers[username];
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.status(401).json({ error: 'اسم المستخدم أو كلمة المرور غير صحيحة.' });
+  }
+
+  const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
+  res.json({ token });
+});
+
+// المصادقة باستخدام JWT
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
+
+// استعادة المستخدمين النشطين
+app.get('/users', authenticateToken, (req, res) => {
+  res.json(Object.keys(users));
+});
+
+// WebSocket لإدارة التراسل
 wss.on('connection', socket => {
   console.log('Client connected');
 
@@ -68,23 +120,6 @@ wss.on('connection', socket => {
       }
     }
   });
-});
-
-app.get('/public-key/:username', (req, res) => {
-  const user = users[req.params.username];
-  if (user) {
-    res.send(user.publicKey);
-  } else {
-    res.status(404).send('User not found');
-  }
-});
-
-app.get('/users', (req, res) => {
-  res.json(Object.keys(users));
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
