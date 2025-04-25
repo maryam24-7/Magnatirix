@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #f0f8ff; /* خلفية زرقاء فاتحة */
         }
         .header {
             display: flex;
@@ -23,26 +23,40 @@
         }
         button {
             padding: 10px 15px;
-            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-weight: bold;
         }
         button:hover {
-            background-color: #45a049;
+            opacity: 0.9;
         }
         .language-switcher {
-            background-color: #2196F3;
+            background-color: #1e90ff; /* أزرق دودجر */
         }
         .login-btn {
-            background-color: #ff9800;
+            background-color: #4682b4; /* أزرق فولاذي */
         }
         .signup-btn {
-            background-color: #9c27b0;
+            background-color: #4169e1; /* أزرق ملكي */
         }
         h1 {
-            color: #333;
+            color: #000080; /* أزرق بحري داكن */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #1e90ff; /* أزرق دودجر */
+        }
+        h3 {
+            color: #4682b4; /* أزرق فولاذي */
+            border-bottom: 2px solid #1e90ff;
+            padding-bottom: 5px;
+        }
+        p {
+            color: #2f4f4f; /* رمادي أزرق داكن */
+            line-height: 1.6;
         }
         .user-list {
             margin-top: 20px;
@@ -50,6 +64,7 @@
             background-color: white;
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #1e90ff;
         }
     </style>
 </head>
@@ -78,27 +93,24 @@
 
     <script>
         function switchLanguage() {
-            // تغيير اللغة بين العربية والإنجليزية
             if (document.documentElement.lang === 'ar') {
                 document.documentElement.lang = 'en';
                 document.documentElement.dir = 'ltr';
                 document.querySelector('.language-switcher').textContent = 'العربية';
-                // هنا يمكنك إضافة تغيير النصوص الأخرى للغة الإنجليزية
+                // يمكن إضافة المزيد من الترجمة هنا
             } else {
                 document.documentElement.lang = 'ar';
                 document.documentElement.dir = 'rtl';
                 document.querySelector('.language-switcher').textContent = 'English';
-                // هنا يمكنك إضافة تغيير النصوص الأخرى للغة العربية
+                // يمكن إضافة المزيد من الترجمة هنا
             }
         }
         
         function goToLogin() {
-            // الانتقال إلى صفحة تسجيل الدخول
             window.location.href = '/login';
         }
         
         function goToSignup() {
-            // الانتقال إلى صفحة إنشاء مستخدم جديد
             window.location.href = '/signup';
         }
     </script>
