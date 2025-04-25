@@ -1,67 +1,86 @@
 const express = require('express');
-const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const WebSocket = require('ws');
-const crypto = require('crypto');
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const server = http.createServer(app);
+
+// تحميل الشهادة والمفتاح الخاص
+const server = https.createServer({
+  key: fs.readFileSync('certs/private-key.pem'),
+  cert: fs.readFileSync('certs/certificate.pem')
+});
+
 const wss = new WebSocket.Server({ server });
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-  modulusLength: 2048,
-  publicKeyEncoding: { type: 'spki', format: 'pem' },
-  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
-});
+const users = {}; // تخزين اسم المستخدم مع معلومات الاتصال والمفتاح العام
 
 wss.on('connection', socket => {
-  console.log('Client connected.');
+  console.log('Client connected');
 
   socket.on('message', msg => {
     try {
-      const { encryptedMessage, encryptedKey, iv, hmac } = JSON.parse(msg);
+      const data = JSON.parse(msg);
 
-      const aesKey = crypto.privateDecrypt(
-        privateKey,
-        Buffer.from(encryptedKey, 'base64')
-      );
-
-      const newHmac = crypto.createHmac('sha256', aesKey)
-        .update(encryptedMessage)
-        .digest('base64');
-
-      if (newHmac !== hmac) {
-        socket.send(JSON.stringify({ error: 'فشل التحقق من HMAC' }));
+      if (data.type === 'register') {
+        socket.username = data.username;
+        socket.publicKey = data.publicKey;
+        users[data.username] = {
+          socket,
+          publicKey: data.publicKey,
+          registeredAt: new Date()
+        };
+        console.log(`User registered: ${data.username}`);
         return;
       }
 
-      const decipher = crypto.createDecipheriv(
-        'aes-256-cbc',
-        aesKey,
-        Buffer.from(iv, 'base64')
-      );
+      const { sender, receiver, encryptedMessage, encryptedKey, iv, hmac } = data;
+      const recipient = users[receiver];
 
-      let decrypted = decipher.update(encryptedMessage, 'base64', 'utf8');
-      decrypted += decipher.final('utf8');
-
-      wss.clients.forEach(client => {
-        if (client !== socket && client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ decryptedMessage: decrypted }));
-        }
-      });
-
+      if (recipient && recipient.socket.readyState === WebSocket.OPEN) {
+        recipient.socket.send(JSON.stringify({
+          sender,
+          encryptedMessage,
+          encryptedKey,
+          iv,
+          hmac
+        }));
+      } else {
+        socket.send(JSON.stringify({ error: 'المستلم غير متصل.' }));
+      }
     } catch (e) {
-      socket.send(JSON.stringify({ error: 'فشل فك التشفير' }));
+      console.error('Error processing message:', e.message);
+      socket.send(JSON.stringify({ error: 'Processing failed' }));
+    }
+  });
+
+  socket.on('close', () => {
+    for (const [username, user] of Object.entries(users)) {
+      if (user.socket === socket) {
+        delete users[username];
+        console.log(`User disconnected: ${username}`);
+        break;
+      }
     }
   });
 });
 
-app.get('/public-key', (req, res) => {
-  res.send(publicKey);
+app.get('/public-key/:username', (req, res) => {
+  const user = users[req.params.username];
+  if (user) {
+    res.send(user.publicKey);
+  } else {
+    res.status(404).send('User not found');
+  }
+});
+
+app.get('/users', (req, res) => {
+  res.json(Object.keys(users));
 });
 
 app.get('*', (req, res) => {
@@ -69,4 +88,6 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+server.listen(PORT, () => {
+  console.log(`Secure server running at https://localhost:${PORT}`);
+});
