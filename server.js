@@ -1,59 +1,58 @@
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
+const http = require('http');
 const WebSocket = require('ws');
 const cors = require('cors');
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-
-// إعداد الشهادة والمفتاح الخاص
-const server = https.createServer({
-  key: fs.readFileSync('certs/private-key.pem'),
-  cert: fs.readFileSync('certs/certificate.pem')
-});
-
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const users = {}; // تخزين اسم المستخدم مع معلومات الاتصال والمفتاح العام
-const registeredUsers = {}; // تخزين بيانات المستخدمين المسجلين (username, hashed password)
-
-// مفتاح التوقيع لـ JWT
-const JWT_SECRET = 'supersecretkey'; // يجب تغييره في بيئة الإنتاج
+const users = {};
+const registeredUsers = {};
+const JWT_SECRET = 'supersecretkey';
 
 // تسجيل مستخدم جديد
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
+    
+    if (registeredUsers[username]) {
+      return res.status(400).json({ error: 'هذا المستخدم مسجل بالفعل.' });
+    }
 
-  if (registeredUsers[username]) {
-    return res.status(400).json({ error: 'هذا المستخدم مسجل بالفعل.' });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    registeredUsers[username] = { password: hashedPassword };
+    res.json({ message: 'تم التسجيل بنجاح!' });
+  } catch (error) {
+    res.status(500).json({ error: 'خطأ في الخادم' });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  registeredUsers[username] = { password: hashedPassword };
-  res.json({ message: 'تم التسجيل بنجاح!' });
 });
 
 // تسجيل الدخول
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
+    const user = registeredUsers[username];
+    
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: 'اسم المستخدم أو كلمة المرور غير صحيحة.' });
+    }
 
-  const user = registeredUsers[username];
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).json({ error: 'اسم المستخدم أو كلمة المرور غير صحيحة.' });
+    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: 'خطأ في الخادم' });
   }
-
-  const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
-  res.json({ token });
 });
 
-// المصادقة باستخدام JWT
+// المصادقة
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -66,63 +65,48 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// استعادة المستخدمين النشطين
+// قائمة المستخدمين
 app.get('/users', authenticateToken, (req, res) => {
   res.json(Object.keys(users));
 });
 
-// WebSocket لإدارة التراسل
-wss.on('connection', socket => {
+// WebSocket
+wss.on('connection', (socket) => {
   console.log('Client connected');
 
-  socket.on('message', msg => {
+  socket.on('message', (msg) => {
     try {
       const data = JSON.parse(msg);
 
       if (data.type === 'register') {
         socket.username = data.username;
-        socket.publicKey = data.publicKey;
-        users[data.username] = {
-          socket,
-          publicKey: data.publicKey,
-          registeredAt: new Date()
-        };
+        users[data.username] = { socket };
         console.log(`User registered: ${data.username}`);
         return;
       }
 
-      const { sender, receiver, encryptedMessage, encryptedKey, iv, hmac } = data;
+      const { receiver } = data;
       const recipient = users[receiver];
 
       if (recipient && recipient.socket.readyState === WebSocket.OPEN) {
-        recipient.socket.send(JSON.stringify({
-          sender,
-          encryptedMessage,
-          encryptedKey,
-          iv,
-          hmac
-        }));
+        recipient.socket.send(JSON.stringify(data));
       } else {
         socket.send(JSON.stringify({ error: 'المستلم غير متصل.' }));
       }
     } catch (e) {
-      console.error('Error processing message:', e.message);
-      socket.send(JSON.stringify({ error: 'Processing failed' }));
+      console.error('Error:', e);
     }
   });
 
   socket.on('close', () => {
-    for (const [username, user] of Object.entries(users)) {
-      if (user.socket === socket) {
-        delete users[username];
-        console.log(`User disconnected: ${username}`);
-        break;
-      }
+    if (socket.username) {
+      delete users[socket.username];
+      console.log(`User disconnected: ${socket.username}`);
     }
   });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Secure server running at https://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
