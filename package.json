@@ -1,14 +1,21 @@
 {
   "name": "secure-messaging",
   "version": "1.0.0",
-  "description": "Secure Messaging App",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "npm install --legacy-peer-deps",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "ws": "^8.5.1",
-    "cors": "^2.8.5"
+    "express": "^4.18.2",
+    "ws": "^8.13.0",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0"
   }
 }
