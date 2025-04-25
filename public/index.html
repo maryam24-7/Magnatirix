@@ -1,33 +1,106 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام التراسل الآمن | Secure Messaging System</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التراسل المشفر</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .language-switcher {
+            background-color: #2196F3;
+        }
+        .login-btn {
+            background-color: #ff9800;
+        }
+        .signup-btn {
+            background-color: #9c27b0;
+        }
+        h1 {
+            color: #333;
+        }
+        .user-list {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <button id="languageToggle" class="btn language-toggle">English</button>
-    <h1 id="main-title">نظام التراسل المشفر</h1>
-  </div>
-
-  <div class="container">
-    <div class="card">
-      <h2 id="welcome-title">مرحبًا بك في نظام التراسل المشفر</h2>
-      <p id="welcome-text">هذا النظام يستخدم تقنيات التشفير المتقدمة لحماية اتصالاتك.</p>
-      
-      <div class="nav-links">
-        <a href="sender.html" class="nav-link" id="sender-link">الانتقال إلى صفحة المرسل</a>
-        <a href="receiver.html" class="nav-link" id="receiver-link">الانتقال إلى صفحة المستقبل</a>
-      </div>
-      
-      <div class="user-list">
-        <h3 id="active-users-title">المستخدمون النشطون:</h3>
-        <div id="active-users-list">جاري تحميل قائمة المستخدمين...</div>
-      </div>
+    <div class="header">
+        <div>
+            <button class="language-switcher" onclick="switchLanguage()">English</button>
+        </div>
+        <div class="auth-buttons">
+            <button class="login-btn" onclick="goToLogin()">تسجيل الدخول</button>
+            <button class="signup-btn" onclick="goToSignup()">إنشاء مستخدم</button>
+        </div>
     </div>
-  </div>
-  <script src="js/script.js"></script>
+
+    <h1>نظام التراسل المشفر</h1>
+    
+    <h2>مرحبًا بك في نظام التراسل المشفر</h2>
+    <p>هذا النظام يستخدم تقنيات الشفير المتقدمة لحماية اتصالاتك.</p>
+    
+    <h3>الانتقال إلى صفحة المرسل</h3>
+    
+    <h3>الانتقال إلى صفحة المستقبل</h3>
+    
+    <h3>المستخدمون الشطون:</h3>
+    <div class="user-list">جاري تحميل قائمة المستخدمين...</div>
+
+    <script>
+        function switchLanguage() {
+            // تغيير اللغة بين العربية والإنجليزية
+            if (document.documentElement.lang === 'ar') {
+                document.documentElement.lang = 'en';
+                document.documentElement.dir = 'ltr';
+                document.querySelector('.language-switcher').textContent = 'العربية';
+                // هنا يمكنك إضافة تغيير النصوص الأخرى للغة الإنجليزية
+            } else {
+                document.documentElement.lang = 'ar';
+                document.documentElement.dir = 'rtl';
+                document.querySelector('.language-switcher').textContent = 'English';
+                // هنا يمكنك إضافة تغيير النصوص الأخرى للغة العربية
+            }
+        }
+        
+        function goToLogin() {
+            // الانتقال إلى صفحة تسجيل الدخول
+            window.location.href = '/login';
+        }
+        
+        function goToSignup() {
+            // الانتقال إلى صفحة إنشاء مستخدم جديد
+            window.location.href = '/signup';
+        }
+    </script>
 </body>
 </html>
