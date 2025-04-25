@@ -5,91 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام التراسل المشفر</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f8ff; /* خلفية زرقاء فاتحة */
+        :root {
+            --primary-blue: #1e90ff;
+            --dark-blue: #000080;
+            --steel-blue: #4682b4;
+            --royal-blue: #4169e1;
+            --light-bg: #f0f8ff;
+            --text-dark: #2f4f4f;
         }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(30, 144, 255, 0.2);
         }
+        
         .auth-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
+        
         button {
-            padding: 10px 15px;
+            padding: 12px 20px;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        
         button:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
+        
         .language-switcher {
-            background-color: #1e90ff; /* أزرق دودجر */
+            background-color: var(--primary-blue);
         }
+        
         .login-btn {
-            background-color: #4682b4; /* أزرق فولاذي */
+            background-color: var(--steel-blue);
         }
+        
         .signup-btn {
-            background-color: #4169e1; /* أزرق ملكي */
+            background-color: var(--royal-blue);
         }
+        
         h1 {
-            color: #000080; /* أزرق بحري داكن */
+            color: var(--dark-blue);
             text-align: center;
-            margin-bottom: 30px;
+            margin: 40px 0 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
+        
         h2 {
-            color: #1e90ff; /* أزرق دودجر */
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
         }
+        
         h3 {
-            color: #4682b4; /* أزرق فولاذي */
-            border-bottom: 2px solid #1e90ff;
-            padding-bottom: 5px;
+            color: var(--steel-blue);
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-blue);
         }
+        
         p {
-            color: #2f4f4f; /* رمادي أزرق داكن */
-            line-height: 1.6;
+            margin: 0 0 20px;
+            font-size: 1.1rem;
         }
+        
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary-blue);
+        }
+        
         .user-list {
             margin-top: 20px;
-            padding: 15px;
+            padding: 20px;
             background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border-left: 4px solid #1e90ff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary-blue);
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <button class="language-switcher" onclick="switchLanguage()">English</button>
+    <div class="container">
+        <div class="header">
+            <div>
+                <button class="language-switcher" onclick="switchLanguage()">English</button>
+            </div>
+            <div class="auth-buttons">
+                <button class="login-btn" onclick="goToLogin()">تسجيل الدخول</button>
+                <button class="signup-btn" onclick="goToSignup()">إنشاء مستخدم</button>
+            </div>
         </div>
-        <div class="auth-buttons">
-            <button class="login-btn" onclick="goToLogin()">تسجيل الدخول</button>
-            <button class="signup-btn" onclick="goToSignup()">إنشاء مستخدم</button>
+
+        <h1>نظام التراسل المشفر</h1>
+        
+        <div class="content-section">
+            <h2>مرحبًا بك في نظام التراسل المشفر</h2>
+            <p>هذا النظام يستخدم تقنيات التشفير المتقدمة لحماية اتصالاتك وضمان خصوصية وسرية رسائلك.</p>
+        </div>
+        
+        <div class="content-section">
+            <h3>الانتقال إلى صفحة المرسل</h3>
+            <p>إرسال الرسائل المشفرة بأمان تام</p>
+        </div>
+        
+        <div class="content-section">
+            <h3>الانتقال إلى صفحة المستقبل</h3>
+            <p>استقبال وفك تشفير الرسائل الواردة</p>
+        </div>
+        
+        <div class="content-section">
+            <h3>المستخدمون النشطون:</h3>
+            <div class="user-list">جاري تحميل قائمة المستخدمين...</div>
         </div>
     </div>
-
-    <h1>نظام التراسل المشفر</h1>
-    
-    <h2>مرحبًا بك في نظام التراسل المشفر</h2>
-    <p>هذا النظام يستخدم تقنيات الشفير المتقدمة لحماية اتصالاتك.</p>
-    
-    <h3>الانتقال إلى صفحة المرسل</h3>
-    
-    <h3>الانتقال إلى صفحة المستقبل</h3>
-    
-    <h3>المستخدمون الشطون:</h3>
-    <div class="user-list">جاري تحميل قائمة المستخدمين...</div>
 
     <script>
         function switchLanguage() {
