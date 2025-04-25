@@ -18,6 +18,11 @@ const users = {};
 const registeredUsers = {};
 const JWT_SECRET = 'supersecretkey';
 
+// الصفحة الرئيسية ترجع register.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
 // تسجيل مستخدم جديد
 app.post('/register', async (req, res) => {
   try {
