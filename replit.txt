@@ -1,19 +1,8 @@
-entrypoint = "server.js"
-modules = ["nodejs-22"]
-hidden = [".config", "package-lock.json"]
-
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix", "package.json", "package-lock.json"]
-
-[nix]
-channel = "stable-24_11"
-packages = ["opensshWithKerberos"]
-
-[deployment]
-run = ["node", "server.js"]
-deploymentTarget = "autoscale"
-ignorePorts = false
-
-[[ports]]
-localPort = 3000
-externalPort = 80
+{
+  "build": {
+    "builder": "nixpacks",
+    "installCommand": "npm install --legacy-peer-deps",
+    "buildCommand": "npm run build",
+    "startCommand": "npm start"
+  }
+}
