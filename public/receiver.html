@@ -1,26 +1,199 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>مستقبل الرسالة</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مستقبل الرسائل | Message Receiver</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a href="index.html" style="margin:10px 0; display:inline-block;">&larr; العودة للرئيسية</a>
-  <h1>استقبال الرسالة</h1>
-  <p id="receivedMessage">جارٍ انتظار الرسالة...</p>
+  <div class="header">
+    <button id="languageToggle" class="btn language-toggle">English</button>
+    <h1 id="main-title">مستقبل الرسائل</h1>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2 id="receive-title">استقبال الرسائل</h2>
+      <div class="message-container">
+        <p id="receivedMessage">بانتظار الرسائل...</p>
+      </div>
+    </div>
+    
+    <a href="index.html" class="btn btn-secondary" id="back-link">العودة إلى الصفحة الرئيسية</a>
+  </div>
 
   <script>
-    const socket = new WebSocket('wss://' + window.location.host);
-
-    socket.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      if (data.decryptedMessage) {
-        document.getElementById('receivedMessage').innerText = `الرسالة: ${data.decryptedMessage}`;
-      } else if (data.error) {
-        document.getElementById('receivedMessage').innerText = data.error;
+    const translations = {
+      ar: {
+        mainTitle: "مستقبل الرسائل",
+        receiveTitle: "استقبال الرسائل",
+        waitingMessage: "بانتظار الرسائل...",
+        backLink: "العودة إلى الصفحة الرئيسية",
+        languageToggle: "English",
+        fromLabel: "من",
+        namePrompt: "الرجاء إدخال اسمك:",
+        nameRequired: "يجب إدخال اسم لاستقبال الرسائل"
+      },
+      en: {
+        mainTitle: "Message Receiver",
+        receiveTitle: "Receive Messages",
+        waitingMessage: "Waiting for messages...",
+        backLink: "Back to Home",
+        languageToggle: "العربية",
+        fromLabel: "From",
+        namePrompt: "Please enter your name:",
+        nameRequired: "You must enter a name to receive messages"
       }
     };
+
+    document.getElementById('languageToggle').addEventListener('click', function() {
+      const html = document.documentElement;
+      const currentLang = html.lang;
+      const newLang = currentLang === 'ar' ? 'en' : 'ar';
+      
+      // Update HTML attributes
+      html.lang = newLang;
+      html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+      
+      // Update all translatable elements
+      document.getElementById('main-title').textContent = translations[newLang].mainTitle;
+      document.getElementById('receive-title').textContent = translations[newLang].receiveTitle;
+      document.getElementById('back-link').textContent = translations[newLang].backLink;
+      document.getElementById('languageToggle').textContent = translations[newLang].languageToggle;
+      
+      // Update waiting message if no message received yet
+      const receivedMsg = document.getElementById('receivedMessage');
+      if (receivedMsg.textContent === translations[currentLang].waitingMessage || 
+          receivedMsg.textContent.startsWith(translations[currentLang].fromLabel)) {
+        receivedMsg.textContent = translations[newLang].waitingMessage;
+      }
+      
+      // Save preference to localStorage
+      localStorage.setItem('preferredLang', newLang);
+    });
+
+    // Check for saved language preference
+    const savedLang = localStorage.getItem('preferredLang');
+    if (savedLang && savedLang !== document.documentElement.lang) {
+      document.getElementById('languageToggle').click();
+    }
+
+    const socket = new WebSocket('wss://' + window.location.host);
+
+    socket.onmessage = async function (event) {
+      try {
+        const data = JSON.parse(event.data);
+        
+        if (data.decryptedMessage) {
+          const lang = document.documentElement.lang;
+          document.getElementById('receivedMessage').innerText = 
+            `${translations[lang].fromLabel} ${data.sender}:\n${data.decryptedMessage}`;
+        } else if (data.error) {
+          document.getElementById('receivedMessage').innerText = data.error;
+        } else {
+          // We need to decrypt the message
+          const { sender, encryptedMessage, encryptedKey, iv, hmac } = data;
+          
+          try {
+            // Decrypt the AES key with our private key
+            const decryptedKey = await window.crypto.subtle.decrypt(
+              { name: "RSA-OAEP" },
+              window.myPrivateKey,
+              base64ToArrayBuffer(encryptedKey)
+            );
+            
+            // Import the AES key
+            const aesKey = await window.crypto.subtle.importKey(
+              'raw',
+              decryptedKey,
+              'AES-CBC',
+              false,
+              ['decrypt']
+            );
+            
+            // Verify HMAC
+            const hmacKey = await window.crypto.subtle.importKey(
+              'raw',
+              decryptedKey,
+              { name: 'HMAC', hash: 'SHA-256' },
+              false,
+              ['verify']
+            );
+            
+            const isValid = await window.crypto.subtle.verify(
+              'HMAC',
+              hmacKey,
+              base64ToArrayBuffer(hmac),
+              new TextEncoder().encode(encryptedMessage)
+            );
+            
+            if (!isValid) {
+              throw new Error('HMAC verification failed - message may have been tampered with');
+            }
+            
+            // Decrypt the message
+            const decrypted = await window.crypto.subtle.decrypt(
+              { name: 'AES-CBC', iv: base64ToArrayBuffer(iv) },
+              aesKey,
+              base64ToArrayBuffer(encryptedMessage)
+            );
+            
+            const decryptedMessage = new TextDecoder().decode(decrypted);
+            const lang = document.documentElement.lang;
+            document.getElementById('receivedMessage').innerText = 
+              `${translations[lang].fromLabel} ${sender}:\n${decryptedMessage}`;
+          } catch (error) {
+            console.error('Decryption error:', error);
+            document.getElementById('receivedMessage').innerText = 
+              `Error decrypting message: ${error.message}`;
+          }
+        }
+      } catch (e) {
+        console.error('Error processing message:', e);
+        document.getElementById('receivedMessage').innerText = 'Error processing message';
+      }
+    };
+
+    function base64ToArrayBuffer(base64) {
+      const binaryString = atob(base64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes.buffer;
+    }
+
+    // Generate key pair when page loads
+    window.addEventListener('load', async () => {
+      try {
+        const keyPair = await window.crypto.subtle.generateKey(
+          { name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" },
+          true, ["encrypt", "decrypt"]
+        );
+        window.myPrivateKey = keyPair.privateKey;
+        const publicKeyPem = await exportPublicKeyToPEM(keyPair.publicKey);
+        
+        // Prompt for username
+        const lang = document.documentElement.lang;
+        const username = prompt(translations[lang].namePrompt);
+        
+        if (username) {
+          socket.send(JSON.stringify({ type: "register", username, publicKey: publicKeyPem }));
+        } else {
+          alert(translations[lang].nameRequired);
+        }
+      } catch (error) {
+        console.error('Key generation error:', error);
+        alert('Error setting up encryption: ' + error.message);
+      }
+    });
+
+    async function exportPublicKeyToPEM(key) {
+      const exported = await window.crypto.subtle.exportKey('spki', key);
+      const exportedAsString = btoa(String.fromCharCode(...new Uint8Array(exported)));
+      return `-----BEGIN PUBLIC KEY-----\n${exportedAsString.match(/.{1,64}/g).join('\n')}\n-----END PUBLIC KEY-----`;
+    }
   </script>
 </body>
 </html>
