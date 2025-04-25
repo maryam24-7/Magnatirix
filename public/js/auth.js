@@ -1,14 +1,10 @@
-// إدارة تسجيل الدخول والخروج
 async function register(username, password) {
   const response = await fetch('/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error);
-  return data.message;
+  return await response.json();
 }
 
 async function login(username, password) {
@@ -17,14 +13,11 @@ async function login(username, password) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   });
-
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error);
-  localStorage.setItem('token', data.token);
-}
-
-function logout() {
-  localStorage.removeItem('token');
+  if (response.ok) {
+    localStorage.setItem('token', data.token);
+  }
+  return data;
 }
 
 function getToken() {
@@ -33,13 +26,8 @@ function getToken() {
 
 async function getActiveUsers() {
   const token = getToken();
-  if (!token) throw new Error('Not authenticated');
-
   const response = await fetch('/users', {
     headers: { 'Authorization': `Bearer ${token}` }
   });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error);
-  return data;
+  return await response.json();
 }
