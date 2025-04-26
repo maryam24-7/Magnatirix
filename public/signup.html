@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+                <a href="login.html" class="btn btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="auth-form">
+            <h2 id="signup-title">إنشاء حساب جديد</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signup-username" id="username-label">اسم المستخدم</label>
+                    <input type="text" id="signup-username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email" id="email-label">البريد الإلكتروني</label>
+                    <input type="email" id="signup-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password" id="password-label">كلمة المرور</label>
+                    <input type="password" id="signup-password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password" id="confirm-password-label">تأكيد كلمة المرور</label>
+                    <input type="password" id="signup-confirm-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="signup-btn">
+                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
+                </button>
+            </form>
+            <div id="signup-result" class="result" style="display: none;"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="#" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Translations object
+        const translations = {
+            ar: {
+                signupTitle: "إنشاء حساب جديد",
+                usernameLabel: "اسم المستخدم",
+                emailLabel: "البريد الإلكتروني",
+                passwordLabel: "كلمة المرور",
+                confirmPasswordLabel: "تأكيد كلمة المرور",
+                signupBtn: "إنشاء حساب",
+                signupSuccess: "تم إنشاء الحساب بنجاح",
+                passwordMismatch: "كلمة المرور غير متطابقة",
+                languageToggle: "English"
+            },
+            en: {
+                signupTitle: "Create New Account",
+                usernameLabel: "Username",
+                emailLabel: "Email",
+                passwordLabel: "Password",
+                confirmPasswordLabel: "Confirm Password",
+                signupBtn: "Sign Up",
+                signupSuccess: "Account created successfully",
+                passwordMismatch: "Passwords do not match",
+                languageToggle: "العربية"
+            }
+        };
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update all translatable elements
+            document.getElementById('signup-title').textContent = translations[newLang].signupTitle;
+            document.getElementById('username-label').textContent = translations[newLang].usernameLabel;
+            document.getElementById('email-label').textContent = translations[newLang].emailLabel;
+            document.getElementById('password-label').textContent = translations[newLang].passwordLabel;
+            document.getElementById('confirm-password-label').textContent = translations[newLang].confirmPasswordLabel;
+            document.getElementById('signup-btn').innerHTML = `<i class="fas fa-user-plus"></i> <span class="btn-text">${translations[newLang].signupBtn}</span>`;
+            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Signup form handling
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resultElement = document.getElementById('signup-result');
+            
+            // Check password match
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                const lang = document.documentElement.lang;
+                resultElement.textContent = translations[lang].passwordMismatch;
+                resultElement.className = 'result error';
+                resultElement.style.display = 'block';
+                return;
+            }
+            
+            // Simulate signup process
+            setTimeout(() => {
+                const lang = document.documentElement.lang;
+                resultElement.textContent = translations[lang].signupSuccess;
+                resultElement.className = 'result success';
+                resultElement.style.display = 'block';
+                
+                // Redirect to login after successful signup
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
