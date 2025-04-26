@@ -1,201 +1,307 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التراسل المشفر</title>
-    <style>
-        :root {
-            --primary-blue: #1e90ff;
-            --dark-blue: #000080;
-            --steel-blue: #4682b4;
-            --royal-blue: #4169e1;
-            --light-bg: #f0f8ff;
-            --text-dark: #2f4f4f;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--light-bg);
-            line-height: 1.6;
-            color: var(--text-dark);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(30, 144, 255, 0.2);
-        }
-        
-        .auth-buttons {
-            display: flex;
-            gap: 15px;
-        }
-        
-        button {
-            padding: 12px 20px;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        
-        .language-switcher {
-            background-color: var(--primary-blue);
-        }
-        
-        .login-btn {
-            background-color: var(--steel-blue);
-        }
-        
-        .signup-btn {
-            background-color: var(--royal-blue);
-        }
-        
-        h1 {
-            color: var(--dark-blue);
-            text-align: center;
-            margin: 40px 0 30px;
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        
-        h2 {
-            color: var(--primary-blue);
-            font-size: 1.8rem;
-            margin: 30px 0 15px;
-        }
-        
-        h3 {
-            color: var(--steel-blue);
-            font-size: 1.4rem;
-            margin: 25px 0 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary-blue);
-        }
-        
-        p {
-            margin: 0 0 20px;
-            font-size: 1.1rem;
-        }
-        
-        .content-section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary-blue);
-        }
-        
-        .user-list {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary-blue);
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            button {
-                padding: 10px 15px;
-                font-size: 0.85rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="keywords" content="تراسل مشفر, أمان, خصوصية, تشفير" />
+  <meta name="description" content="نظام تراسل مشفر يحمي خصوصيتك ويرسلك رسائل مشفرة من طرف إلى طرف" />
+  <title>نظام التراسل المشفر</title>
+  <link rel="stylesheet" href="css/bootstrap.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
+  <style>
+    body {font-family:'Tajawal',sans-serif;text-align:right}
+    .navbar-nav {padding-right:0}
+    .carousel-indicators {right:0;left:auto}
+    .info_links a {text-align:right;padding-right:15px}
+    .detail-box a {display:inline-block;margin-top:10px}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div>
-                <button class="language-switcher" onclick="switchLanguage()">English</button>
+  <div class="hero_area">
+    <div class="hero_bg_box"><div class="bg_img_box"><img src="images/hero-bg.png" alt=""></div></div>
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="index.html"><span><i class="fa fa-lock"></i> نظام التراسل المشفر</span></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class=""> </span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+              <li class="nav-item active"><a class="nav-link" href="index.html">الرئيسية</a></li>
+              <li class="nav-item"><a class="nav-link" href="about.html">عن النظام</a></li>
+              <li class="nav-item"><a class="nav-link" href="service.html">الميزات</a></li>
+              <li class="nav-item"><a class="nav-link" href="why.html">لماذا نحن</a></li>
+              <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user"></i> تسجيل الدخول</a></li>
+              <form class="form-inline">
+                <button class="btn my-2 my-sm-0 nav_search-btn" type="submit"><i class="fa fa-search"></i></button>
+              </form>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    
+    <section class="slider_section">
+      <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="detail-box">
+                    <h1>نظام <br>تراسل مشفر</h1>
+                    <p>نظام تراسل مشفر متكامل يحافظ على خصوصيتك ويضمن سرية رسائلك باستخدام أحدث تقنيات التشفير.</p>
+                    <div class="btn-box"><a href="" class="btn1">اقرأ المزيد</a></div>
+                  </div>
+                </div>
+                <div class="col-md-6"><div class="img-box"><img src="images/slider-img.png" alt=""></div></div>
+              </div>
             </div>
-            <div class="auth-buttons">
-                <button class="login-btn" onclick="goToLogin()">تسجيل الدخول</button>
-                <button class="signup-btn" onclick="goToSignup()">إنشاء مستخدم</button>
+          </div>
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="detail-box">
+                    <h1>تشفير <br>من طرف إلى طرف</h1>
+                    <p>لا يمكن لأي جهة خارجية بما في ذلك نحن قراءة محتوى رسائلك، فقط أنت والمستقبل يمكنكم فك التشفير.</p>
+                    <div class="btn-box"><a href="" class="btn1">اقرأ المزيد</a></div>
+                  </div>
+                </div>
+                <div class="col-md-6"><div class="img-box"><img src="images/slider-img2.png" alt=""></div></div>
+              </div>
             </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="detail-box">
+                    <h1>حماية <br>وخصوصية</h1>
+                    <p>نستخدم خوارزميات تشفير متقدمة لحماية بياناتك وضمان أمان اتصالاتك.</p>
+                    <div class="btn-box"><a href="" class="btn1">اقرأ المزيد</a></div>
+                  </div>
+                </div>
+                <div class="col-md-6"><div class="img-box"><img src="images/slider-img3.png" alt=""></div></div>
+              </div>
+            </div>
+          </div>
         </div>
+        <ol class="carousel-indicators">
+          <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
+          <li data-target="#customCarousel1" data-slide-to="1"></li>
+          <li data-target="#customCarousel1" data-slide-to="2"></li>
+        </ol>
+      </div>
+    </section>
+  </div>
 
-        <h1>نظام التراسل المشفر</h1>
-        
-        <div class="content-section">
-            <h2>مرحبًا بك في نظام التراسل المشفر</h2>
-            <p>هذا النظام يستخدم تقنيات التشفير المتقدمة لحماية اتصالاتك وضمان خصوصية وسرية رسائلك.</p>
+  <section class="service_section layout_padding">
+    <div class="service_container">
+      <div class="container">
+        <div class="heading_container heading_center">
+          <h2>ميزات <span>النظام</span></h2>
+          <p>نقدم مجموعة من الميزات المتقدمة التي تضمن أمان وخصوصية اتصالاتك</p>
         </div>
-        
-        <div class="content-section">
-            <h3>الانتقال إلى صفحة المرسل</h3>
-            <p>إرسال الرسائل المشفرة بأمان تام</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="box">
+              <div class="img-box"><img src="images/s1.png" alt=""></div>
+              <div class="detail-box">
+                <h5>رسائل مشفرة</h5>
+                <p>إرسال واستقبال الرسائل مع تشفير متقدم يضمن عدم إمكانية قراءتها من قبل أي طرف ثالث.</p>
+                <a href="">اقرأ المزيد</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="box">
+              <div class="img-box"><img src="images/s2.png" alt=""></div>
+              <div class="detail-box">
+                <h5>ملفات آمنة</h5>
+                <p>مشاركة الملفات مع تشفير متقدم يحمي بياناتك من أي محاولات اختراق أو اعتراض.</p>
+                <a href="">اقرأ المزيد</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="box">
+              <div class="img-box"><img src="images/s3.png" alt=""></div>
+              <div class="detail-box">
+                <h5>دعم فني</h5>
+                <p>فريق دعم فني متخصص جاهز لمساعدتك في أي وقت لتقديم أفضل تجربة استخدام للنظام.</p>
+                <a href="">اقرأ المزيد</a>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <div class="content-section">
-            <h3>الانتقال إلى صفحة المستقبل</h3>
-            <p>استقبال وفك تشفير الرسائل الواردة</p>
-        </div>
-        
-        <div class="content-section">
-            <h3>المستخدمون النشطون:</h3>
-            <div class="user-list">جاري تحميل قائمة المستخدمين...</div>
-        </div>
+        <div class="btn-box"><a href="">عرض الكل</a></div>
+      </div>
     </div>
+  </section>
 
-    <script>
-        function switchLanguage() {
-            if (document.documentElement.lang === 'ar') {
-                document.documentElement.lang = 'en';
-                document.documentElement.dir = 'ltr';
-                document.querySelector('.language-switcher').textContent = 'العربية';
-                // يمكن إضافة المزيد من الترجمة هنا
-            } else {
-                document.documentElement.lang = 'ar';
-                document.documentElement.dir = 'rtl';
-                document.querySelector('.language-switcher').textContent = 'English';
-                // يمكن إضافة المزيد من الترجمة هنا
-            }
-        }
-        
-        function goToLogin() {
-            window.location.href = '/login';
-        }
-        
-        function goToSignup() {
-            window.location.href = '/signup';
-        }
-    </script>
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2>عن <span>النظام</span></h2>
+        <p>نظام متكامل مصمم لحماية خصوصيتك وضمان سرية اتصالاتك</p>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><div class="img-box"><img src="images/about-img.png" alt=""></div></div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <h3>نظام التراسل المشفر</h3>
+            <p>نظام تراسل مشفر متكامل يحافظ على خصوصيتك ويضمن سرية رسائلك باستخدام أحدث تقنيات التشفير. تم تطوير النظام بأعلى معايير الأمان لتلبية احتياجات الأفراد والشركات الذين يهتمون بخصوصية اتصالاتهم.</p>
+            <p>نستخدم خوارزميات تشفير متقدمة تضمن عدم إمكانية قراءة الرسائل إلا من قبل المرسل والمستقبل فقط، مع عدم تخزين أي سجلات للمحادثات على خوادمنا.</p>
+            <a href="">اقرأ المزيد</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why_section layout_padding">
+    <div class="container">
+      <div class="heading_container heading_center"><h2>لماذا <span>نحن</span></h2></div>
+      <div class="why_container">
+        <div class="box">
+          <div class="img-box"><img src="images/w1.png" alt=""></div>
+          <div class="detail-box">
+            <h5>أمان متقدم</h5>
+            <p>نستخدم أحدث تقنيات التشفير لحماية اتصالاتك، مع خوارزميات تشفير من طرف إلى طرف تضمن عدم إمكانية قراءة الرسائل من قبل أي طرف ثالث.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="img-box"><img src="images/w2.png" alt=""></div>
+          <div class="detail-box">
+            <h5>خصوصية كاملة</h5>
+            <p>لا نحتفظ بأي سجلات للمحادثات أو الملفات، مما يضمن خصوصيتك الكاملة وعدم إمكانية تتبع اتصالاتك.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="img-box"><img src="images/w3.png" alt=""></div>
+          <div class="detail-box">
+            <h5>سهولة الاستخدام</h5>
+            <p>واجهة مستخدم بسيطة وسهلة الاستخدام تمكنك من إرسال واستقبال الرسائل المشفرة دون الحاجة إلى خبرة تقنية.</p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="img-box"><img src="images/w4.png" alt=""></div>
+          <div class="detail-box">
+            <h5>دعم فني دائم</h5>
+            <p>دعم فني متاح على مدار الساعة لمساعدتك في أي استفسار أو مشكلة تواجهك أثناء استخدام النظام.</p>
+          </div>
+        </div>
+      </div>
+      <div class="btn-box"><a href="">اقرأ المزيد</a></div>
+    </div>
+  </section>
+
+  <section class="client_section layout_padding">
+    <div class="container">
+      <div class="heading_container heading_center psudo_white_primary mb_45">
+        <h2>ما يقوله <span>عملاؤنا</span></h2>
+      </div>
+      <div class="carousel-wrap">
+        <div class="owl-carousel client_owl-carousel">
+          <div class="item">
+            <div class="box">
+              <div class="img-box"><img src="images/client1.jpg" alt="" class="box-img"></div>
+              <div class="detail-box">
+                <div class="client_id">
+                  <div class="client_info">
+                    <h6>محمد أحمد</h6>
+                    <p>مدير شركة</p>
+                  </div>
+                  <i class="fa fa-quote-left" aria-hidden="true"></i>
+                </div>
+                <p>نظام ممتاز يوفر أمانًا وخصوصية عالية لاتصالاتنا الداخلية. نستخدمه في شركتنا منذ عام ونحن سعداء جدًا بالأداء والميزات التي يقدمها.</p>
+              </div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="box">
+              <div class="img-box"><img src="images/client2.jpg" alt="" class="box-img"></div>
+              <div class="detail-box">
+                <div class="client_id">
+                  <div class="client_info">
+                    <h6>سلمى خالد</h6>
+                    <p>صحفية تحقيقات</p>
+                  </div>
+                  <i class="fa fa-quote-left" aria-hidden="true"></i>
+                </div>
+                <p>النظام سهل الاستخدام ويوفر طبقة حماية ممتازة لاتصالاتي مع المصادر. أشعر بالأمان عند مشاركة المعلومات الحساسة عبر هذا النظام.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="info_section layout_padding2">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-lg-3 info_col">
+          <div class="info_contact">
+            <h4>العنوان</h4>
+            <div class="contact_link_box">
+              <a href=""><i class="fa fa-phone"></i><span>اتصل بنا +966 123456789</span></a>
+              <a href=""><i class="fa fa-envelope"></i><span>info@securechat.com</span></a>
+            </div>
+          </div>
+          <div class="info_social">
+            <a href=""><i class="fa fa-facebook"></i></a>
+            <a href=""><i class="fa fa-twitter"></i></a>
+            <a href=""><i class="fa fa-linkedin"></i></a>
+            <a href=""><i class="fa fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 info_col">
+          <div class="info_detail">
+            <h4>معلومات</h4>
+            <p>نظام تراسل مشفر متكامل يحافظ على خصوصيتك ويضمن سرية رسائلك باستخدام أحدث تقنيات التشفير.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-2 mx-auto info_col">
+          <div class="info_link_box">
+            <h4>روابط</h4>
+            <div class="info_links">
+              <a class="active" href="index.html">الرئيسية</a>
+              <a class="" href="about.html">عن النظام</a>
+              <a class="" href="service.html">الميزات</a>
+              <a class="" href="why.html">لماذا نحن</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 info_col">
+          <h4>اشترك بالنشرة البريدية</h4>
+          <form action="#">
+            <input type="text" placeholder="أدخل بريدك الإلكتروني" />
+            <button type="submit">اشترك</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="footer_section">
+    <div class="container">
+      <p>&copy; <span id="displayYear"></span> جميع الحقوق محفوظة لـ <a href="index.html">نظام التراسل المشفر</a></p>
+    </div>
+  </section>
+
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="js/bootstrap.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
 </body>
 </html>
