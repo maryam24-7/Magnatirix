@@ -1,46 +1,183 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مرسل الرسالة | Message Sender</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إرسال رسالة | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="header">
-    <button id="languageToggle" class="btn language-toggle">English</button>
-    <h1 id="main-title">مرسل الرسالة</h1>
-  </div>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+                <a href="dashboard.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> <span class="btn-text">العودة</span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-  <div class="container">
-    <div class="card">
-      <h2 id="form-title">إرسال رسالة مشفرة</h2>
-      
-      <form id="senderForm">
-        <div class="form-group">
-          <label for="username" id="username-label">اسمك:</label>
-          <input type="text" id="username" class="form-control" required>
+    <main class="container">
+        <section class="message-form">
+            <h2 id="send-title">إرسال رسالة مشفرة</h2>
+            
+            <form id="messageForm">
+                <div class="form-group">
+                    <label for="recipient" id="recipient-label">المستلم</label>
+                    <input type="text" id="recipient" class="form-control" required list="usersList">
+                    <datalist id="usersList"></datalist>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message" id="message-label">الرسالة</label>
+                    <textarea id="message" class="form-control" rows="6" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attachment" id="attachment-label">مرفق (اختياري)</label>
+                    <input type="file" id="attachment" class="form-control">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="send-btn">
+                    <i class="fas fa-paper-plane"></i> <span class="btn-text">إرسال</span>
+                </button>
+            </form>
+            
+            <div id="result" class="result" style="display: none;"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
-        
-        <div class="form-group">
-          <label for="receiver" id="receiver-label">اسم المستقبل:</label>
-          <input type="text" id="receiver" class="form-control" required list="userList">
-          <datalist id="userList"></datalist>
-        </div>
-        
-        <div class="form-group">
-          <label for="message" id="message-label">الرسالة:</label>
-          <textarea id="message" class="form-control" rows="4" required></textarea>
-        </div>
-        
-        <button type="submit" class="btn btn-accent" id="submit-btn">إرسال</button>
-      </form>
-      
-      <div id="result" class="result info" style="display: none;"></div>
-    </div>
-    
-    <a href="index.html" class="btn btn-secondary" id="back-link">العودة إلى الصفحة الرئيسية</a>
-  </div>
-  <script src="js/script.js"></script>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Translations object
+        const translations = {
+            ar: {
+                sendTitle: "إرسال رسالة مشفرة",
+                recipientLabel: "المستلم",
+                messageLabel: "الرسالة",
+                attachmentLabel: "مرفق (اختياري)",
+                sendBtn: "إرسال",
+                successMessage: "تم إرسال الرسالة بنجاح",
+                errorMessage: "حدث خطأ أثناء إرسال الرسالة",
+                backBtn: "العودة",
+                languageToggle: "English",
+                loadingUsers: "جاري تحميل قائمة المستخدمين..."
+            },
+            en: {
+                sendTitle: "Send Encrypted Message",
+                recipientLabel: "Recipient",
+                messageLabel: "Message",
+                attachmentLabel: "Attachment (Optional)",
+                sendBtn: "Send",
+                successMessage: "Message sent successfully",
+                errorMessage: "Error sending message",
+                backBtn: "Back",
+                languageToggle: "العربية",
+                loadingUsers: "Loading users list..."
+            }
+        };
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update all translatable elements
+            document.getElementById('send-title').textContent = translations[newLang].sendTitle;
+            document.getElementById('recipient-label').textContent = translations[newLang].recipientLabel;
+            document.getElementById('message-label').textContent = translations[newLang].messageLabel;
+            document.getElementById('attachment-label').textContent = translations[newLang].attachmentLabel;
+            document.getElementById('send-btn').innerHTML = `<i class="fas fa-paper-plane"></i> <span class="btn-text">${translations[newLang].sendBtn}</span>`;
+            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+            document.querySelector('.btn-text').textContent = translations[newLang].backBtn;
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Load users list
+        document.addEventListener('DOMContentLoaded', function() {
+            const usersList = document.getElementById('usersList');
+            const lang = document.documentElement.lang;
+            
+            // Simulate loading users from server
+            setTimeout(() => {
+                const users = ['أحمد', 'محمد', 'علي', 'فاطمة', 'خالد'];
+                usersList.innerHTML = users.map(user => `<option value="${user}">${user}</option>`).join('');
+            }, 1000);
+        });
+
+        // Handle form submission
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const resultElement = document.getElementById('result');
+            resultElement.style.display = 'none';
+            
+            // Simulate sending message
+            setTimeout(() => {
+                const lang = document.documentElement.lang;
+                const success = Math.random() > 0.2; // 80% success rate for simulation
+                
+                if (success) {
+                    resultElement.textContent = translations[lang].successMessage;
+                    resultElement.className = 'result success';
+                    resultElement.style.display = 'block';
+                    
+                    // Clear form
+                    document.getElementById('messageForm').reset();
+                } else {
+                    resultElement.textContent = translations[lang].errorMessage;
+                    resultElement.className = 'result error';
+                    resultElement.style.display = 'block';
+                }
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
