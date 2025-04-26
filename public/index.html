@@ -97,6 +97,7 @@
             box-shadow: var(--box-shadow);
             position: relative;
             overflow: hidden;
+            min-width: 120px;
         }
 
         .btn::before {
@@ -457,11 +458,11 @@
                     <i class="fas fa-globe"></i>
                     <span>English</span>
                 </button>
-                <button class="btn btn-primary" onclick="goToLogin()">
-                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                <button class="btn btn-primary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
-                <button class="btn btn-secondary" onclick="goToSignup()">
-                    <i class="fas fa-user-plus"></i> إنشاء حساب
+                <button class="btn btn-secondary" id="signupBtn">
+                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
                 </button>
             </div>
         </div>
@@ -473,7 +474,7 @@
                 <h1>نظام التراسل المشفر الآمن</h1>
                 <p>حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير</p>
                 <button class="btn btn-accent" onclick="learnMore()">
-                    <i class="fas fa-info-circle"></i> تعرف أكثر
+                    <i class="fas fa-info-circle"></i> <span class="btn-text">تعرف أكثر</span>
                 </button>
             </div>
         </section>
@@ -511,7 +512,7 @@
             <h2>جاهز لبدء استخدام Magnatirix؟</h2>
             <p>انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية</p>
             <button class="btn btn-accent" onclick="goToSignup()">
-                <i class="fas fa-rocket"></i> ابدأ مجاناً الآن
+                <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
             </button>
         </section>
     </main>
@@ -621,10 +622,13 @@
                 document.querySelectorAll('.feature-card p')[2].textContent = translations.en.feature3Text;
                 document.querySelector('.cta-section h2').textContent = translations.en.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.en.ctaText;
-                document.querySelectorAll('.btn-primary')[1].innerHTML = '<i class="fas fa-sign-in-alt"></i>' + translations.en.login;
-                document.querySelectorAll('.btn-secondary')[0].innerHTML = '<i class="fas fa-user-plus"></i>' + translations.en.signup;
-                document.querySelectorAll('.btn-accent')[0].innerHTML = '<i class="fas fa-info-circle"></i>' + translations.en.learnMore;
-                document.querySelectorAll('.btn-accent')[1].innerHTML = '<i class="fas fa-rocket"></i>' + translations.en.getStarted;
+                
+                // Update button texts while keeping icons
+                document.querySelectorAll('.btn-text')[0].textContent = translations.en.login;
+                document.querySelectorAll('.btn-text')[1].textContent = translations.en.signup;
+                document.querySelectorAll('.btn-text')[2].textContent = translations.en.learnMore;
+                document.querySelectorAll('.btn-text')[3].textContent = translations.en.getStarted;
+                
                 document.querySelector('.copyright').innerHTML = translations.en.copyright + ' &copy; <span id="year"></span> Magnatirix';
             } else {
                 // Switch to Arabic
@@ -644,10 +648,13 @@
                 document.querySelectorAll('.feature-card p')[2].textContent = translations.ar.feature3Text;
                 document.querySelector('.cta-section h2').textContent = translations.ar.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.ar.ctaText;
-                document.querySelectorAll('.btn-primary')[1].innerHTML = '<i class="fas fa-sign-in-alt"></i>' + translations.ar.login;
-                document.querySelectorAll('.btn-secondary')[0].innerHTML = '<i class="fas fa-user-plus"></i>' + translations.ar.signup;
-                document.querySelectorAll('.btn-accent')[0].innerHTML = '<i class="fas fa-info-circle"></i>' + translations.ar.learnMore;
-                document.querySelectorAll('.btn-accent')[1].innerHTML = '<i class="fas fa-rocket"></i>' + translations.ar.getStarted;
+                
+                // Update button texts while keeping icons
+                document.querySelectorAll('.btn-text')[0].textContent = translations.ar.login;
+                document.querySelectorAll('.btn-text')[1].textContent = translations.ar.signup;
+                document.querySelectorAll('.btn-text')[2].textContent = translations.ar.learnMore;
+                document.querySelectorAll('.btn-text')[3].textContent = translations.ar.getStarted;
+                
                 document.querySelector('.copyright').innerHTML = translations.ar.copyright + ' &copy; <span id="year"></span> Magnatirix';
             }
             
@@ -657,6 +664,10 @@
 
         // Initialize language switcher
         document.getElementById('languageToggle').addEventListener('click', switchLanguage);
+
+        // Initialize button click handlers
+        document.getElementById('loginBtn').addEventListener('click', goToLogin);
+        document.getElementById('signupBtn').addEventListener('click', goToSignup);
 
         // Check for preferred language in localStorage
         document.addEventListener('DOMContentLoaded', () => {
