@@ -1,27 +1,203 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مستقبل الرسائل | Message Receiver</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صندوق الوارد | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="header">
-    <button id="languageToggle" class="btn language-toggle">English</button>
-    <h1 id="main-title">مستقبل الرسائل</h1>
-  </div>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+                <a href="dashboard.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> <span class="btn-text">العودة</span>
+                </a>
+            </div>
+        </div>
+    </header>
 
-  <div class="container">
-    <div class="card">
-      <h2 id="receive-title">استقبال الرسائل</h2>
-      <div class="message-container">
-        <p id="receivedMessage">بانتظار الرسائل...</p>
-      </div>
-    </div>
-    
-    <a href="index.html" class="btn btn-secondary" id="back-link">العودة إلى الصفحة الرئيسية</a>
-  </div>
-  <script src="js/script.js"></script>
+    <main class="container">
+        <section class="inbox">
+            <h2 id="inbox-title">صندوق الوارد</h2>
+            
+            <div class="message-filters">
+                <button class="btn btn-primary active" id="all-messages">
+                    <i class="fas fa-inbox"></i> <span id="all-messages-text">الكل</span>
+                </button>
+                <button class="btn btn-secondary" id="unread-messages">
+                    <i class="fas fa-envelope"></i> <span id="unread-messages-text">غير المقروءة</span>
+                </button>
+                <button class="btn btn-secondary" id="important-messages">
+                    <i class="fas fa-star"></i> <span id="important-messages-text">مهمة</span>
+                </button>
+            </div>
+            
+            <div class="messages-list" id="messages-list">
+                <!-- سيتم ملء هذا القسم بالرسائل عبر JavaScript -->
+                <div class="loading" id="loading-messages">
+                    <i class="fas fa-spinner fa-spin"></i> <span id="loading-text">جاري تحميل الرسائل...</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Translations object
+        const translations = {
+            ar: {
+                inboxTitle: "صندوق الوارد",
+                allMessages: "الكل",
+                unreadMessages: "غير المقروءة",
+                importantMessages: "مهمة",
+                loadingMessages: "جاري تحميل الرسائل...",
+                noMessages: "لا توجد رسائل لعرضها",
+                backBtn: "العودة",
+                languageToggle: "English",
+                fromLabel: "من",
+                subjectLabel: "الموضوع",
+                dateLabel: "التاريخ",
+                viewBtn: "عرض"
+            },
+            en: {
+                inboxTitle: "Inbox",
+                allMessages: "All",
+                unreadMessages: "Unread",
+                importantMessages: "Important",
+                loadingMessages: "Loading messages...",
+                noMessages: "No messages to display",
+                backBtn: "Back",
+                languageToggle: "العربية",
+                fromLabel: "From",
+                subjectLabel: "Subject",
+                dateLabel: "Date",
+                viewBtn: "View"
+            }
+        };
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update all translatable elements
+            document.getElementById('inbox-title').textContent = translations[newLang].inboxTitle;
+            document.getElementById('all-messages-text').textContent = translations[newLang].allMessages;
+            document.getElementById('unread-messages-text').textContent = translations[newLang].unreadMessages;
+            document.getElementById('important-messages-text').textContent = translations[newLang].importantMessages;
+            document.getElementById('loading-text').textContent = translations[newLang].loadingMessages;
+            document.querySelector('.btn-text').textContent = translations[newLang].backBtn;
+            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Load messages
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading messages from server
+            setTimeout(() => {
+                const messagesList = document.getElementById('messages-list');
+                const lang = document.documentElement.lang;
+                
+                // Remove loading indicator
+                document.getElementById('loading-messages').remove();
+                
+                // Check if there are messages
+                if (Math.random() > 0.2) { // 80% chance of having messages
+                    const messages = [
+                        {from: 'أحمد', subject: 'اجتماع الغد', date: '10:30 ص', unread: true, important: false},
+                        {from: 'محمد', subject: 'تقرير المشروع', date: 'أمس', unread: false, important: true},
+                        {from: 'فاطمة', subject: 'مستجدات النظام', date: '٢٠ يونيو', unread: false, important: false}
+                    ];
+                    
+                    messages.forEach(msg => {
+                        const messageElement = document.createElement('div');
+                        messageElement.className = `message-item ${msg.unread ? 'unread' : ''} ${msg.important ? 'important' : ''}`;
+                        messageElement.innerHTML = `
+                            <div class="message-from">${msg.from}</div>
+                            <div class="message-subject">${msg.subject}</div>
+                            <div class="message-date">${msg.date}</div>
+                            <a href="message-detail.html?from=${encodeURIComponent(msg.from)}" class="btn btn-small">
+                                <i class="fas fa-eye"></i> <span>${translations[lang].viewBtn}</span>
+                            </a>
+                        `;
+                        messagesList.appendChild(messageElement);
+                    });
+                } else {
+                    messagesList.innerHTML = `<div class="no-messages">${translations[lang].noMessages}</div>`;
+                }
+            }, 1500);
+        });
+
+        // Filter buttons functionality
+        document.getElementById('all-messages').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('unread-messages').classList.remove('active');
+            document.getElementById('important-messages').classList.remove('active');
+            // Here you would filter messages in a real app
+        });
+
+        document.getElementById('unread-messages').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('all-messages').classList.remove('active');
+            document.getElementById('important-messages').classList.remove('active');
+            // Here you would filter messages in a real app
+        });
+
+        document.getElementById('important-messages').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('all-messages').classList.remove('active');
+            document.getElementById('unread-messages').classList.remove('active');
+            // Here you would filter messages in a real app
+        });
+    </script>
 </body>
 </html>
