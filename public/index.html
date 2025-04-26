@@ -67,6 +67,8 @@
             margin-left: 12px;
             font-size: 1.8rem;
             color: rgba(255, 255, 255, 0.9);
+            vertical-align: middle;
+            line-height: 1;
         }
 
         .logo-text {
@@ -97,7 +99,8 @@
             box-shadow: var(--box-shadow);
             position: relative;
             overflow: hidden;
-            min-width: 120px;
+            min-width: 140px; /* Added fixed width for buttons */
+            text-align: center;
         }
 
         .btn::before {
@@ -118,6 +121,7 @@
 
         .btn i {
             margin-left: 8px;
+            margin-right: 8px;
         }
 
         .btn-primary {
@@ -260,6 +264,9 @@
             margin-bottom: 1.5rem;
             font-size: 1.6rem;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .feature-card p {
@@ -276,6 +283,9 @@
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
         }
 
         /* CTA Section */
@@ -325,6 +335,7 @@
         .footer-logo i {
             margin-left: 10px;
             font-size: 1.8rem;
+            vertical-align: middle;
         }
 
         .footer-links {
@@ -458,10 +469,10 @@
                     <i class="fas fa-globe"></i>
                     <span>English</span>
                 </button>
-                <button class="btn btn-primary" id="loginBtn">
+                <button class="btn btn-primary" onclick="goToLogin()">
                     <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
-                <button class="btn btn-secondary" id="signupBtn">
+                <button class="btn btn-secondary" onclick="goToSignup()">
                     <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
                 </button>
             </div>
@@ -486,7 +497,7 @@
                 </div>
                 <h3>تشفير من طرف إلى طرف</h3>
                 <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك</p>
-                <button class="btn btn-primary">المزيد من التفاصيل</button>
+                <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -495,7 +506,7 @@
                 </div>
                 <h3>خصوصية مطلقة</h3>
                 <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن</p>
-                <button class="btn btn-primary">المزيد من التفاصيل</button>
+                <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -504,7 +515,7 @@
                 </div>
                 <h3>مشاركة ملفات آمنة</h3>
                 <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف</p>
-                <button class="btn btn-primary">المزيد من التفاصيل</button>
+                <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
         </section>
 
@@ -562,6 +573,7 @@
                 signup: "إنشاء حساب",
                 learnMore: "تعرف أكثر",
                 getStarted: "ابدأ مجاناً الآن",
+                moreDetails: "المزيد من التفاصيل",
                 language: "English",
                 copyright: "جميع الحقوق محفوظة"
             },
@@ -581,6 +593,7 @@
                 signup: "Sign Up",
                 learnMore: "Learn More",
                 getStarted: "Get Started for Free",
+                moreDetails: "More Details",
                 language: "العربية",
                 copyright: "All Rights Reserved"
             }
@@ -623,11 +636,14 @@
                 document.querySelector('.cta-section h2').textContent = translations.en.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.en.ctaText;
                 
-                // Update button texts while keeping icons
+                // Update button texts
                 document.querySelectorAll('.btn-text')[0].textContent = translations.en.login;
                 document.querySelectorAll('.btn-text')[1].textContent = translations.en.signup;
                 document.querySelectorAll('.btn-text')[2].textContent = translations.en.learnMore;
-                document.querySelectorAll('.btn-text')[3].textContent = translations.en.getStarted;
+                document.querySelectorAll('.btn-text')[3].textContent = translations.en.moreDetails;
+                document.querySelectorAll('.btn-text')[4].textContent = translations.en.moreDetails;
+                document.querySelectorAll('.btn-text')[5].textContent = translations.en.moreDetails;
+                document.querySelectorAll('.btn-text')[6].textContent = translations.en.getStarted;
                 
                 document.querySelector('.copyright').innerHTML = translations.en.copyright + ' &copy; <span id="year"></span> Magnatirix';
             } else {
@@ -649,11 +665,14 @@
                 document.querySelector('.cta-section h2').textContent = translations.ar.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.ar.ctaText;
                 
-                // Update button texts while keeping icons
+                // Update button texts
                 document.querySelectorAll('.btn-text')[0].textContent = translations.ar.login;
                 document.querySelectorAll('.btn-text')[1].textContent = translations.ar.signup;
                 document.querySelectorAll('.btn-text')[2].textContent = translations.ar.learnMore;
-                document.querySelectorAll('.btn-text')[3].textContent = translations.ar.getStarted;
+                document.querySelectorAll('.btn-text')[3].textContent = translations.ar.moreDetails;
+                document.querySelectorAll('.btn-text')[4].textContent = translations.ar.moreDetails;
+                document.querySelectorAll('.btn-text')[5].textContent = translations.ar.moreDetails;
+                document.querySelectorAll('.btn-text')[6].textContent = translations.ar.getStarted;
                 
                 document.querySelector('.copyright').innerHTML = translations.ar.copyright + ' &copy; <span id="year"></span> Magnatirix';
             }
@@ -664,10 +683,6 @@
 
         // Initialize language switcher
         document.getElementById('languageToggle').addEventListener('click', switchLanguage);
-
-        // Initialize button click handlers
-        document.getElementById('loginBtn').addEventListener('click', goToLogin);
-        document.getElementById('signupBtn').addEventListener('click', goToSignup);
 
         // Check for preferred language in localStorage
         document.addEventListener('DOMContentLoaded', () => {
