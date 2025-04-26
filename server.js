@@ -11,12 +11,30 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.static('public'));
 app.use(express.json());
 
-// Routes
+// Serve static files (JS, CSS, images) from current directory
+app.use(express.static(__dirname));
+
+// Routes to serve HTML files manually
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/sender.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'sender.html'));
+});
+
+app.get('/receiver.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'receiver.html'));
+});
+
+app.get('/generate.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'generate.html'));
+});
+
+app.get('/connect.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'connect.html'));
 });
 
 // WebSocket server
