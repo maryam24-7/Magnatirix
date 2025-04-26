@@ -64,8 +64,8 @@
         }
 
         .logo i {
-            margin-left: 12px;
-            font-size: 1.8rem;
+            margin-left: 15px; /* زيادة المسافة بين الأيقونة والنص */
+            font-size: 1.6rem; /* جعل حجم الأيقونة مساويًا لحجم النص */
             color: rgba(255, 255, 255, 0.9);
             vertical-align: middle;
             line-height: 1;
@@ -76,6 +76,7 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+            gap: 10px; /* إضافة مسافة بين العناصر */
         }
 
         .nav-actions {
@@ -99,7 +100,7 @@
             box-shadow: var(--box-shadow);
             position: relative;
             overflow: hidden;
-            min-width: 140px; /* Added fixed width for buttons */
+            min-width: 140px;
             text-align: center;
         }
 
@@ -262,11 +263,11 @@
         .feature-card h3 {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
-            font-size: 1.6rem;
+            font-size: 1.8rem; /* زيادة حجم خط العناوين */
             font-weight: 700;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 15px; /* مسافة بين الأيقونة والنص */
         }
 
         .feature-card p {
@@ -277,15 +278,11 @@
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 2rem;
+            font-size: 1.8rem; /* جعل حجم الأيقونة متناسقًا مع حجم العنوان */
             color: var(--secondary-color);
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: inline-block;
-            width: 100%;
-            text-align: center;
         }
 
         /* CTA Section */
@@ -330,12 +327,11 @@
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
             font-weight: 700;
+            gap: 10px; /* إضافة مسافة بين الأيقونة والنص */
         }
 
         .footer-logo i {
-            margin-left: 10px;
-            font-size: 1.8rem;
-            vertical-align: middle;
+            font-size: 1.5rem; /* تعديل حجم الأيقونة لتناسب النص */
         }
 
         .footer-links {
@@ -427,6 +423,10 @@
             .feature-card {
                 padding: 2rem;
             }
+            
+            .feature-card h3 {
+                font-size: 1.5rem; /* تعديل حجم الخط للهواتف */
+            }
         }
 
         /* Animation */
@@ -492,28 +492,28 @@
 
         <section class="features">
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3>تشفير من طرف إلى طرف</h3>
+                <h3>
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <span>تشفير من طرف إلى طرف</span>
+                </h3>
                 <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك</p>
                 <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-user-secret"></i>
-                </div>
-                <h3>خصوصية مطلقة</h3>
+                <h3>
+                    <i class="fas fa-user-secret feature-icon"></i>
+                    <span>خصوصية مطلقة</span>
+                </h3>
                 <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن</p>
                 <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-file-export"></i>
-                </div>
-                <h3>مشاركة ملفات آمنة</h3>
+                <h3>
+                    <i class="fas fa-file-export feature-icon"></i>
+                    <span>مشاركة ملفات آمنة</span>
+                </h3>
                 <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف</p>
                 <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
@@ -627,11 +627,11 @@
                 document.querySelector('.logo').textContent = translations.en.logo;
                 document.querySelector('.hero h1').textContent = translations.en.heroTitle;
                 document.querySelector('.hero p').textContent = translations.en.heroText;
-                document.querySelectorAll('.feature-card h3')[0].textContent = translations.en.feature1Title;
+                document.querySelectorAll('.feature-card h3')[0].innerHTML = '<i class="fas fa-shield-alt feature-icon"></i><span>' + translations.en.feature1Title + '</span>';
                 document.querySelectorAll('.feature-card p')[0].textContent = translations.en.feature1Text;
-                document.querySelectorAll('.feature-card h3')[1].textContent = translations.en.feature2Title;
+                document.querySelectorAll('.feature-card h3')[1].innerHTML = '<i class="fas fa-user-secret feature-icon"></i><span>' + translations.en.feature2Title + '</span>';
                 document.querySelectorAll('.feature-card p')[1].textContent = translations.en.feature2Text;
-                document.querySelectorAll('.feature-card h3')[2].textContent = translations.en.feature3Title;
+                document.querySelectorAll('.feature-card h3')[2].innerHTML = '<i class="fas fa-file-export feature-icon"></i><span>' + translations.en.feature3Title + '</span>';
                 document.querySelectorAll('.feature-card p')[2].textContent = translations.en.feature3Text;
                 document.querySelector('.cta-section h2').textContent = translations.en.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.en.ctaText;
@@ -656,11 +656,11 @@
                 document.querySelector('.logo').textContent = translations.ar.logo;
                 document.querySelector('.hero h1').textContent = translations.ar.heroTitle;
                 document.querySelector('.hero p').textContent = translations.ar.heroText;
-                document.querySelectorAll('.feature-card h3')[0].textContent = translations.ar.feature1Title;
+                document.querySelectorAll('.feature-card h3')[0].innerHTML = '<i class="fas fa-shield-alt feature-icon"></i><span>' + translations.ar.feature1Title + '</span>';
                 document.querySelectorAll('.feature-card p')[0].textContent = translations.ar.feature1Text;
-                document.querySelectorAll('.feature-card h3')[1].textContent = translations.ar.feature2Title;
+                document.querySelectorAll('.feature-card h3')[1].innerHTML = '<i class="fas fa-user-secret feature-icon"></i><span>' + translations.ar.feature2Title + '</span>';
                 document.querySelectorAll('.feature-card p')[1].textContent = translations.ar.feature2Text;
-                document.querySelectorAll('.feature-card h3')[2].textContent = translations.ar.feature3Title;
+                document.querySelectorAll('.feature-card h3')[2].innerHTML = '<i class="fas fa-file-export feature-icon"></i><span>' + translations.ar.feature3Title + '</span>';
                 document.querySelectorAll('.feature-card p')[2].textContent = translations.ar.feature3Text;
                 document.querySelector('.cta-section h2').textContent = translations.ar.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.ar.ctaText;
