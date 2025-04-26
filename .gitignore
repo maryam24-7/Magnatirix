@@ -1,3 +1,4 @@
-*.key
-*.crt
-*.pem
+node_modules/
+ssl/
+.env
+.DS_Store
