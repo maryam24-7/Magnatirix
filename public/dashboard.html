@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+                <div class="user-dropdown">
+                    <button class="btn btn-secondary" id="userMenu">
+                        <i class="fas fa-user-circle"></i> <span id="username-display">مستخدم</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="profile.html" id="profile-link"><i class="fas fa-user"></i> الملف الشخصي</a>
+                        <a href="settings.html" id="settings-link"><i class="fas fa-cog"></i> الإعدادات</a>
+                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="dashboard">
+            <h1 id="welcome-message">مرحباً بك في لوحة التحكم</h1>
+            
+            <div class="dashboard-cards">
+                <div class="dashboard-card" onclick="location.href='sender.html'">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3 id="send-message-title">إرسال رسالة</h3>
+                    <p id="send-message-desc">إرسال رسالة مشفرة إلى مستخدم آخر</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="location.href='receiver.html'">
+                    <i class="fas fa-inbox"></i>
+                    <h3 id="inbox-title">صندوق الوارد</h3>
+                    <p id="inbox-desc">عرض الرسائل الواردة</p>
+                </div>
+                
+                <div class="dashboard-card" onclick="location.href='contacts.html'">
+                    <i class="fas fa-address-book"></i>
+                    <h3 id="contacts-title">جهات الاتصال</h3>
+                    <p id="contacts-desc">إدارة جهات الاتصال الخاصة بك</p>
+                </div>
+            </div>
+            
+            <div class="recent-messages">
+                <h2 id="recent-messages-title">آخر الرسائل</h2>
+                <div class="messages-list" id="messages-list">
+                    <!-- سيتم ملء هذا القسم بالرسائل عبر JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Translations object
+        const translations = {
+            ar: {
+                welcome: "مرحباً بك في لوحة التحكم",
+                sendMessage: "إرسال رسالة",
+                sendMessageDesc: "إرسال رسالة مشفرة إلى مستخدم آخر",
+                inbox: "صندوق الوارد",
+                inboxDesc: "عرض الرسائل الواردة",
+                contacts: "جهات الاتصال",
+                contactsDesc: "إدارة جهات الاتصال الخاصة بك",
+                recentMessages: "آخر الرسائل",
+                profile: "الملف الشخصي",
+                settings: "الإعدادات",
+                logout: "تسجيل الخروج",
+                languageToggle: "English",
+                noMessages: "لا توجد رسائل حديثة"
+            },
+            en: {
+                welcome: "Welcome to Dashboard",
+                sendMessage: "Send Message",
+                sendMessageDesc: "Send encrypted message to another user",
+                inbox: "Inbox",
+                inboxDesc: "View incoming messages",
+                contacts: "Contacts",
+                contactsDesc: "Manage your contacts",
+                recentMessages: "Recent Messages",
+                profile: "Profile",
+                settings: "Settings",
+                logout: "Logout",
+                languageToggle: "العربية",
+                noMessages: "No recent messages"
+            }
+        };
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update all translatable elements
+            document.getElementById('welcome-message').textContent = translations[newLang].welcome;
+            document.getElementById('send-message-title').textContent = translations[newLang].sendMessage;
+            document.getElementById('send-message-desc').textContent = translations[newLang].sendMessageDesc;
+            document.getElementById('inbox-title').textContent = translations[newLang].inbox;
+            document.getElementById('inbox-desc').textContent = translations[newLang].inboxDesc;
+            document.getElementById('contacts-title').textContent = translations[newLang].contacts;
+            document.getElementById('contacts-desc').textContent = translations[newLang].contactsDesc;
+            document.getElementById('recent-messages-title').textContent = translations[newLang].recentMessages;
+            document.getElementById('profile-link').innerHTML = `<i class="fas fa-user"></i> ${translations[newLang].profile}`;
+            document.getElementById('settings-link').innerHTML = `<i class="fas fa-cog"></i> ${translations[newLang].settings}`;
+            document.getElementById('logout-link').innerHTML = `<i class="fas fa-sign-out-alt"></i> ${translations[newLang].logout}`;
+            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Load user data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate loading user data
+            const username = localStorage.getItem('username') || 'مستخدم';
+            document.getElementById('username-display').textContent = username;
+            
+            // Simulate loading recent messages
+            const messagesList = document.getElementById('messages-list');
+            const lang = document.documentElement.lang;
+            
+            // Check if there are messages
+            if (Math.random() > 0.5) {
+                // Simulate messages
+                const messages = [
+                    {sender: 'أحمد', preview: 'هذا نص رسالة مشفرة...', time: '10:30 ص'},
+                    {sender: 'محمد', preview: 'مرحباً، كيف حالك؟', time: 'أمس'}
+                ];
+                
+                messages.forEach(msg => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'message-item';
+                    messageElement.innerHTML = `
+                        <div class="message-sender">${msg.sender}</div>
+                        <div class="message-preview">${msg.preview}</div>
+                        <div class="message-time">${msg.time}</div>
+                    `;
+                    messageElement.onclick = function() {
+                        window.location.href = 'message-detail.html?id=' + encodeURIComponent(msg.sender);
+                    };
+                    messagesList.appendChild(messageElement);
+                });
+            } else {
+                messagesList.innerHTML = `<div class="no-messages">${translations[lang].noMessages}</div>`;
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
