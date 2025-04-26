@@ -67,4 +67,233 @@
             </div>
             
             <div class="tab-content" id="security-content">
-                <form id="security
+                <form id="security-form">
+                    <div class="form-group">
+                        <label id="password-change-label">تغيير كلمة المرور</label>
+                        <div class="password-fields">
+                            <input type="password" id="current-password" class="form-control" placeholder="كلمة المرور الحالية">
+                            <input type="password" id="new-password" class="form-control" placeholder="كلمة المرور الجديدة">
+                            <input type="password" id="confirm-password" class="form-control" placeholder="تأكيد كلمة المرور الجديدة">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="twofa-label">المصادقة الثنائية</label>
+                        <div class="twofa-option">
+                            <input type="checkbox" id="enable-twofa">
+                            <label for="enable-twofa" id="enable-twofa-label">تمكين المصادقة الثنائية</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="save-security-btn">
+                        <i class="fas fa-save"></i> <span class="btn-text">حفظ التغييرات</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="notifications-content">
+                <form id="notifications-form">
+                    <div class="form-group">
+                        <label id="email-notifications-label">إشعارات البريد الإلكتروني</label>
+                        <div class="notification-option">
+                            <input type="checkbox" id="enable-email" checked>
+                            <label for="enable-email" id="enable-email-label">تلقي إشعارات عبر البريد الإلكتروني</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="push-notifications-label">إشعارات التطبيق</label>
+                        <div class="notification-option">
+                            <input type="checkbox" id="enable-push" checked>
+                            <label for="enable-push" id="enable-push-label">تلقي إشعارات داخل التطبيق</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label id="notification-sound-label">صوت الإشعارات</label>
+                        <div class="notification-option">
+                            <input type="checkbox" id="enable-sound" checked>
+                            <label for="enable-sound" id="enable-sound-label">تشغيل صوت للإشعارات</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="save-notifications-btn">
+                        <i class="fas fa-save"></i> <span class="btn-text">حفظ التغييرات</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Translations object
+        const translations = {
+            ar: {
+                settingsTitle: "الإعدادات",
+                accountText: "الحساب",
+                securityText: "الأمان",
+                notificationsText: "الإشعارات",
+                usernameLabel: "اسم المستخدم",
+                emailLabel: "البريد الإلكتروني",
+                fullnameLabel: "الاسم الكامل",
+                saveChanges: "حفظ التغييرات",
+                passwordChange: "تغيير كلمة المرور",
+                currentPassword: "كلمة المرور الحالية",
+                newPassword: "كلمة المرور الجديدة",
+                confirmPassword: "تأكيد كلمة المرور الجديدة",
+                twofaLabel: "المصادقة الثنائية",
+                enableTwofa: "تمكين المصادقة الثنائية",
+                emailNotifications: "إشعارات البريد الإلكتروني",
+                enableEmail: "تلقي إشعارات عبر البريد الإلكتروني",
+                pushNotifications: "إشعارات التطبيق",
+                enablePush: "تلقي إشعارات داخل التطبيق",
+                notificationSound: "صوت الإشعارات",
+                enableSound: "تشغيل صوت للإشعارات",
+                backBtn: "العودة",
+                languageToggle: "English",
+                successMessage: "تم حفظ التغييرات بنجاح",
+                errorMessage: "حدث خطأ أثناء حفظ التغييرات"
+            },
+            en: {
+                settingsTitle: "Settings",
+                accountText: "Account",
+                securityText: "Security",
+                notificationsText: "Notifications",
+                usernameLabel: "Username",
+                emailLabel: "Email",
+                fullnameLabel: "Full Name",
+                saveChanges: "Save Changes",
+                passwordChange: "Change Password",
+                currentPassword: "Current Password",
+                newPassword: "New Password",
+                confirmPassword: "Confirm New Password",
+                twofaLabel: "Two-Factor Authentication",
+                enableTwofa: "Enable Two-Factor Authentication",
+                emailNotifications: "Email Notifications",
+                enableEmail: "Receive email notifications",
+                pushNotifications: "App Notifications",
+                enablePush: "Receive in-app notifications",
+                notificationSound: "Notification Sound",
+                enableSound: "Play sound for notifications",
+                backBtn: "Back",
+                languageToggle: "العربية",
+                successMessage: "Changes saved successfully",
+                errorMessage: "Error saving changes"
+            }
+        };
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Update all translatable elements
+            document.getElementById('settings-title').textContent = translations[newLang].settingsTitle;
+            document.getElementById('account-text').textContent = translations[newLang].accountText;
+            document.getElementById('security-text').textContent = translations[newLang].securityText;
+            document.getElementById('notifications-text').textContent = translations[newLang].notificationsText;
+            document.getElementById('username-label').textContent = translations[newLang].usernameLabel;
+            document.getElementById('email-label').textContent = translations[newLang].emailLabel;
+            document.getElementById('fullname-label').textContent = translations[newLang].fullnameLabel;
+            document.getElementById('save-account-btn').innerHTML = `<i class="fas fa-save"></i> <span class="btn-text">${translations[newLang].saveChanges}</span>`;
+            document.getElementById('password-change-label').textContent = translations[newLang].passwordChange;
+            document.getElementById('current-password').placeholder = translations[newLang].currentPassword;
+            document.getElementById('new-password').placeholder = translations[newLang].newPassword;
+            document.getElementById('confirm-password').placeholder = translations[newLang].confirmPassword;
+            document.getElementById('twofa-label').textContent = translations[newLang].twofaLabel;
+            document.getElementById('enable-twofa-label').textContent = translations[newLang].enableTwofa;
+            document.getElementById('save-security-btn').innerHTML = `<i class="fas fa-save"></i> <span class="btn-text">${translations[newLang].saveChanges}</span>`;
+            document.getElementById('email-notifications-label').textContent = translations[newLang].emailNotifications;
+            document.getElementById('enable-email-label').textContent = translations[newLang].enableEmail;
+            document.getElementById('push-notifications-label').textContent = translations[newLang].pushNotifications;
+            document.getElementById('enable-push-label').textContent = translations[newLang].enablePush;
+            document.getElementById('notification-sound-label').textContent = translations[newLang].notificationSound;
+            document.getElementById('enable-sound-label').textContent = translations[newLang].enableSound;
+            document.getElementById('save-notifications-btn').innerHTML = `<i class="fas fa-save"></i> <span class="btn-text">${translations[newLang].saveChanges}</span>`;
+            document.querySelector('.btn-text').textContent = translations[newLang].backBtn;
+            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Tab switching functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab button
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update active tab content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabId}-content`).classList.add('active');
+            });
+        });
+
+        // Form submission handlers
+        document.getElementById('account-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showResult('account');
+        });
+
+        document.getElementById('security-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showResult('security');
+        });
+
+        document.getElementById('notifications-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showResult('notifications');
+        });
+
+        function showResult(formType) {
+            const lang = document.documentElement.lang;
+            const success = Math.random() > 0.2; // 80% success rate for simulation
+            
+            alert(`${translations[lang][success ? 'successMessage' : 'errorMessage']}`);
+        }
+    </script>
+</body>
+</html>
