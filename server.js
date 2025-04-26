@@ -1,9 +1,9 @@
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
-const WebSocket = require('ws');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const path = require('path');
+const WebSocket = require('ws');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,62 +11,69 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Route for the root URL
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Serve HTML pages
+const serveHtml = (fileName) => (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', fileName));
+};
+
+app.get('/', serveHtml('index.html'));
+app.get('/sender.html', serveHtml('sender.html'));
+app.get('/receiver.html', serveHtml('receiver.html'));
+app.get('/generate.html', serveHtml('generate.html'));
+app.get('/connect.html', serveHtml('connect.html'));
+
+// SSL certificates (تأكد من إنشاء هذه الملفات أو استخدام شهادات حقيقية)
+const sslOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.cert'))
+};
+
+// Create HTTPS server
+const server = https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`HTTPS Server running on port ${PORT}`);
 });
 
-// WebSocket Server
-const wss = new WebSocket.Server({ noServer: true });
+// WebSocket Secure (WSS) server
+const wss = new WebSocket.Server({ server });
+
+// Store connected clients
+const clients = new Set();
 
 wss.on('connection', (ws) => {
-    console.log('New WebSocket connection');
+  console.log('New client connected');
+  clients.add(ws);
 
-    ws.on('message', (message) => {
-        console.log(`Received message: ${message}`);
-        wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
-            }
-        });
+  ws.on('message', (message) => {
+    console.log(`Received: ${message}`);
+    
+    // Broadcast message to all clients
+    clients.forEach(client => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(`Broadcast: ${message}`);
+      }
     });
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    clients.delete(ws);
+  });
+
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
 });
 
-// Authentication routes
-app.post('/api/register', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        // Save user to database (implementation needed)
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/api/login', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        // Verify user credentials (implementation needed)
-        const token = jwt.sign({ username }, 'your-secret-key', { expiresIn: '1h' });
-        res.json({ token });
-    } catch (error) {
-        res.status(401).json({ error: 'Invalid credentials' });
-    }
-});
-
-// Create HTTP server
-const server = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-// Upgrade HTTP to WebSocket
-server.on('upgrade', (request, socket, head) => {
-    wss.handleUpgrade(request, socket, head, (ws) => {
-        wss.emit('connection', ws, request);
-    });
-});
+// Generate self-signed certificates if not exists (للتطوير فقط)
+if (!fs.existsSync(path.join(__dirname, 'ssl'))) {
+  fs.mkdirSync(path.join(__dirname, 'ssl'));
+  const { execSync } = require('child_process');
+  try {
+    execSync('openssl req -x509 -newkey rsa:4096 -keyout ssl/server.key -out ssl/server.cert -days 365 -nodes -subj "/CN=localhost"');
+    console.log('Self-signed certificates generated');
+  } catch (err) {
+    console.error('Failed to generate SSL certificates:', err);
+  }
+}
