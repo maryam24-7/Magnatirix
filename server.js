@@ -1,9 +1,7 @@
 const express = require('express');
-const WebSocket = require('ws');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const path = require('path');
+const WebSocket = require('ws');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,50 +9,46 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
 
-// WebSocket Server
-const wss = new WebSocket.Server({ noServer: true });
+// Serve static files (JS, CSS, images, etc.) from the current directory
+app.use(express.static(__dirname));
 
-wss.on('connection', (ws) => {
-  console.log('New WebSocket connection');
-
-  ws.on('message', (message) => {
-    console.log(`Received message: ${message}`);
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
-  });
-});
-
-// Routes
+// Serve HTML pages manually
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serve the main HTML file
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Authentication routes
-app.post('/api/register', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Save user to database (implementation needed)
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+app.get('/sender.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'sender.html'));
 });
 
-app.post('/api/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    // Verify user credentials (implementation needed)
-    const token = jwt.sign({ username }, 'your-secret-key', { expiresIn: '1h' });
-    res.json({ token });
-  } catch (error) {
-    res.status(401).json({ error: 'Invalid credentials' });
-  }
+app.get('/receiver.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'receiver.html'));
+});
+
+app.get('/generate.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'generate.html'));
+});
+
+app.get('/connect.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'connect.html'));
+});
+
+// Routes without .html (redirect to correct page)
+app.get('/sender', (req, res) => {
+  res.redirect('/sender.html');
+});
+
+app.get('/receiver', (req, res) => {
+  res.redirect('/receiver.html');
+});
+
+app.get('/generate', (req, res) => {
+  res.redirect('/generate.html');
+});
+
+app.get('/connect', (req, res) => {
+  res.redirect('/connect.html');
 });
 
 // Create HTTP server
@@ -62,9 +56,18 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Upgrade HTTP to WebSocket
-server.on('upgrade', (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
+// WebSocket server
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Client connected.');
+
+  ws.on('message', (message) => {
+    console.log(`Received: ${message}`);
+    ws.send(`Server received: ${message}`);
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected.');
   });
 });
