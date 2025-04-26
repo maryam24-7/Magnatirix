@@ -3,199 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التراسل المشفر</title>
+    <title>نظام التراسل المشفر الآمن</title>
     <style>
         :root {
-            --primary-blue: #1e90ff;
-            --dark-blue: #000080;
-            --steel-blue: #4682b4;
-            --royal-blue: #4169e1;
-            --light-bg: #f0f8ff;
-            --text-dark: #2f4f4f;
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: var(--dark-color);
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
-            background-color: var(--light-bg);
-            line-height: 1.6;
-            color: var(--text-dark);
+            min-height: 100vh;
+            text-align: right;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
+        /* Header Styles */
         .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(30, 144, 255, 0.2);
+            padding: 0 2rem;
         }
-        
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            margin-left: 10px;
+            font-size: 1.8rem;
+        }
+
         .auth-buttons {
             display: flex;
             gap: 15px;
         }
-        
-        button {
-            padding: 12px 20px;
-            color: white;
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
             border: none;
-            border-radius: 6px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
         }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
         }
-        
-        .language-switcher {
-            background-color: var(--primary-blue);
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
         }
-        
-        .login-btn {
-            background-color: var(--steel-blue);
+
+        .btn-secondary {
+            background-color: var(--primary-color);
+            color: white;
         }
-        
-        .signup-btn {
-            background-color: var(--royal-blue);
+
+        .btn-secondary:hover {
+            background-color: #1a252f;
+            transform: translateY(-3px);
         }
-        
-        h1 {
-            color: var(--dark-blue);
+
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+        }
+
+        /* Main Content Styles */
+        .hero {
             text-align: center;
-            margin: 40px 0 30px;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #555;
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon {
             font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
         }
-        
-        h2 {
-            color: var(--primary-blue);
-            font-size: 1.8rem;
-            margin: 30px 0 15px;
+
+        /* User List Section */
+        .user-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 3rem;
         }
-        
-        h3 {
-            color: var(--steel-blue);
-            font-size: 1.4rem;
-            margin: 25px 0 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary-blue);
+
+        .user-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
         }
-        
-        p {
-            margin: 0 0 20px;
-            font-size: 1.1rem;
-        }
-        
-        .content-section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary-blue);
-        }
-        
+
         .user-list {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary-blue);
             min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
         }
-        
+
+        /* Footer Styles */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header {
+            .header-content {
                 flex-direction: column;
-                gap: 15px;
+                gap: 1.5rem;
+                text-align: center;
             }
-            
-            h1 {
-                font-size: 2rem;
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
             }
-            
-            button {
-                padding: 10px 15px;
-                font-size: 0.85rem;
+
+            .btn {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
             }
         }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-card {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.3s; }
+        .feature-card:nth-child(3) { animation-delay: 0.5s; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div>
-                <button class="language-switcher" onclick="switchLanguage()">English</button>
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-lock"></i>
+                <span>نظام التراسل المشفر</span>
             </div>
             <div class="auth-buttons">
-                <button class="login-btn" onclick="goToLogin()">تسجيل الدخول</button>
-                <button class="signup-btn" onclick="goToSignup()">إنشاء مستخدم</button>
+                <button class="btn btn-primary" onclick="goToLogin()">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                <button class="btn btn-secondary" onclick="goToSignup()">
+                    <i class="fas fa-user-plus"></i> إنشاء حساب
+                </button>
             </div>
         </div>
+    </header>
 
-        <h1>نظام التراسل المشفر</h1>
-        
-        <div class="content-section">
-            <h2>مرحبًا بك في نظام التراسل المشفر</h2>
-            <p>هذا النظام يستخدم تقنيات التشفير المتقدمة لحماية اتصالاتك وضمان خصوصية وسرية رسائلك.</p>
+    <main class="container">
+        <section class="hero">
+            <h1>نظام التراسل المشفر الآمن</h1>
+            <p>حافظ على خصوصيتك مع نظام التراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير</p>
+            <button class="btn btn-accent" onclick="learnMore()">
+                <i class="fas fa-info-circle"></i> تعرف أكثر
+            </button>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>تشفير من طرف إلى طرف</h3>
+                <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود</p>
+                <button class="btn btn-primary">المزيد من التفاصيل</button>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <h3>خصوصية كاملة</h3>
+                <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث</p>
+                <button class="btn btn-primary">المزيد من التفاصيل</button>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-export"></i>
+                </div>
+                <h3>مشاركة ملفات آمنة</h3>
+                <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية</p>
+                <button class="btn btn-primary">المزيد من التفاصيل</button>
+            </div>
+        </section>
+
+        <section class="user-section">
+            <h2><i class="fas fa-users"></i> المستخدمون النشطون حالياً</h2>
+            <div class="user-list">
+                <p>جاري تحميل قائمة المستخدمين...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>جميع الحقوق محفوظة &copy; <span id="year"></span> نظام التراسل المشفر</p>
         </div>
-        
-        <div class="content-section">
-            <h3>الانتقال إلى صفحة المرسل</h3>
-            <p>إرسال الرسائل المشفرة بأمان تام</p>
-        </div>
-        
-        <div class="content-section">
-            <h3>الانتقال إلى صفحة المستقبل</h3>
-            <p>استقبال وفك تشفير الرسائل الواردة</p>
-        </div>
-        
-        <div class="content-section">
-            <h3>المستخدمون النشطون:</h3>
-            <div class="user-list">جاري تحميل قائمة المستخدمين...</div>
-        </div>
-    </div>
+    </footer>
 
     <script>
-        function switchLanguage() {
-            if (document.documentElement.lang === 'ar') {
-                document.documentElement.lang = 'en';
-                document.documentElement.dir = 'ltr';
-                document.querySelector('.language-switcher').textContent = 'العربية';
-                // يمكن إضافة المزيد من الترجمة هنا
-            } else {
-                document.documentElement.lang = 'ar';
-                document.documentElement.dir = 'rtl';
-                document.querySelector('.language-switcher').textContent = 'English';
-                // يمكن إضافة المزيد من الترجمة هنا
-            }
-        }
-        
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Navigation functions
         function goToLogin() {
             window.location.href = '/login';
         }
-        
+
         function goToSignup() {
             window.location.href = '/signup';
         }
+
+        function learnMore() {
+            window.location.href = '/about';
+        }
+
+        // Language switcher function
+        function switchLanguage() {
+            const html = document.documentElement;
+            if (html.lang === 'ar') {
+                html.lang = 'en';
+                html.dir = 'ltr';
+                // Here you would update all text elements to English
+            } else {
+                html.lang = 'ar';
+                html.dir = 'rtl';
+                // Here you would update all text elements to Arabic
+            }
+        }
+
+        // Load active users
+        async function loadActiveUsers() {
+            try {
+                const response = await fetch('/users');
+                const users = await response.json();
+                const userList = document.querySelector('.user-list');
+                
+                if (users.length > 0) {
+                    userList.innerHTML = '<ul style="list-style: none; padding: 0; margin: 0; width: 100%;">' + 
+                        users.map(user => `<li style="padding: 0.5rem; border-bottom: 1px solid #eee; display: flex; align-items: center;">
+                            <i class="fas fa-user-circle" style="margin-left: 10px; color: ${getRandomColor()}"></i>
+                            ${user}
+                        </li>`).join('') + '</ul>';
+                } else {
+                    userList.innerHTML = '<p>لا يوجد مستخدمون نشطون حالياً</p>';
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.querySelector('.user-list').innerHTML = '<p>خطأ في تحميل قائمة المستخدمين</p>';
+            }
+        }
+
+        // Helper function for random colors
+        function getRandomColor() {
+            const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Load users when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            loadActiveUsers();
+            // Refresh every 30 seconds
+            setInterval(loadActiveUsers, 30000);
+        });
     </script>
 </body>
 </html>
