@@ -64,8 +64,8 @@
         }
 
         .logo i {
-            margin-left: 15px; /* زيادة المسافة بين الأيقونة والنص */
-            font-size: 1.6rem; /* جعل حجم الأيقونة مساويًا لحجم النص */
+            margin-left: 15px;
+            font-size: 1.6rem;
             color: rgba(255, 255, 255, 0.9);
             vertical-align: middle;
             line-height: 1;
@@ -76,7 +76,7 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px; /* إضافة مسافة بين العناصر */
+            gap: 10px;
         }
 
         .nav-actions {
@@ -263,11 +263,11 @@
         .feature-card h3 {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
-            font-size: 1.8rem; /* زيادة حجم خط العناوين */
+            font-size: 1.8rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 15px; /* مسافة بين الأيقونة والنص */
+            gap: 15px;
         }
 
         .feature-card p {
@@ -278,7 +278,7 @@
         }
 
         .feature-icon {
-            font-size: 1.8rem; /* جعل حجم الأيقونة متناسقًا مع حجم العنوان */
+            font-size: 1.8rem;
             color: var(--secondary-color);
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
@@ -327,11 +327,11 @@
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
             font-weight: 700;
-            gap: 10px; /* إضافة مسافة بين الأيقونة والنص */
+            gap: 10px;
         }
 
         .footer-logo i {
-            font-size: 1.5rem; /* تعديل حجم الأيقونة لتناسب النص */
+            font-size: 1.5rem;
         }
 
         .footer-links {
@@ -425,7 +425,7 @@
             }
             
             .feature-card h3 {
-                font-size: 1.5rem; /* تعديل حجم الخط للهواتف */
+                font-size: 1.5rem;
             }
         }
 
@@ -453,6 +453,52 @@
         .feature-card:nth-child(1) { animation-delay: 0.2s; }
         .feature-card:nth-child(2) { animation-delay: 0.4s; }
         .feature-card:nth-child(3) { animation-delay: 0.6s; }
+
+        /* New styles for the links section */
+        .links-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .links-section h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .links-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .links-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .links-list a {
+            display: block;
+            padding: 0.8rem 1.2rem;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .links-list a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -519,6 +565,17 @@
             </div>
         </section>
 
+        <!-- New Links Section -->
+        <section class="links-section">
+            <h2>واجهات النظام الرئيسية</h2>
+            <ul class="links-list">
+                <li><a href="/sender.html">إرسال رسالة</a></li>
+                <li><a href="/receiver.html">استقبال رسالة</a></li>
+                <li><a href="/generate.html">توليد المفاتيح</a></li>
+                <li><a href="/connect.html">الاتصال بالخادم</a></li>
+            </ul>
+        </section>
+
         <section class="cta-section">
             <h2>جاهز لبدء استخدام Magnatirix؟</h2>
             <p>انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية</p>
@@ -567,13 +624,18 @@
                 feature2Text: "لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن",
                 feature3Title: "مشاركة ملفات آمنة",
                 feature3Text: "أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف",
+                linksTitle: "واجهات النظام الرئيسية",
+                sendMessage: "إرسال رسالة",
+                receiveMessage: "استقبال رسالة",
+                generateKeys: "توليد المفاتيح",
+                connectServer: "الاتصال بالخادم",
                 ctaTitle: "جاهز لبدء استخدام Magnatirix؟",
                 ctaText: "انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية",
                 login: "تسجيل الدخول",
                 signup: "إنشاء حساب",
                 learnMore: "تعرف أكثر",
-                getStarted: "ابدأ مجاناً الآن",
                 moreDetails: "المزيد من التفاصيل",
+                getStarted: "ابدأ مجاناً الآن",
                 language: "English",
                 copyright: "جميع الحقوق محفوظة"
             },
@@ -587,13 +649,18 @@
                 feature2Text: "We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us",
                 feature3Title: "Secure File Sharing",
                 feature3Text: "Send your files with the same strong encryption level we use for text messages, with files up to 2GB each",
+                linksTitle: "System Interfaces",
+                sendMessage: "Send Message",
+                receiveMessage: "Receive Message",
+                generateKeys: "Generate Keys",
+                connectServer: "Connect to Server",
                 ctaTitle: "Ready to start using Magnatirix?",
                 ctaText: "Join thousands of users who trust us to protect their daily communications",
                 login: "Login",
                 signup: "Sign Up",
                 learnMore: "Learn More",
-                getStarted: "Get Started for Free",
                 moreDetails: "More Details",
+                getStarted: "Get Started for Free",
                 language: "العربية",
                 copyright: "All Rights Reserved"
             }
@@ -633,6 +700,11 @@
                 document.querySelectorAll('.feature-card p')[1].textContent = translations.en.feature2Text;
                 document.querySelectorAll('.feature-card h3')[2].innerHTML = '<i class="fas fa-file-export feature-icon"></i><span>' + translations.en.feature3Title + '</span>';
                 document.querySelectorAll('.feature-card p')[2].textContent = translations.en.feature3Text;
+                document.querySelector('.links-section h2').textContent = translations.en.linksTitle;
+                document.querySelectorAll('.links-list a')[0].textContent = translations.en.sendMessage;
+                document.querySelectorAll('.links-list a')[1].textContent = translations.en.receiveMessage;
+                document.querySelectorAll('.links-list a')[2].textContent = translations.en.generateKeys;
+                document.querySelectorAll('.links-list a')[3].textContent = translations.en.connectServer;
                 document.querySelector('.cta-section h2').textContent = translations.en.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.en.ctaText;
                 
@@ -662,6 +734,11 @@
                 document.querySelectorAll('.feature-card p')[1].textContent = translations.ar.feature2Text;
                 document.querySelectorAll('.feature-card h3')[2].innerHTML = '<i class="fas fa-file-export feature-icon"></i><span>' + translations.ar.feature3Title + '</span>';
                 document.querySelectorAll('.feature-card p')[2].textContent = translations.ar.feature3Text;
+                document.querySelector('.links-section h2').textContent = translations.ar.linksTitle;
+                document.querySelectorAll('.links-list a')[0].textContent = translations.ar.sendMessage;
+                document.querySelectorAll('.links-list a')[1].textContent = translations.ar.receiveMessage;
+                document.querySelectorAll('.links-list a')[2].textContent = translations.ar.generateKeys;
+                document.querySelectorAll('.links-list a')[3].textContent = translations.ar.connectServer;
                 document.querySelector('.cta-section h2').textContent = translations.ar.ctaTitle;
                 document.querySelector('.cta-section p').textContent = translations.ar.ctaText;
                 
