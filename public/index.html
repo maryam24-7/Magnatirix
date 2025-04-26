@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magnatirix - نظام التراسل المشفر الآمن</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
             --primary-color: #3a4f6c;
@@ -137,14 +141,14 @@
         }
 
         .btn-secondary {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(5px);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.25);
+            background-color: rgba(255, 255, 255, 0.35);
             transform: translateY(-3px) scale(1.02);
         }
 
@@ -454,8 +458,6 @@
         .feature-card:nth-child(2) { animation-delay: 0.4s; }
         .feature-card:nth-child(3) { animation-delay: 0.6s; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="header">
@@ -465,14 +467,14 @@
                 <span class="logo">Magnatirix</span>
             </a>
             <div class="nav-actions">
-                <button class="language-switcher" id="languageToggle">
+                <button class="language-switcher" id="languageToggle" aria-label="تبديل اللغة">
                     <i class="fas fa-globe"></i>
                     <span>English</span>
                 </button>
-                <button class="btn btn-primary" onclick="goToLogin()">
+                <button class="btn btn-primary" onclick="goToLogin()" aria-label="تسجيل الدخول">
                     <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
-                <button class="btn btn-secondary" onclick="goToSignup()">
+                <button class="btn btn-secondary" onclick="goToSignup()" aria-label="إنشاء حساب">
                     <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
                 </button>
             </div>
@@ -484,7 +486,7 @@
             <div class="hero-content">
                 <h1>نظام التراسل المشفر الآمن</h1>
                 <p>حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير</p>
-                <button class="btn btn-accent" onclick="learnMore()">
+                <button class="btn btn-accent" onclick="learnMore()" aria-label="تعرف أكثر">
                     <i class="fas fa-info-circle"></i> <span class="btn-text">تعرف أكثر</span>
                 </button>
             </div>
@@ -497,7 +499,7 @@
                     <span>تشفير من طرف إلى طرف</span>
                 </h3>
                 <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك</p>
-                <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -506,7 +508,7 @@
                     <span>خصوصية مطلقة</span>
                 </h3>
                 <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن</p>
-                <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -515,14 +517,14 @@
                     <span>مشاركة ملفات آمنة</span>
                 </h3>
                 <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف</p>
-                <button class="btn btn-primary"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
         </section>
 
         <section class="cta-section">
             <h2>جاهز لبدء استخدام Magnatirix؟</h2>
             <p>انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية</p>
-            <button class="btn btn-accent" onclick="goToSignup()">
+            <button class="btn btn-accent" onclick="goToSignup()" aria-label="ابدأ مجاناً الآن">
                 <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
             </button>
         </section>
@@ -535,17 +537,17 @@
                 <span>Magnatirix</span>
             </div>
             <div class="footer-links">
-                <a href="#" class="footer-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link">سياسة الخصوصية</a>
-                <a href="#" class="footer-link">عن النظام</a>
-                <a href="#" class="footer-link">الأسئلة الشائعة</a>
-                <a href="#" class="footer-link">اتصل بنا</a>
+                <a href="#" class="footer-link" aria-label="الشروط والأحكام">الشروط والأحكام</a>
+                <a href="#" class="footer-link" aria-label="سياسة الخصوصية">سياسة الخصوصية</a>
+                <a href="#" class="footer-link" aria-label="عن النظام">عن النظام</a>
+                <a href="#" class="footer-link" aria-label="الأسئلة الشائعة">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link" aria-label="اتصل بنا">اتصل بنا</a>
             </div>
             <div class="footer-social">
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-icon" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon" aria-label="جيت هاب"><i class="fab fa-github"></i></a>
             </div>
             <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
@@ -601,15 +603,15 @@
 
         // Navigation functions
         function goToLogin() {
-            window.location.href = '/login';
+            window.location.href = document.documentElement.lang === 'ar' ? '/login-ar' : '/login';
         }
 
         function goToSignup() {
-            window.location.href = '/signup';
+            window.location.href = document.documentElement.lang === 'ar' ? '/signup-ar' : '/signup';
         }
 
         function learnMore() {
-            window.location.href = '/about';
+            window.location.href = document.documentElement.lang === 'ar' ? '/about-ar' : '/about';
         }
 
         // Language switching function
