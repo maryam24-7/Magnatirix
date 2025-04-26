@@ -1,23 +1,18 @@
 {
   "name": "magnatirix",
   "version": "1.0.0",
+  "description": "Secure Messaging Application",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm install --legacy-peer-deps",
-    "prod": "npm install --omit=dev"
-  },
-  "engines": {
-    "node": ">=16.0.0"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "ws": "^8.13.0",
-    "cors": "^2.8.5",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0"
+    "cors": "^2.8.5"
   },
-  "config": {
-    "omit": "dev"
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
