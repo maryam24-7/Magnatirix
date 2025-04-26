@@ -1,708 +1,333 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="نظام Magnatirix للتراسل المشفر الآمن - حافظ على خصوصيتك مع تشفير من طرف إلى طرف">
-    <title>Magnatirix - نظام التراسل المشفر الآمن</title>
-    <style>
-        :root {
-            --primary-color: #3a4f6c;
-            --secondary-color: #1e88e5;
-            --accent-color: #ff5252;
-            --light-color: #f5f7fa;
-            --dark-color: #263238;
-            --success-color: #4caf50;
-            --warning-color: #ff9800;
-            --danger-color: #f44336;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        }
-
-        body {
-            font-family: 'Tajawal', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.8;
-            color: var(--dark-color);
-            background-color: var(--light-color);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            text-align: right;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header Styles */
-        .header {
-            background: var(--gradient);
-            color: white;
-            padding: 1.2rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .logo i {
-            margin-left: 15px;
-            font-size: 1.6rem;
-            color: rgba(255, 255, 255, 0.9);
-            vertical-align: middle;
-            line-height: 1;
-        }
-
-        .logo-text {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        /* Button Styles */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.85rem 2rem;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            box-shadow: var(--box-shadow);
-            position: relative;
-            overflow: hidden;
-            min-width: 140px;
-            text-align: center;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .btn:hover::before {
-            transform: translateX(0);
-        }
-
-        .btn i {
-            margin-left: 8px;
-            margin-right: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #1976d2;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 20px rgba(30, 136, 229, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-3px) scale(1.02);
-        }
-
-        .btn-accent {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .btn-accent:hover {
-            background-color: #ff1744;
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 20px rgba(255, 82, 82, 0.3);
-        }
-
-        .language-switcher {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            transition: var(--transition);
-        }
-
-        .language-switcher:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .language-switcher i {
-            font-size: 1.2rem;
-        }
-
-        /* Main Content Styles */
-        .hero {
-            text-align: center;
-            padding: 5rem 0 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(30, 136, 229, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-        }
-
-        .hero h1 {
-            font-size: 3.2rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-            font-weight: 800;
-            line-height: 1.3;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            max-width: 700px;
-            margin: 0 auto 2.5rem;
-            color: #555;
-        }
-
-        /* Feature Cards */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            margin-bottom: 4rem;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2.5rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            border-top: 4px solid var(--secondary-color);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(30, 136, 229, 0.03), rgba(58, 79, 108, 0.03));
-            z-index: -1;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-card:hover::after {
-            opacity: 1;
-        }
-
-        .feature-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .feature-card p {
-            color: #666;
-            margin-bottom: 2rem;
-            font-size: 1.05rem;
-            line-height: 1.7;
-        }
-
-        .feature-icon {
-            font-size: 1.8rem;
-            color: var(--secondary-color);
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            text-align: center;
-            padding: 4rem 0;
-            background: linear-gradient(135deg, rgba(30, 136, 229, 0.05), rgba(58, 79, 108, 0.05));
-            border-radius: var(--border-radius);
-            margin-bottom: 4rem;
-        }
-
-        .cta-section h2 {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-section p {
-            max-width: 700px;
-            margin: 0 auto 2.5rem;
-            color: #666;
-            font-size: 1.1rem;
-        }
-
-        /* Footer Styles */
-        .footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 3rem 0 2rem;
-            text-align: center;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            gap: 10px;
-        }
-
-        .footer-logo i {
-            font-size: 1.5rem;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .footer-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-link:hover {
-            color: white;
-            transform: translateX(-5px);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-icon {
-            color: white;
-            font-size: 1.5rem;
-            transition: var(--transition);
-        }
-
-        .social-icon:hover {
-            transform: translateY(-5px) scale(1.1);
-        }
-
-        .copyright {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            margin-top: 1.5rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1.5rem;
-                text-align: center;
-            }
-
-            .nav-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .hero {
-                padding: 4rem 0 3rem;
-            }
-
-            .hero h1 {
-                font-size: 2.4rem;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .feature-card {
-                padding: 2rem;
-            }
-            
-            .feature-card h3 {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* Animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-content {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .feature-card {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.2s; }
-        .feature-card:nth-child(2) { animation-delay: 0.4s; }
-        .feature-card:nth-child(3) { animation-delay: 0.6s; }
-
-        /* Language Transition */
-        .lang-transition {
-            transition: all 0.5s ease;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="preload" as="style">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <header class="header">
-        <div class="container header-content">
-            <a href="#" class="logo-text">
-                <i class="fas fa-lock"></i>
-                <span class="logo">Magnatirix</span>
-            </a>
-            <div class="nav-actions">
-                <button class="language-switcher" id="languageToggle" aria-label="تبديل اللغة">
-                    <i class="fas fa-globe"></i>
-                    <span>English</span>
-                </button>
-                <button class="btn btn-primary" onclick="goToLogin()" aria-label="تسجيل الدخول">
-                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
-                </button>
-                <button class="btn btn-secondary" onclick="goToSignup()" aria-label="إنشاء حساب">
-                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="hero">
-            <div class="hero-content lang-transition">
-                <h1>نظام التراسل المشفر الآمن</h1>
-                <p>حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير</p>
-                <button class="btn btn-accent" onclick="learnMore()" aria-label="تعرف أكثر">
-                    <i class="fas fa-info-circle"></i> <span class="btn-text">تعرف أكثر</span>
-                </button>
-            </div>
-        </section>
-
-        <section class="features">
-            <div class="feature-card lang-transition">
-                <h3>
-                    <i class="fas fa-shield-alt feature-icon"></i>
-                    <span>تشفير من طرف إلى طرف</span>
-                </h3>
-                <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
-            </div>
-
-            <div class="feature-card lang-transition">
-                <h3>
-                    <i class="fas fa-user-secret feature-icon"></i>
-                    <span>خصوصية مطلقة</span>
-                </h3>
-                <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
-            </div>
-
-            <div class="feature-card lang-transition">
-                <h3>
-                    <i class="fas fa-file-export feature-icon"></i>
-                    <span>مشاركة ملفات آمنة</span>
-                </h3>
-                <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
-            </div>
-        </section>
-
-        <section class="cta-section lang-transition">
-            <h2>جاهز لبدء استخدام Magnatirix؟</h2>
-            <p>انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية</p>
-            <button class="btn btn-accent" onclick="goToSignup()" aria-label="ابدأ مجاناً الآن">
-                <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
-            </button>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-lock"></i>
-                <span>Magnatirix</span>
-            </div>
-            <div class="footer-links">
-                <a href="#" class="footer-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link">سياسة الخصوصية</a>
-                <a href="#" class="footer-link">عن النظام</a>
-                <a href="#" class="footer-link">الأسئلة الشائعة</a>
-                <a href="#" class="footer-link">اتصل بنا</a>
-            </div>
-            <div class="footer-social">
-                <a href="#" class="social-icon" rel="noopener noreferrer" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-icon" rel="noopener noreferrer" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-icon" rel="noopener noreferrer" aria-label="لينكدإن"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-icon" rel="noopener noreferrer" aria-label="جيت هاب"><i class="fab fa-github"></i></a>
-            </div>
-            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
-        </div>
-    </footer>
-
-    <script>
-        // Set current year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Translations object
-        const translations = {
-            ar: {
-                logo: "Magnatirix",
-                heroTitle: "نظام التراسل المشفر الآمن",
-                heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير",
-                feature1Title: "تشفير من طرف إلى طرف",
-                feature1Text: "رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك",
-                feature2Title: "خصوصية مطلقة",
-                feature2Text: "لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن",
-                feature3Title: "مشاركة ملفات آمنة",
-                feature3Text: "أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف",
-                ctaTitle: "جاهز لبدء استخدام Magnatirix؟",
-                ctaText: "انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية",
-                login: "تسجيل الدخول",
-                signup: "إنشاء حساب",
-                learnMore: "تعرف أكثر",
-                getStarted: "ابدأ مجاناً الآن",
-                moreDetails: "المزيد من التفاصيل",
-                language: "English",
-                copyright: "جميع الحقوق محفوظة"
-            },
-            en: {
-                logo: "Magnatirix",
-                heroTitle: "Secure Encrypted Messaging",
-                heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system that secures your communications using the latest encryption technologies",
-                feature1Title: "End-to-End Encryption",
-                feature1Text: "Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications",
-                feature2Title: "Absolute Privacy",
-                feature2Text: "We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us",
-                feature3Title: "Secure File Sharing",
-                feature3Text: "Send your files with the same strong encryption level we use for text messages, with files up to 2GB each",
-                ctaTitle: "Ready to start using Magnatirix?",
-                ctaText: "Join thousands of users who trust us to protect their daily communications",
-                login: "Login",
-                signup: "Sign Up",
-                learnMore: "Learn More",
-                getStarted: "Get Started for Free",
-                moreDetails: "More Details",
-                language: "العربية",
-                copyright: "All Rights Reserved"
-            }
-        };
-
-        // Navigation functions
-        function goToLogin() {
-            window.location.href = '/login';
-        }
-
-        function goToSignup() {
-            window.location.href = '/signup';
-        }
-
-        function learnMore() {
-            window.location.href = '/about';
-        }
-
-        // Language switching function with improved performance
-        function switchLanguage() {
-            const html = document.documentElement;
-            const isArabic = html.lang === 'ar';
-            const newLang = isArabic ? 'en' : 'ar';
-            const newDir = isArabic ? 'ltr' : 'rtl';
-            
-            // Apply transition class
-            document.querySelectorAll('.lang-transition').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-            });
-
-            // Change language and direction after a short delay
-            setTimeout(() => {
-                html.lang = newLang;
-                html.dir = newDir;
-                
-                // Update UI elements
-                updateUIText(newLang);
-                localStorage.setItem('preferredLang', newLang);
-                
-                // Fade back in
-                document.querySelectorAll('.lang-transition').forEach(el => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                });
-            }, 300);
-        }
-
-        // Efficient UI text updater
-        function updateUIText(lang) {
-            const trans = translations[lang];
-            
-            // Update language toggle button
-            document.getElementById('languageToggle').innerHTML = 
-                `<i class="fas fa-globe"></i><span>${trans.language}</span>`;
-            
-            // Update main content
-            document.querySelector('.logo').textContent = trans.logo;
-            document.querySelector('.hero h1').textContent = trans.heroTitle;
-            document.querySelector('.hero p').textContent = trans.heroText;
-            
-            // Update feature cards
-            const featureTitles = document.querySelectorAll('.feature-card h3');
-            const featureTexts = document.querySelectorAll('.feature-card p');
-            
-            featureTitles[0].innerHTML = `<i class="fas fa-shield-alt feature-icon"></i><span>${trans.feature1Title}</span>`;
-            featureTexts[0].textContent = trans.feature1Text;
-            
-            featureTitles[1].innerHTML = `<i class="fas fa-user-secret feature-icon"></i><span>${trans.feature2Title}</span>`;
-            featureTexts[1].textContent = trans.feature2Text;
-            
-            featureTitles[2].innerHTML = `<i class="fas fa-file-export feature-icon"></i><span>${trans.feature3Title}</span>`;
-            featureTexts[2].textContent = trans.feature3Text;
-            
-            // Update CTA section
-            document.querySelector('.cta-section h2').textContent = trans.ctaTitle;
-            document.querySelector('.cta-section p').textContent = trans.ctaText;
-            
-            // Update buttons
-            const btnTexts = document.querySelectorAll('.btn-text');
-            btnTexts[0].textContent = trans.login;
-            btnTexts[1].textContent = trans.signup;
-            btnTexts[2].textContent = trans.learnMore;
-            btnTexts[3].textContent = trans.moreDetails;
-            btnTexts[4].textContent = trans.moreDetails;
-            btnTexts[5].textContent = trans.moreDetails;
-            btnTexts[6].textContent = trans.getStarted;
-            
-            // Update footer
-            document.querySelector('.copyright').innerHTML = `${trans.copyright} &copy; <span id="year"></span> Magnatirix`;
-            document.getElementById('year').textContent = new Date().getFullYear();
-        }
-
-        // Initialize language switcher
-        document.getElementById('languageToggle').addEventListener('click', switchLanguage);
-
-        // Check for preferred language in localStorage
-        document.addEventListener('DOMContentLoaded', () => {
-            const preferredLang = localStorage.getItem('preferredLang');
-            if (preferredLang && preferredLang !== document.documentElement.lang) {
-                switchLanguage();
-            }
-        });
-    </script>
-</body>
-</html>
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
+const { body, validationResult } = require('express-validator');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(helmet());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  credentials: true
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/magnatirix', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+// Models
+const User = require('./models/User');
+const Message = require('./models/Message');
+
+// Generate encryption key pair
+function generateKeyPair() {
+  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem'
+    },
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem',
+      cipher: 'aes-256-cbc',
+      passphrase: process.env.ENCRYPTION_PASSPHRASE
+    }
+  });
+  return { publicKey, privateKey };
+}
+
+// Encrypt message
+function encryptMessage(message, publicKey) {
+  const buffer = Buffer.from(message, 'utf8');
+  const encrypted = crypto.publicEncrypt(publicKey, buffer);
+  return encrypted.toString('base64');
+}
+
+// Decrypt message
+function decryptMessage(encryptedMessage, privateKey) {
+  const buffer = Buffer.from(encryptedMessage, 'base64');
+  const decrypted = crypto.privateDecrypt({
+    key: privateKey,
+    passphrase: process.env.ENCRYPTION_PASSPHRASE
+  }, buffer);
+  return decrypted.toString('utf8');
+}
+
+// Authentication Middleware
+const authenticate = (req, res, next) => {
+  const token = req.header('x-auth-token');
+  if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ message: 'Token is not valid' });
+  }
+};
+
+// Routes
+
+// @route   POST /api/auth/register
+// @desc    Register a new user
+app.post('/api/auth/register', [
+  body('username', 'Username is required').not().isEmpty(),
+  body('email', 'Please include a valid email').isEmail(),
+  body('password', 'Password must be at least 6 characters').isLength({ min: 6 })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, email, password } = req.body;
+
+  try {
+    // Check if user exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Generate key pair
+    const { publicKey, privateKey } = generateKeyPair();
+
+    // Create new user
+    user = new User({
+      username,
+      email,
+      password,
+      publicKey,
+      privateKey
+    });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    // Create JWT
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   POST /api/auth/login
+// @desc    Authenticate user & get token
+app.post('/api/auth/login', [
+  body('email', 'Please include a valid email').isEmail(),
+  body('password', 'Password is required').exists()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    // Check if user exists
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Create JWT
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET /api/auth/user
+// @desc    Get user data
+app.get('/api/auth/user', authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password -privateKey');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   POST /api/messages
+// @desc    Send a new message
+app.post('/api/messages', authenticate, async (req, res) => {
+  const { recipientId, content } = req.body;
+
+  try {
+    // Get recipient's public key
+    const recipient = await User.findById(recipientId).select('publicKey');
+    if (!recipient) {
+      return res.status(404).json({ message: 'Recipient not found' });
+    }
+
+    // Encrypt the message
+    const encryptedContent = encryptMessage(content, recipient.publicKey);
+
+    // Create new message
+    const message = new Message({
+      sender: req.user.id,
+      recipient: recipientId,
+      content: encryptedContent,
+      isRead: false
+    });
+
+    await message.save();
+
+    res.json(message);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET /api/messages/inbox
+// @desc    Get user's inbox
+app.get('/api/messages/inbox', authenticate, async (req, res) => {
+  try {
+    const messages = await Message.find({ recipient: req.user.id })
+      .sort({ createdAt: -1 })
+      .populate('sender', 'username');
+
+    // Decrypt messages
+    const user = await User.findById(req.user.id);
+    const decryptedMessages = messages.map(msg => {
+      const decryptedContent = decryptMessage(msg.content, user.privateKey);
+      return {
+        ...msg._doc,
+        content: decryptedContent
+      };
+    });
+
+    res.json(decryptedMessages);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET /api/messages/sent
+// @desc    Get user's sent messages
+app.get('/api/messages/sent', authenticate, async (req, res) => {
+  try {
+    const messages = await Message.find({ sender: req.user.id })
+      .sort({ createdAt: -1 })
+      .populate('recipient', 'username');
+
+    res.json(messages);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   PUT /api/messages/:id/read
+// @desc    Mark message as read
+app.put('/api/messages/:id/read', authenticate, async (req, res) => {
+  try {
+    const message = await Message.findOneAndUpdate(
+      { _id: req.params.id, recipient: req.user.id },
+      { $set: { isRead: true } },
+      { new: true }
+    );
+
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    res.json(message);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET /api/users/search
+// @desc    Search for users
+app.get('/api/users/search', authenticate, async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const users = await User.find({
+      $or: [
+        { username: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } }
+      ],
+      _id: { $ne: req.user.id }
+    }).select('-password -privateKey');
+
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
