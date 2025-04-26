@@ -1,93 +1,54 @@
 const express = require('express');
-const https = require('https');
 const fs = require('fs');
-const WebSocket = require('ws');
+const https = require('https');
+const http = require('http');
 const cors = require('cors');
 const path = require('path');
+const WebSocket = require('ws');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// تحميل الشهادة والمفتاح الخاص
-const server = https.createServer({
-    key: fs.readFileSync('certs/private-key.pem'),
-    cert: fs.readFileSync('certs/certificate.pem')
-}, app);
+// Middleware
+app.use(cors());
+app.use(express.static('public'));
+app.use(express.json());
+
+// Routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// WebSocket server
+let server;
+try {
+  const privateKey = fs.readFileSync('certs/private-key.pem', 'utf8');
+  const certificate = fs.readFileSync('certs/certificate.pem', 'utf8');
+  const credentials = { key: privateKey, cert: certificate };
+
+  server = https.createServer(credentials, app);
+  console.log('Using HTTPS server.');
+} catch (err) {
+  console.warn('Certificates not found. Using HTTP server instead.');
+  server = http.createServer(app);
+}
 
 const wss = new WebSocket.Server({ server });
 
-app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
+wss.on('connection', (ws) => {
+  console.log('Client connected.');
 
-const users = {}; // تخزين اسم المستخدم مع معلومات الاتصال والمفتاح
+  ws.on('message', (message) => {
+    console.log(`Received: ${message}`);
+    ws.send(`Server received: ${message}`);
+  });
 
-wss.on('connection', socket => {
-    console.log('Client connected');
-
-    socket.on('message', msg => {
-        try {
-            const data = JSON.parse(msg);
-
-            if (data.type === 'register') {
-                socket.username = data.username;
-                socket.publicKey = data.publicKey;
-                users[data.username] = {
-                    socket,
-                    publicKey: data.publicKey,
-                    registeredAt: new Date()
-                };
-                console.log(`User registered: ${data.username}`);
-                return;
-            }
-
-            const { sender, receiver, encryptedMessage, encryptedKey, iv, hmac } = data;
-            const recipient = users[receiver];
-
-            if (recipient && recipient.socket.readyState === WebSocket.OPEN) {
-                recipient.socket.send(JSON.stringify({
-                    sender,
-                    encryptedMessage,
-                    encryptedKey,
-                    iv,
-                    hmac
-                }));
-            } else {
-                socket.send(JSON.stringify({ error: 'المستلم غير متصل' }));
-            }
-        } catch (e) {
-            console.error('Error processing message:', e.message);
-            socket.send(JSON.stringify({ error: 'Processing failed' }));
-        }
-    });
-
-    socket.on('close', () => {
-        for (const [username, user] of Object.entries(users)) {
-            if (user.socket === socket) {
-                delete users[username];
-                console.log(`User disconnected: ${username}`);
-                break;
-            }
-        }
-    });
+  ws.on('close', () => {
+    console.log('Client disconnected.');
+  });
 });
 
-app.get('/public-key/:username', (req, res) => {
-    const user = users[req.params.username];
-    if (user) {
-        res.send(user.publicKey);
-    } else {
-        res.status(404).send('User not found');
-    }
-});
-
-app.get('/users', (req, res) => {
-    res.json(Object.keys(users));
-});
-
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-const PORT = process.env.PORT || 3000;
+// Start server
 server.listen(PORT, () => {
-    console.log(`Secure server running at https://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
