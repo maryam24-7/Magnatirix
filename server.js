@@ -1,4 +1,5 @@
 const fs = require('fs');
+const http = require('http');
 const https = require('https');
 const express = require('express');
 const cors = require('cors');
@@ -24,18 +25,47 @@ app.get('/receiver.html', serveHtml('receiver.html'));
 app.get('/generate.html', serveHtml('generate.html'));
 app.get('/connect.html', serveHtml('connect.html'));
 
-// SSL certificates (تأكد من إنشاء هذه الملفات أو استخدام شهادات حقيقية)
-const sslOptions = {
-  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key')),
-  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.cert'))
-};
-
-// Create HTTPS server
-const server = https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`HTTPS Server running on port ${PORT}`);
+// Handle all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// WebSocket Secure (WSS) server
+// Determine environment
+const isProduction = process.env.NODE_ENV === 'production';
+let server;
+
+if (isProduction) {
+  // Production: Use HTTP (Railway handles HTTPS)
+  server = http.createServer(app);
+  console.log("Running in PRODUCTION mode (HTTP)");
+} else {
+  // Development: Use HTTPS with self-signed certificates
+  // Generate SSL certificates if they don't exist
+  if (!fs.existsSync(path.join(__dirname, 'ssl'))) {
+    fs.mkdirSync(path.join(__dirname, 'ssl'));
+    const { execSync } = require('child_process');
+    try {
+      execSync('openssl req -x509 -newkey rsa:4096 -keyout ssl/server.key -out ssl/server.cert -days 365 -nodes -subj "/CN=localhost"');
+      console.log('Self-signed certificates generated');
+    } catch (err) {
+      console.error('Failed to generate SSL certificates:', err);
+    }
+  }
+
+  const sslOptions = {
+    key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.cert'))
+  };
+  server = https.createServer(sslOptions, app);
+  console.log("Running in DEVELOPMENT mode (HTTPS)");
+}
+
+// Start server
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+// WebSocket server
 const wss = new WebSocket.Server({ server });
 
 // Store connected clients
@@ -65,15 +95,3 @@ wss.on('connection', (ws) => {
     console.error('WebSocket error:', error);
   });
 });
-
-// Generate self-signed certificates if not exists (للتطوير فقط)
-if (!fs.existsSync(path.join(__dirname, 'ssl'))) {
-  fs.mkdirSync(path.join(__dirname, 'ssl'));
-  const { execSync } = require('child_process');
-  try {
-    execSync('openssl req -x509 -newkey rsa:4096 -keyout ssl/server.key -out ssl/server.cert -days 365 -nodes -subj "/CN=localhost"');
-    console.log('Self-signed certificates generated');
-  } catch (err) {
-    console.error('Failed to generate SSL certificates:', err);
-  }
-}
