@@ -1,12 +1,18 @@
 # Magnatirix
 
-This is the Magnatirix project.
+Magnatirix هو نظام التراسل المشفر الآمن الذي يضمن الخصوصية باستخدام أحدث تقنيات التشفير. يتضمن هذا المشروع واجهات مشفرة للنصوص والملفات بين المستخدمين.
 
-## Setup Instructions
+## تثبيت التبعيات
 
-To set up the project and install dependencies, follow these steps:
+لتثبيت التبعيات الخاصة بالمشروع، استخدم الأمر التالي:
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/maryam24-7/Magnatirix.git
-   cd Magnatirix
+```bash
+npm install
+
+npm install --omit=dev
+
+npm run dev
+
+npm start
+
+هل هكذا اطبع فيه الملف
