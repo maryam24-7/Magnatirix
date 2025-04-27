@@ -620,73 +620,55 @@
         // Language switching function
         function switchLanguage() {
             const html = document.documentElement;
-            const languageToggle = document.getElementById('languageToggle');
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
             
-            if (html.lang === 'ar') {
-                // Switch to English
-                html.lang = 'en';
-                html.dir = 'ltr';
-                languageToggle.innerHTML = '<i class="fas fa-globe"></i><span>' + translations.en.language + '</span>';
-                
-                // Update all text elements
-                document.querySelector('.logo').textContent = translations.en.logo;
-                document.querySelector('.hero h1').textContent = translations.en.heroTitle;
-                document.querySelector('.hero p').textContent = translations.en.heroText;
-                document.querySelectorAll('.feature-card h3')[0].innerHTML = '<i class="fas fa-shield-alt feature-icon"></i><span>' + translations.en.feature1Title + '</span>';
-                document.querySelectorAll('.feature-card p')[0].textContent = translations.en.feature1Text;
-                document.querySelectorAll('.feature-card h3')[1].innerHTML = '<i class="fas fa-user-secret feature-icon"></i><span>' + translations.en.feature2Title + '</span>';
-                document.querySelectorAll('.feature-card p')[1].textContent = translations.en.feature2Text;
-                document.querySelectorAll('.feature-card h3')[2].innerHTML = '<i class="fas fa-file-export feature-icon"></i><span>' + translations.en.feature3Title + '</span>';
-                document.querySelectorAll('.feature-card p')[2].textContent = translations.en.feature3Text;
-                document.querySelector('.cta-section h2').textContent = translations.en.ctaTitle;
-                document.querySelector('.cta-section p').textContent = translations.en.ctaText;
-                
-                // Update button texts
-                document.querySelectorAll('.btn-text')[0].textContent = translations.en.login;
-                document.querySelectorAll('.btn-text')[1].textContent = translations.en.signup;
-                document.querySelectorAll('.btn-text')[2].textContent = translations.en.learnMore;
-                document.querySelectorAll('.btn-text')[3].textContent = translations.en.moreDetails;
-                document.querySelectorAll('.btn-text')[4].textContent = translations.en.moreDetails;
-                document.querySelectorAll('.btn-text')[5].textContent = translations.en.moreDetails;
-                document.querySelectorAll('.btn-text')[6].textContent = translations.en.getStarted;
-                
-                document.querySelector('.copyright').innerHTML = translations.en.copyright + ' &copy; <span id="year"></span> Magnatirix';
-            } else {
-                // Switch to Arabic
-                html.lang = 'ar';
-                html.dir = 'rtl';
-                languageToggle.innerHTML = '<i class="fas fa-globe"></i><span>' + translations.ar.language + '</span>';
-                
-                // Update all text elements
-                document.querySelector('.logo').textContent = translations.ar.logo;
-                document.querySelector('.hero h1').textContent = translations.ar.heroTitle;
-                document.querySelector('.hero p').textContent = translations.ar.heroText;
-                document.querySelectorAll('.feature-card h3')[0].innerHTML = '<i class="fas fa-shield-alt feature-icon"></i><span>' + translations.ar.feature1Title + '</span>';
-                document.querySelectorAll('.feature-card p')[0].textContent = translations.ar.feature1Text;
-                document.querySelectorAll('.feature-card h3')[1].innerHTML = '<i class="fas fa-user-secret feature-icon"></i><span>' + translations.ar.feature2Title + '</span>';
-                document.querySelectorAll('.feature-card p')[1].textContent = translations.ar.feature2Text;
-                document.querySelectorAll('.feature-card h3')[2].innerHTML = '<i class="fas fa-file-export feature-icon"></i><span>' + translations.ar.feature3Title + '</span>';
-                document.querySelectorAll('.feature-card p')[2].textContent = translations.ar.feature3Text;
-                document.querySelector('.cta-section h2').textContent = translations.ar.ctaTitle;
-                document.querySelector('.cta-section p').textContent = translations.ar.ctaText;
-                
-                // Update button texts
-                document.querySelectorAll('.btn-text')[0].textContent = translations.ar.login;
-                document.querySelectorAll('.btn-text')[1].textContent = translations.ar.signup;
-                document.querySelectorAll('.btn-text')[2].textContent = translations.ar.learnMore;
-                document.querySelectorAll('.btn-text')[3].textContent = translations.ar.moreDetails;
-                document.querySelectorAll('.btn-text')[4].textContent = translations.ar.moreDetails;
-                document.querySelectorAll('.btn-text')[5].textContent = translations.ar.moreDetails;
-                document.querySelectorAll('.btn-text')[6].textContent = translations.ar.getStarted;
-                
-                document.querySelector('.copyright').innerHTML = translations.ar.copyright + ' &copy; <span id="year"></span> Magnatirix';
-            }
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+            
+            // Get the translation object for the new language
+            const langData = translations[newLang];
+            
+            // Update all text elements
+            document.querySelector('.logo').textContent = langData.logo;
+            document.querySelector('.hero h1').textContent = langData.heroTitle;
+            document.querySelector('.hero p').textContent = langData.heroText;
+            
+            // Update feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
+            featureCards[0].querySelector('p').textContent = langData.feature1Text;
+            featureCards[1].querySelector('h3 span').textContent = langData.feature2Title;
+            featureCards[1].querySelector('p').textContent = langData.feature2Text;
+            featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
+            featureCards[2].querySelector('p').textContent = langData.feature3Text;
+            
+            // Update CTA section
+            document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
+            document.querySelector('.cta-section p').textContent = langData.ctaText;
+            
+            // Update buttons
+            document.querySelectorAll('.btn-text')[0].textContent = langData.login;
+            document.querySelectorAll('.btn-text')[1].textContent = langData.signup;
+            document.querySelectorAll('.btn-text')[2].textContent = langData.learnMore;
+            document.querySelectorAll('.btn-text')[3].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[4].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[5].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[6].textContent = langData.getStarted;
+            
+            // Update footer
+            document.querySelector('.copyright').innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
+            
+            // Update language switcher button
+            const languageToggle = document.getElementById('languageToggle');
+            languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
             
             // Update year again after language switch
             document.getElementById('year').textContent = new Date().getFullYear();
             
             // Save language preference
-            localStorage.setItem('preferredLang', html.lang);
+            localStorage.setItem('preferredLang', newLang);
         }
 
         // Initialize language switcher
