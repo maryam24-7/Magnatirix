@@ -94,6 +94,21 @@ const authenticate = (req, res, next) => {
   }
 };
 
+// Language API Endpoint
+app.post('/api/language', authenticate, async (req, res) => {
+  const { language } = req.body;
+  
+  try {
+    // Update user's language preference in database
+    await User.findByIdAndUpdate(req.user.id, { language });
+    
+    res.json({ success: true, language });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 // Routes
 
 // @route   POST /api/auth/register
@@ -126,7 +141,8 @@ app.post('/api/auth/register', [
       email,
       password,
       publicKey,
-      privateKey
+      privateKey,
+      language: 'ar' // Default language Arabic
     });
 
     // Hash password
@@ -196,7 +212,7 @@ app.post('/api/auth/login', [
       { expiresIn: '7d' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({ token, language: user.language });
       }
     );
   } catch (err) {
