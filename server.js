@@ -1,4 +1,4 @@
-// زر تبديل اللغة
+// تبديل اللغة
 document.getElementById("language-switch").addEventListener("click", function() {
     alert("Language switch button clicked!"); // اختبار عمل الزر
     // يمكنك استبدال هذا الكود بوظيفة تبديل اللغة الفعلية
@@ -14,10 +14,10 @@ document.querySelectorAll("nav a").forEach(link => {
     });
 });
 
-// تحديد السنة الحالية في الفوتر
+// Set current year in footer
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// كائن التراجم
+// Translations object
 const translations = {
     ar: {
         logo: "Magnatirix",
@@ -61,7 +61,7 @@ const translations = {
     }
 };
 
-// وظائف التنقل
+// Navigation functions
 function goToLogin() {
     const lang = document.documentElement.lang;
     window.location.href = lang === 'ar' ? '/login-ar' : '/login';
@@ -77,25 +77,25 @@ function learnMore() {
     window.location.href = lang === 'ar' ? '/about-ar' : '/about';
 }
 
-// وظيفة تبديل اللغة
+// Language switching function
 function switchLanguage() {
     const html = document.documentElement;
     const currentLang = html.lang;
     const newLang = currentLang === 'ar' ? 'en' : 'ar';
-
-    // تحديث صفات HTML
+    
+    // Update HTML attributes
     html.lang = newLang;
     html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-
-    // الحصول على كائن الترجمة للغة الجديدة
+    
+    // Get the translation object for the new language
     const langData = translations[newLang];
-
-    // تحديث النصوص
+    
+    // Update all text elements
     document.querySelector('.logo').textContent = langData.logo;
     document.querySelector('.hero h1').textContent = langData.heroTitle;
     document.querySelector('.hero p').textContent = langData.heroText;
-
-    // تحديث بطاقات الميزات
+    
+    // Update feature cards
     const featureCards = document.querySelectorAll('.feature-card');
     featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
     featureCards[0].querySelector('p').textContent = langData.feature1Text;
@@ -103,39 +103,38 @@ function switchLanguage() {
     featureCards[1].querySelector('p').textContent = langData.feature2Text;
     featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
     featureCards[2].querySelector('p').textContent = langData.feature3Text;
-
-    // تحديث قسم الدعوة إلى العمل
+    
+    // Update CTA section
     document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
     document.querySelector('.cta-section p').textContent = langData.ctaText;
-
-    // تحديث أزرار النصوص
-    const btnTexts = document.querySelectorAll('.btn-text');
-    btnTexts[0].textContent = langData.login;
-    btnTexts[1].textContent = langData.signup;
-    btnTexts[2].textContent = langData.learnMore;
-    btnTexts[3].textContent = langData.moreDetails;
-    btnTexts[4].textContent = langData.moreDetails;
-    btnTexts[5].textContent = langData.moreDetails;
-    btnTexts[6].textContent = langData.getStarted;
-
-    // تحديث الفوتر
-    document.querySelector('.copyright').innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
-
-    // تحديث زر تبديل اللغة
+    
+    // Update buttons
+    document.querySelectorAll('.btn-text')[0].textContent = langData.login;
+    document.querySelectorAll('.btn-text')[1].textContent = langData.signup;
+    document.querySelectorAll('.btn-text')[2].textContent = langData.learnMore;
+    document.querySelectorAll('.btn-text')[3].textContent = langData.moreDetails;
+    document.querySelectorAll('.btn-text')[4].textContent = langData.moreDetails;
+    document.querySelectorAll('.btn-text')[5].textContent = langData.moreDetails;
+    document.querySelectorAll('.btn-text')[6].textContent = langData.getStarted;
+    
+    // Update footer
+    document.querySelector('.copyright').innerHTML = langData.copyright + ' © <span id="year"></span> Magnatirix';
+    
+    // Update language switcher button
     const languageToggle = document.getElementById('languageToggle');
     languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
-
-    // إعادة تعيين السنة بعد التبديل
+    
+    // Update year again after language switch
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // حفظ تفضيل اللغة
+    
+    // Save language preference
     localStorage.setItem('preferredLang', newLang);
 }
 
-// تفعيل تبديل اللغة عند الضغط
+// Initialize language switcher
 document.getElementById('languageToggle').addEventListener('click', switchLanguage);
 
-// التحقق من تفضيل اللغة المحفوظ
+// Check for preferred language in localStorage
 document.addEventListener('DOMContentLoaded', () => {
     const preferredLang = localStorage.getItem('preferredLang');
     if (preferredLang && preferredLang !== document.documentElement.lang) {
