@@ -1,3 +1,7 @@
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // تبديل اللغة
 document.getElementById("language-switch").addEventListener("click", function() {
     alert("Language switch button clicked!"); // اختبار عمل الزر
@@ -82,19 +86,19 @@ function switchLanguage() {
     const html = document.documentElement;
     const currentLang = html.lang;
     const newLang = currentLang === 'ar' ? 'en' : 'ar';
-    
+
     // Update HTML attributes
     html.lang = newLang;
     html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-    
+
     // Get the translation object for the new language
     const langData = translations[newLang];
-    
+
     // Update all text elements
     document.querySelector('.logo').textContent = langData.logo;
     document.querySelector('.hero h1').textContent = langData.heroTitle;
     document.querySelector('.hero p').textContent = langData.heroText;
-    
+
     // Update feature cards
     const featureCards = document.querySelectorAll('.feature-card');
     featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
@@ -103,11 +107,11 @@ function switchLanguage() {
     featureCards[1].querySelector('p').textContent = langData.feature2Text;
     featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
     featureCards[2].querySelector('p').textContent = langData.feature3Text;
-    
+
     // Update CTA section
     document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
     document.querySelector('.cta-section p').textContent = langData.ctaText;
-    
+
     // Update buttons
     document.querySelectorAll('.btn-text')[0].textContent = langData.login;
     document.querySelectorAll('.btn-text')[1].textContent = langData.signup;
@@ -116,17 +120,17 @@ function switchLanguage() {
     document.querySelectorAll('.btn-text')[4].textContent = langData.moreDetails;
     document.querySelectorAll('.btn-text')[5].textContent = langData.moreDetails;
     document.querySelectorAll('.btn-text')[6].textContent = langData.getStarted;
-    
+
     // Update footer
     document.querySelector('.copyright').innerHTML = langData.copyright + ' © <span id="year"></span> Magnatirix';
-    
+
     // Update language switcher button
     const languageToggle = document.getElementById('languageToggle');
     languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
-    
+
     // Update year again after language switch
     document.getElementById('year').textContent = new Date().getFullYear();
-    
+
     // Save language preference
     localStorage.setItem('preferredLang', newLang);
 }
