@@ -1,358 +1,144 @@
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const crypto = require('crypto');
-const { body, validationResult } = require('express-validator');
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+// زر تبديل اللغة
+document.getElementById("language-switch").addEventListener("click", function() {
+    alert("Language switch button clicked!"); // اختبار عمل الزر
+    // يمكنك استبدال هذا الكود بوظيفة تبديل اللغة الفعلية
 });
-app.use(limiter);
 
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
+// التنقل بين الأقسام
+document.querySelectorAll("nav a").forEach(link => {
+    link.addEventListener("click", function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href");
+        const targetSection = document.querySelector(targetId);
+        targetSection.scrollIntoView({ behavior: "smooth" });
+    });
+});
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/magnatirix', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
+// تحديد السنة الحالية في الفوتر
+document.getElementById('year').textContent = new Date().getFullYear();
 
-// Models
-const User = require('./models/User');
-const Message = require('./models/Message');
-
-// Generate encryption key pair
-function generateKeyPair() {
-  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: {
-      type: 'spki',
-      format: 'pem'
+// كائن التراجم
+const translations = {
+    ar: {
+        logo: "Magnatirix",
+        heroTitle: "نظام التراسل المشفر الآمن",
+        heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير",
+        feature1Title: "تشفير من طرف إلى طرف",
+        feature1Text: "رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية اتصالاتك",
+        feature2Title: "خصوصية مطلقة",
+        feature2Text: "لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن",
+        feature3Title: "مشاركة ملفات آمنة",
+        feature3Text: "أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف",
+        ctaTitle: "جاهز لبدء استخدام Magnatirix؟",
+        ctaText: "انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية",
+        login: "تسجيل الدخول",
+        signup: "إنشاء حساب",
+        learnMore: "تعرف أكثر",
+        getStarted: "ابدأ مجاناً الآن",
+        moreDetails: "المزيد من التفاصيل",
+        language: "English",
+        copyright: "جميع الحقوق محفوظة"
     },
-    privateKeyEncoding: {
-      type: 'pkcs8',
-      format: 'pem',
-      cipher: 'aes-256-cbc',
-      passphrase: process.env.ENCRYPTION_PASSPHRASE
+    en: {
+        logo: "Magnatirix",
+        heroTitle: "Secure Encrypted Messaging",
+        heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system that secures your communications using the latest encryption technologies",
+        feature1Title: "End-to-End Encryption",
+        feature1Text: "Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications",
+        feature2Title: "Absolute Privacy",
+        feature2Text: "We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us",
+        feature3Title: "Secure File Sharing",
+        feature3Text: "Send your files with the same strong encryption level we use for text messages, with files up to 2GB each",
+        ctaTitle: "Ready to start using Magnatirix?",
+        ctaText: "Join thousands of users who trust us to protect their daily communications",
+        login: "Login",
+        signup: "Sign Up",
+        learnMore: "Learn More",
+        getStarted: "Get Started for Free",
+        moreDetails: "More Details",
+        language: "العربية",
+        copyright: "All Rights Reserved"
     }
-  });
-  return { publicKey, privateKey };
-}
-
-// Encrypt message
-function encryptMessage(message, publicKey) {
-  const buffer = Buffer.from(message, 'utf8');
-  const encrypted = crypto.publicEncrypt(publicKey, buffer);
-  return encrypted.toString('base64');
-}
-
-// Decrypt message
-function decryptMessage(encryptedMessage, privateKey) {
-  const buffer = Buffer.from(encryptedMessage, 'base64');
-  const decrypted = crypto.privateDecrypt({
-    key: privateKey,
-    passphrase: process.env.ENCRYPTION_PASSPHRASE
-  }, buffer);
-  return decrypted.toString('utf8');
-}
-
-// Authentication Middleware
-const authenticate = (req, res, next) => {
-  const token = req.header('x-auth-token');
-  if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
-    next();
-  } catch (err) {
-    res.status(401).json({ message: 'Token is not valid' });
-  }
 };
 
-// Language API Endpoint
-app.post('/api/language', authenticate, async (req, res) => {
-  const { language } = req.body;
-  
-  try {
-    // Update user's language preference in database
-    await User.findByIdAndUpdate(req.user.id, { language });
-    
-    res.json({ success: true, language });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
+// وظائف التنقل
+function goToLogin() {
+    const lang = document.documentElement.lang;
+    window.location.href = lang === 'ar' ? '/login-ar' : '/login';
+}
 
-// Routes
+function goToSignup() {
+    const lang = document.documentElement.lang;
+    window.location.href = lang === 'ar' ? '/signup-ar' : '/signup';
+}
 
-// @route   POST /api/auth/register
-// @desc    Register a new user
-app.post('/api/auth/register', [
-  body('username', 'Username is required').not().isEmpty(),
-  body('email', 'Please include a valid email').isEmail(),
-  body('password', 'Password must be at least 6 characters').isLength({ min: 6 })
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+function learnMore() {
+    const lang = document.documentElement.lang;
+    window.location.href = lang === 'ar' ? '/about-ar' : '/about';
+}
 
-  const { username, email, password } = req.body;
+// وظيفة تبديل اللغة
+function switchLanguage() {
+    const html = document.documentElement;
+    const currentLang = html.lang;
+    const newLang = currentLang === 'ar' ? 'en' : 'ar';
 
-  try {
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: 'User already exists' });
+    // تحديث صفات HTML
+    html.lang = newLang;
+    html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+    // الحصول على كائن الترجمة للغة الجديدة
+    const langData = translations[newLang];
+
+    // تحديث النصوص
+    document.querySelector('.logo').textContent = langData.logo;
+    document.querySelector('.hero h1').textContent = langData.heroTitle;
+    document.querySelector('.hero p').textContent = langData.heroText;
+
+    // تحديث بطاقات الميزات
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
+    featureCards[0].querySelector('p').textContent = langData.feature1Text;
+    featureCards[1].querySelector('h3 span').textContent = langData.feature2Title;
+    featureCards[1].querySelector('p').textContent = langData.feature2Text;
+    featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
+    featureCards[2].querySelector('p').textContent = langData.feature3Text;
+
+    // تحديث قسم الدعوة إلى العمل
+    document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
+    document.querySelector('.cta-section p').textContent = langData.ctaText;
+
+    // تحديث أزرار النصوص
+    const btnTexts = document.querySelectorAll('.btn-text');
+    btnTexts[0].textContent = langData.login;
+    btnTexts[1].textContent = langData.signup;
+    btnTexts[2].textContent = langData.learnMore;
+    btnTexts[3].textContent = langData.moreDetails;
+    btnTexts[4].textContent = langData.moreDetails;
+    btnTexts[5].textContent = langData.moreDetails;
+    btnTexts[6].textContent = langData.getStarted;
+
+    // تحديث الفوتر
+    document.querySelector('.copyright').innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
+
+    // تحديث زر تبديل اللغة
+    const languageToggle = document.getElementById('languageToggle');
+    languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
+
+    // إعادة تعيين السنة بعد التبديل
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // حفظ تفضيل اللغة
+    localStorage.setItem('preferredLang', newLang);
+}
+
+// تفعيل تبديل اللغة عند الضغط
+document.getElementById('languageToggle').addEventListener('click', switchLanguage);
+
+// التحقق من تفضيل اللغة المحفوظ
+document.addEventListener('DOMContentLoaded', () => {
+    const preferredLang = localStorage.getItem('preferredLang');
+    if (preferredLang && preferredLang !== document.documentElement.lang) {
+        switchLanguage();
     }
-
-    // Generate key pair
-    const { publicKey, privateKey } = generateKeyPair();
-
-    // Create new user
-    user = new User({
-      username,
-      email,
-      password,
-      publicKey,
-      privateKey,
-      language: 'ar' // Default language Arabic
-    });
-
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-
-    await user.save();
-
-    // Create JWT
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   POST /api/auth/login
-// @desc    Authenticate user & get token
-app.post('/api/auth/login', [
-  body('email', 'Please include a valid email').isEmail(),
-  body('password', 'Password is required').exists()
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { email, password } = req.body;
-
-  try {
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-
-    // Create JWT
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token, language: user.language });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   GET /api/auth/user
-// @desc    Get user data
-app.get('/api/auth/user', authenticate, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select('-password -privateKey');
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   POST /api/messages
-// @desc    Send a new message
-app.post('/api/messages', authenticate, async (req, res) => {
-  const { recipientId, content } = req.body;
-
-  try {
-    // Get recipient's public key
-    const recipient = await User.findById(recipientId).select('publicKey');
-    if (!recipient) {
-      return res.status(404).json({ message: 'Recipient not found' });
-    }
-
-    // Encrypt the message
-    const encryptedContent = encryptMessage(content, recipient.publicKey);
-
-    // Create new message
-    const message = new Message({
-      sender: req.user.id,
-      recipient: recipientId,
-      content: encryptedContent,
-      isRead: false
-    });
-
-    await message.save();
-
-    res.json(message);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   GET /api/messages/inbox
-// @desc    Get user's inbox
-app.get('/api/messages/inbox', authenticate, async (req, res) => {
-  try {
-    const messages = await Message.find({ recipient: req.user.id })
-      .sort({ createdAt: -1 })
-      .populate('sender', 'username');
-
-    // Decrypt messages
-    const user = await User.findById(req.user.id);
-    const decryptedMessages = messages.map(msg => {
-      const decryptedContent = decryptMessage(msg.content, user.privateKey);
-      return {
-        ...msg._doc,
-        content: decryptedContent
-      };
-    });
-
-    res.json(decryptedMessages);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   GET /api/messages/sent
-// @desc    Get user's sent messages
-app.get('/api/messages/sent', authenticate, async (req, res) => {
-  try {
-    const messages = await Message.find({ sender: req.user.id })
-      .sort({ createdAt: -1 })
-      .populate('recipient', 'username');
-
-    res.json(messages);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   PUT /api/messages/:id/read
-// @desc    Mark message as read
-app.put('/api/messages/:id/read', authenticate, async (req, res) => {
-  try {
-    const message = await Message.findOneAndUpdate(
-      { _id: req.params.id, recipient: req.user.id },
-      { $set: { isRead: true } },
-      { new: true }
-    );
-
-    if (!message) {
-      return res.status(404).json({ message: 'Message not found' });
-    }
-
-    res.json(message);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   GET /api/users/search
-// @desc    Search for users
-app.get('/api/users/search', authenticate, async (req, res) => {
-  const { query } = req.query;
-
-  try {
-    const users = await User.find({
-      $or: [
-        { username: { $regex: query, $options: 'i' } },
-        { email: { $regex: query, $options: 'i' } }
-      ],
-      _id: { $ne: req.user.id }
-    }).select('-password -privateKey');
-
-    res.json(users);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// Handle root route "/"
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
