@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magnatirix - نظام التراسل المشفر الآمن</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
             --primary-color: #3a4f6c;
@@ -458,6 +454,10 @@
         .feature-card:nth-child(2) { animation-delay: 0.4s; }
         .feature-card:nth-child(3) { animation-delay: 0.6s; }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="header">
@@ -467,7 +467,7 @@
                 <span class="logo">Magnatirix</span>
             </a>
             <div class="nav-actions">
-                <button class="language-switcher" id="languageToggle" aria-label="تبديل اللغة">
+                <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
                     <span>English</span>
                 </button>
@@ -603,15 +603,18 @@
 
         // Navigation functions
         function goToLogin() {
-            window.location.href = document.documentElement.lang === 'ar' ? '/login-ar' : '/login';
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/login-ar' : '/login';
         }
 
         function goToSignup() {
-            window.location.href = document.documentElement.lang === 'ar' ? '/signup-ar' : '/signup';
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/signup-ar' : '/signup';
         }
 
         function learnMore() {
-            window.location.href = document.documentElement.lang === 'ar' ? '/about-ar' : '/about';
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/about-ar' : '/about';
         }
 
         // Language switching function
@@ -681,6 +684,9 @@
             
             // Update year again after language switch
             document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Save language preference
+            localStorage.setItem('preferredLang', html.lang);
         }
 
         // Initialize language switcher
@@ -692,11 +698,6 @@
             if (preferredLang && preferredLang !== document.documentElement.lang) {
                 switchLanguage();
             }
-            
-            // Save language preference when switching
-            document.getElementById('languageToggle').addEventListener('click', () => {
-                localStorage.setItem('preferredLang', document.documentElement.lang === 'ar' ? 'en' : 'ar');
-            });
         });
     </script>
 </body>
