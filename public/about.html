@@ -1,57 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Magnatirix</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>عن النظام | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* تصغير زر ابدأ مجاناً الآن في الموبايل */
+        @media (max-width: 768px) {
+            .btn-accent {
+                padding: 10px 20px;
+                font-size: 14px;
+                width: 230px;
+                height: 45px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0 auto;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Language Toggle Button -->
-    <button id="languageToggle">
-        <span>العربية</span>
-    </button>
-
-    <!-- Header Section -->
-    <header>
-        <div class="logo">Magnatirix</div>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span id="languageText">English</span>
+                </button>
+                <a href="login.html" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
+                </a>
+                <a href="signup.html" class="btn btn-secondary">
+                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
+                </a>
+            </div>
+        </div>
     </header>
 
-    <!-- Hero Section -->
+<main class="container">
     <section class="hero">
-        <h1>Secure Encrypted Messaging</h1>
-        <p>Protect your privacy with Magnatirix's end-to-end encrypted messaging system that secures your communications using the latest encryption technologies</p>
+        <div class="hero-content">
+            <h1 id="about-title">عن نظام Magnatirix</h1>
+            <p id="about-subtitle">نظام التراسل المشفر الآمن من طرف إلى طرف</p>
+        </div>
     </section>
 
-    <!-- Feature Section -->
     <section class="features">
         <div class="feature-card">
-            <h3><span>End-to-End Encryption</span></h3>
-            <p>Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications</p>
+            <h3>
+                <i class="fas fa-shield-alt feature-icon"></i>
+                <span id="security-title">الأمان والخصوصية</span>
+            </h3>
+            <p id="security-text">نظام Magnatirix يستخدم أحدث تقنيات التشفير لحماية اتصالاتك. جميع الرسائل مشفرة من طرف إلى طرف، مما يعني أنه لا يمكن لأي شخص، بما في ذلك نحن، قراءة محتوى رسائلك.</p>
         </div>
+
         <div class="feature-card">
-            <h3><span>Absolute Privacy</span></h3>
-            <p>We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us</p>
+            <h3>
+                <i class="fas fa-key feature-icon"></i>
+                <span id="encryption-title">تشفير متقدم</span>
+            </h3>
+            <p id="encryption-text">نستخدم مزيجًا من تشفير RSA-2048 و AES-256 و HMAC-SHA256 لتأمين اتصالاتك. كل رسالة يتم تشفيرها بمفتاح فريد ولا يتم تخزين أي مفاتيح على خوادمنا.</p>
         </div>
+
         <div class="feature-card">
-            <h3><span>Secure File Sharing</span></h3>
-            <p>Send your files with the same strong encryption level we use for text messages, with files up to 2GB each</p>
+            <h3>
+                <i class="fas fa-users feature-icon"></i>
+                <span id="team-title">فريقنا</span>
+            </h3>
+            <p id="team-text">نحن فريق من خبراء الأمن السيبراني والمطورين الملتزمين بحماية خصوصيتك. مهمتنا هي توفير وسيلة اتصال آمنة لا يمكن اختراقها.</p>
         </div>
     </section>
 
-    <!-- Call to Action (CTA) Section -->
     <section class="cta-section">
-        <h2>Ready to start using Magnatirix?</h2>
-        <p>Join thousands of users who trust us to protect their daily communications</p>
-        <button class="btn-text">Get Started for Free</button>
+        <h2 id="ready-title">جاهز لبدء استخدام Magnatirix؟</h2>
+        <a href="signup.html" class="btn btn-accent">
+            <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
+        </a>
     </section>
+</main>
 
-    <!-- Footer -->
-    <footer>
-        <p class="copyright">All Rights Reserved &copy; <span id="year"></span> Magnatirix</p>
-    </footer>
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-logo">
+            <i class="fas fa-lock"></i>
+            <span>Magnatirix</span>
+        </div>
+        <div class="footer-links">
+            <a href="#" class="footer-link">الشروط والأحكام</a>
+            <a href="#" class="footer-link">سياسة الخصوصية</a>
+            <a href="about.html" class="footer-link">عن النظام</a>
+            <a href="#" class="footer-link">الأسئلة الشائعة</a>
+            <a href="#" class="footer-link">اتصل بنا</a>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</footer>
 
-    <!-- Include Script -->
-    <script src="script.js"></script>
+<script>
+    // تفعيل زر تحويل اللغة
+    document.getElementById('languageToggle').addEventListener('click', function() {
+        const languageText = document.getElementById('languageText');
+
+        if (languageText.textContent === 'English') {
+            languageText.textContent = 'العربية';
+            document.documentElement.lang = 'en';
+            document.documentElement.dir = 'ltr';
+        } else {
+            languageText.textContent = 'English';
+            document.documentElement.lang = 'ar';
+            document.documentElement.dir = 'rtl';
+        }
+    });
+</script>
+
 </body>
 </html>
