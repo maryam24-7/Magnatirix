@@ -8,12 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* تحسين زر ابدأ مجاناً في الموبايل */
+        /* تصغير زر ابدأ مجاناً الآن في الموبايل */
         @media (max-width: 768px) {
             .btn-accent {
-                padding: 8px 16px;
-                font-size: 13px;
-                min-width: 150px;
+                padding: 10px 20px;
+                font-size: 14px;
+                width: 230px;
+                height: 45px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0 auto;
             }
         }
     </style>
@@ -40,56 +45,85 @@
         </div>
     </header>
 
-    <main class="container">
-        <section class="hero">
-            <div class="hero-content">
-                <h1 id="about-title">عن نظام Magnatirix</h1>
-                <p id="about-subtitle">نظام التراسل المشفر الآمن من طرف إلى طرف</p>
-            </div>
-        </section>
+<main class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h1 id="about-title">عن نظام Magnatirix</h1>
+            <p id="about-subtitle">نظام التراسل المشفر الآمن من طرف إلى طرف</p>
+        </div>
+    </section>
 
-        <section class="features">
-            <div class="feature-card">
-                <h3>
-                    <i class="fas fa-shield-alt feature-icon"></i>
-                    <span id="security-title">الأمان والخصوصية</span>
-                </h3>
-                <p id="security-text">نظام Magnatirix يستخدم أحدث تقنيات التشفير لحماية اتصالاتك. جميع الرسائل مشفرة من طرف إلى طرف، مما يعني أنه لا يمكن لأي شخص، بما في ذلك نحن، قراءة محتوى رسائلك.</p>
-            </div>
+    <section class="features">
+        <div class="feature-card">
+            <h3>
+                <i class="fas fa-shield-alt feature-icon"></i>
+                <span id="security-title">الأمان والخصوصية</span>
+            </h3>
+            <p id="security-text">نظام Magnatirix يستخدم أحدث تقنيات التشفير لحماية اتصالاتك. جميع الرسائل مشفرة من طرف إلى طرف، مما يعني أنه لا يمكن لأي شخص، بما في ذلك نحن، قراءة محتوى رسائلك.</p>
+        </div>
 
-            <div class="feature-card">
-                <h3>
-                    <i class="fas fa-key feature-icon"></i>
-                    <span id="encryption-title">تشفير متقدم</span>
-                </h3>
-                <p id="encryption-text">نستخدم مزيجًا من تشفير RSA-2048 و AES-256 و HMAC-SHA256 لتأمين اتصالاتك. كل رسالة يتم تشفيرها بمفتاح فريد ولا يتم تخزين أي مفاتيح على خوادمنا.</p>
-            </div>
+        <div class="feature-card">
+            <h3>
+                <i class="fas fa-key feature-icon"></i>
+                <span id="encryption-title">تشفير متقدم</span>
+            </h3>
+            <p id="encryption-text">نستخدم مزيجًا من تشفير RSA-2048 و AES-256 و HMAC-SHA256 لتأمين اتصالاتك. كل رسالة يتم تشفيرها بمفتاح فريد ولا يتم تخزين أي مفاتيح على خوادمنا.</p>
+        </div>
 
-            <div class="feature-card">
-                <h3>
-                    <i class="fas fa-users feature-icon"></i>
-                    <span id="team-title">فريقنا</span>
-                </h3>
-                <p id="team-text">نحن فريق من خبراء الأمن السيبراني والمطورين الملتزمين بحماية خصوصيتك. مهمتنا هي توفير وسيلة اتصال آمنة لا يمكن اختراقها.</p>
-            </div>
-        </section>
+        <div class="feature-card">
+            <h3>
+                <i class="fas fa-users feature-icon"></i>
+                <span id="team-title">فريقنا</span>
+            </h3>
+            <p id="team-text">نحن فريق من خبراء الأمن السيبراني والمطورين الملتزمين بحماية خصوصيتك. مهمتنا هي توفير وسيلة اتصال آمنة لا يمكن اختراقها.</p>
+        </div>
+    </section>
 
-        <section class="cta-section">
-            <h2 id="ready-title">جاهز لبدء استخدام Magnatirix؟</h2>
-            <a href="signup.html" class="btn btn-accent">
-                <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
-            </a>
-        </section>
-    </main>
+    <section class="cta-section">
+        <h2 id="ready-title">جاهز لبدء استخدام Magnatirix؟</h2>
+        <a href="signup.html" class="btn btn-accent">
+            <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
+        </a>
+    </section>
+</main>
 
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-lock"></i>
-                <span>Magnatirix</span>
-            </div>
-            <div class="footer-links">
-                <a href="#" class="footer-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link">سياسة الخصوصية</a>
-                <a href="about.html" class="footer-link">عن النظام</a>
-                <a href="#" class="footer-link
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-logo">
+            <i class="fas fa-lock"></i>
+            <span>Magnatirix</span>
+        </div>
+        <div class="footer-links">
+            <a href="#" class="footer-link">الشروط والأحكام</a>
+            <a href="#" class="footer-link">سياسة الخصوصية</a>
+            <a href="about.html" class="footer-link">عن النظام</a>
+            <a href="#" class="footer-link">الأسئلة الشائعة</a>
+            <a href="#" class="footer-link">اتصل بنا</a>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // تفعيل زر تحويل اللغة
+    document.getElementById('languageToggle').addEventListener('click', function() {
+        const languageText = document.getElementById('languageText');
+
+        if (languageText.textContent === 'English') {
+            languageText.textContent = 'العربية';
+            document.documentElement.lang = 'en';
+            document.documentElement.dir = 'ltr';
+        } else {
+            languageText.textContent = 'English';
+            document.documentElement.lang = 'ar';
+            document.documentElement.dir = 'rtl';
+        }
+    });
+</script>
+
+</body>
+</html>
