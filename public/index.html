@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عن Magnatirix - نظام التراسل المشفر الآمن</title>
+    <title>Magnatirix - نظام التراسل المشفر الآمن</title>
     <style>
         :root {
             --primary-color: #3a4f6c;
@@ -41,7 +41,7 @@
         .header {
             background: var(--gradient);
             color: white;
-            padding: 1rem 0;
+            padding: 1.2rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -52,20 +52,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .logo i {
-            margin-left: 10px;
-            font-size: 1.4rem;
+            margin-left: 15px;
+            font-size: 1.6rem;
             color: rgba(255, 255, 255, 0.9);
+            vertical-align: middle;
+            line-height: 1;
         }
 
         .logo-text {
@@ -73,13 +76,13 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         /* Button Styles */
@@ -87,7 +90,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.7rem 1.5rem;
+            padding: 0.85rem 2rem;
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
@@ -97,7 +100,29 @@
             box-shadow: var(--box-shadow);
             position: relative;
             overflow: hidden;
-            font-size: 0.9rem;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn i {
+            margin-left: 8px;
+            margin-right: 8px;
         }
 
         .btn-primary {
@@ -107,41 +132,43 @@
 
         .btn-primary:hover {
             background-color: #1976d2;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(30, 136, 229, 0.3);
         }
 
         .btn-secondary {
             background-color: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-secondary:hover {
             background-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-3px) scale(1.02);
         }
 
         .btn-accent {
             background-color: var(--accent-color);
             color: white;
-            padding: 0.8rem 1.8rem; /* تعديل حجم الزر */
-            font-size: 1rem; /* تعديل حجم الخط */
         }
 
         .btn-accent:hover {
             background-color: #ff1744;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(255, 82, 82, 0.3);
         }
 
         .language-switcher {
             background: none;
             border: none;
             color: white;
-            font-size: 0.9rem;
+            font-size: 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 0.5rem;
+            gap: 8px;
+            padding: 0.5rem 1rem;
             border-radius: 50px;
             transition: var(--transition);
         }
@@ -150,145 +177,282 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* About Content Styles */
-        .about-hero {
+        .language-switcher i {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content Styles */
+        .hero {
             text-align: center;
-            padding: 3rem 0;
+            padding: 5rem 0 4rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .about-hero h1 {
-            font-size: 2.5rem;
-            color: var(--primary-color);
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(30, 136, 229, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
             margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 800;
+            line-height: 1.3;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .about-hero p {
-            font-size: 1.1rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
             color: #555;
         }
 
-        .about-content {
+        /* Feature Cards */
+        .features {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
         }
 
-        .about-section {
+        .feature-card {
             background: white;
             border-radius: var(--border-radius);
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: var(--box-shadow);
-        }
-
-        .about-section h2 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 0.5rem;
-        }
-
-        .about-section p {
-            color: #666;
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-        }
-
-        .team-members {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .team-card {
-            background: white;
-            border-radius: var(--border-radius);
+            transition: var(--transition);
+            border-top: 4px solid var(--secondary-color);
+            position: relative;
             overflow: hidden;
-            box-shadow: var(--box-shadow);
-            text-align: center;
+            z-index: 1;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.03), rgba(58, 79, 108, 0.03));
+            z-index: -1;
+            opacity: 0;
             transition: var(--transition);
         }
 
-        .team-card:hover {
-            transform: translateY(-5px);
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
         }
 
-        .team-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
+        .feature-card:hover::after {
+            opacity: 1;
         }
 
-        .team-info {
-            padding: 1.5rem;
-        }
-
-        .team-info h3 {
+        .feature-card h3 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .team-info p {
+        .feature-card p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
             color: var(--secondary-color);
-            font-weight: 500;
-            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(30, 136, 229, 0.05), rgba(58, 79, 108, 0.05));
+            border-radius: var(--border-radius);
+            margin-bottom: 4rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            gap: 10px;
+        }
+
+        .footer-logo i {
+            font-size: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-icon {
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
         }
 
         /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
+                gap: 1.5rem;
+                text-align: center;
             }
 
             .nav-actions {
+                flex-direction: column;
                 width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
             }
 
             .btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.85rem;
+                width: 100%;
             }
 
-            .about-hero h1 {
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
                 font-size: 2rem;
             }
 
-            .about-hero p {
-                font-size: 1rem;
+            .hero p {
+                font-size: 1.1rem;
             }
 
-            .about-section {
-                padding: 1.5rem;
+            .feature-card {
+                padding: 2rem;
             }
-
-            .btn-accent {
-                padding: 0.7rem 1.5rem; /* تصغير حجم الزر في الجوال */
-                font-size: 0.9rem; /* تصغير حجم الخط في الجوال */
+            
+            .feature-card h3 {
+                font-size: 1.5rem;
             }
         }
 
-        @media (max-width: 480px) {
-            .about-hero h1 {
-                font-size: 1.8rem;
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-
-            .team-members {
-                grid-template-columns: 1fr;
-            }
-
-            .btn-accent {
-                padding: 0.6rem 1.2rem; /* تصغير أكثر للزر في الشاشات الصغيرة */
-                font-size: 0.85rem;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .feature-card {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.2s; }
+        .feature-card:nth-child(2) { animation-delay: 0.4s; }
+        .feature-card:nth-child(3) { animation-delay: 0.6s; }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -298,7 +462,7 @@
 <body>
     <header class="header">
         <div class="container header-content">
-            <a href="/" class="logo-text">
+            <a href="#" class="logo-text">
                 <i class="fas fa-lock"></i>
                 <span class="logo">Magnatirix</span>
             </a>
@@ -307,86 +471,138 @@
                     <i class="fas fa-globe"></i>
                     <span>English</span>
                 </button>
-                <button class="btn btn-primary" onclick="goToLogin()">
-                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                <button class="btn btn-primary" onclick="goToLogin()" aria-label="تسجيل الدخول">
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
-                <button class="btn btn-secondary" onclick="goToSignup()">
-                    <i class="fas fa-user-plus"></i> إنشاء حساب
+                <button class="btn btn-secondary" onclick="goToSignup()" aria-label="إنشاء حساب">
+                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
                 </button>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <section class="about-hero">
-            <h1>عن نظام Magnatirix</h1>
-            <p>اكتشف القصة وراء نظام التراسل المشفر الأكثر أماناً في العالم</p>
-            <button class="btn btn-accent" onclick="goToSignup()">
-                <i class="fas fa-rocket"></i> ابدأ مجاناً الآن
-            </button>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>نظام التراسل المشفر الآمن</h1>
+                <p>حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير</p>
+                <button class="btn btn-accent" onclick="learnMore()" aria-label="تعرف أكثر">
+                    <i class="fas fa-info-circle"></i> <span class="btn-text">تعرف أكثر</span>
+                </button>
+            </div>
         </section>
 
-        <section class="about-content">
-            <div class="about-section">
-                <h2>قصتنا</h2>
-                <p>بدأت رحلة Magnatirix في عام 2023 كمشروع صغير بهدف واحد بسيط: توفير وسيلة اتصال آمنة حقاً للأفراد والشركات الذين يهتمون بخصوصيتهم.</p>
-                <p>مع تزايد التهديدات الأمنية وانتهاكات الخصوصية، رأينا حاجة ماسة لمنصة توفر تشفيراً من طرف إلى طرف حقيقياً دون أي تنازلات.</p>
-                <p>اليوم، نحن فخورون بأننا نوفر واحدة من أكثر أنظمة التراسل أماناً في العالم، مع أكثر من مليون مستخدم يثقون بنا لحماية اتصالاتهم اليومية.</p>
+        <section class="features">
+            <div class="feature-card">
+                <h3>
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <span>تشفير من طرف إلى طرف</span>
+                </h3>
+                <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك</p>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
-            <div class="about-section">
-                <h2>فلسفتنا</h2>
-                <p>في Magnatirix، نؤمن بأن الخصوصية حق أساسي لكل فرد. فلسفتنا تقوم على ثلاثة مبادئ أساسية:</p>
-                <ul style="color: #666; line-height: 1.7; padding-right: 20px;">
-                    <li><strong>الشفافية:</strong> كل شفرة مصدرية مفتوحة للتدقيق والمراجعة.</li>
-                    <li><strong>الأمان أولاً:</strong> لا نضع سهولة الاستخدام فوق الأمان أبداً.</li>
-                    <li><strong>عدم التتبع:</strong> لا نجمع أي بيانات شخصية ولا نتعقب مستخدمينا.</li>
-                </ul>
+            <div class="feature-card">
+                <h3>
+                    <i class="fas fa-user-secret feature-icon"></i>
+                    <span>خصوصية مطلقة</span>
+                </h3>
+                <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن</p>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
-            <div class="about-section">
-                <h2>فريقنا</h2>
-                <p>خلف Magnatirix يقف فريق من خبراء الأمن السيبراني والمطورين المتفانين الذين يعملون بلا كلل لضمان أمان نظامنا.</p>
-                
-                <div class="team-members">
-                    <div class="team-card">
-                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="فريق Magnatirix">
-                        <div class="team-info">
-                            <h3>مريم أحمد</h3>
-                            <p>المؤسس والرئيس التنفيذي</p>
-                            <p>خبيرة في التشفير وأمن المعلومات مع أكثر من 10 سنوات من الخبرة.</p>
-                        </div>
-                    </div>
-                    <div class="team-card">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="فريق Magnatirix">
-                        <div class="team-info">
-                            <h3>علي محمد</h3>
-                            <p>مدير التقنية</p>
-                            <p>متخصص في أنظمة التوزيع الآمنة وهندسة البرمجيات.</p>
-                        </div>
-                    </div>
-                    <div class="team-card">
-                        <img src="https://images.unsplash.com/photo-1573497019709-293846ab3465?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="فريق Magnatirix">
-                        <div class="team-info">
-                            <h3>سارة خالد</h3>
-                            <p>رئيسة قسم التصميم</p>
-                            <p>تجمع بين الأمان وسهولة الاستخدام في واجهات المستخدم.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <h3>
+                    <i class="fas fa-file-export feature-icon"></i>
+                    <span>مشاركة ملفات آمنة</span>
+                </h3>
+                <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف</p>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>جاهز لبدء استخدام Magnatirix؟</h2>
+            <p>انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية</p>
+            <button class="btn btn-accent" onclick="goToSignup()" aria-label="ابدأ مجاناً الآن">
+                <i class="fas fa-rocket"></i> <span class="btn-text">ابدأ مجاناً الآن</span>
+            </button>
         </section>
     </main>
 
-    <footer class="footer" style="background-color: var(--primary-color); color: white; padding: 2rem 0; text-align: center;">
-        <div class="container">
-            <p>جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link" aria-label="الشروط والأحكام">الشروط والأحكام</a>
+                <a href="#" class="footer-link" aria-label="سياسة الخصوصية">سياسة الخصوصية</a>
+                <a href="#" class="footer-link" aria-label="عن النظام">عن النظام</a>
+                <a href="#" class="footer-link" aria-label="الأسئلة الشائعة">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link" aria-label="اتصل بنا">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon" aria-label="لينكد إن"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon" aria-label="جيت هاب"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
 
     <script>
         // Set current year in footer
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Translations object
+        const translations = {
+            ar: {
+                logo: "Magnatirix",
+                heroTitle: "نظام التراسل المشفر الآمن",
+                heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير",
+                feature1Title: "تشفير من طرف إلى طرف",
+                feature1Text: "رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك",
+                feature2Title: "خصوصية مطلقة",
+                feature2Text: "لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن",
+                feature3Title: "مشاركة ملفات آمنة",
+                feature3Text: "أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف",
+                ctaTitle: "جاهز لبدء استخدام Magnatirix؟",
+                ctaText: "انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية",
+                login: "تسجيل الدخول",
+                signup: "إنشاء حساب",
+                learnMore: "تعرف أكثر",
+                getStarted: "ابدأ مجاناً الآن",
+                moreDetails: "المزيد من التفاصيل",
+                language: "English",
+                copyright: "جميع الحقوق محفوظة"
+            },
+            en: {
+                logo: "Magnatirix",
+                heroTitle: "Secure Encrypted Messaging",
+                heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system that secures your communications using the latest encryption technologies",
+                feature1Title: "End-to-End Encryption",
+                feature1Text: "Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications",
+                feature2Title: "Absolute Privacy",
+                feature2Text: "We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us",
+                feature3Title: "Secure File Sharing",
+                feature3Text: "Send your files with the same strong encryption level we use for text messages, with files up to 2GB each",
+                ctaTitle: "Ready to start using Magnatirix?",
+                ctaText: "Join thousands of users who trust us to protect their daily communications",
+                login: "Login",
+                signup: "Sign Up",
+                learnMore: "Learn More",
+                getStarted: "Get Started for Free",
+                moreDetails: "More Details",
+                language: "العربية",
+                copyright: "All Rights Reserved"
+            }
+        };
 
         // Navigation functions
         function goToLogin() {
@@ -399,27 +615,10 @@
             window.location.href = lang === 'ar' ? '/signup-ar' : '/signup';
         }
 
-        // Translations object
-        const translations = {
-            ar: {
-                title: "عن Magnatirix - نظام التراسل المشفر الآمن",
-                heading: "عن نظام Magnatirix",
-                subheading: "اكتشف القصة وراء نظام التراسل المشفر الأكثر أماناً في العالم",
-                getStarted: "ابدأ مجاناً الآن",
-                login: "تسجيل الدخول",
-                signup: "إنشاء حساب",
-                language: "English"
-            },
-            en: {
-                title: "About Magnatirix - Secure Encrypted Messaging",
-                heading: "About Magnatirix",
-                subheading: "Discover the story behind the world's most secure encrypted messaging system",
-                getStarted: "Get Started for Free",
-                login: "Login",
-                signup: "Sign Up",
-                language: "العربية"
-            }
-        };
+        function learnMore() {
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/about-ar' : '/about';
+        }
 
         // Language switching function
         function switchLanguage() {
@@ -434,19 +633,42 @@
             // Get the translation object for the new language
             const langData = translations[newLang];
             
-            // Update page content
-            document.title = langData.title;
-            document.querySelector('.about-hero h1').textContent = langData.heading;
-            document.querySelector('.about-hero p').textContent = langData.subheading;
-            document.querySelector('.btn-accent').innerHTML = `<i class="fas fa-rocket"></i> ${langData.getStarted}`;
+            // Update all text elements
+            document.querySelector('.logo').textContent = langData.logo;
+            document.querySelector('.hero h1').textContent = langData.heroTitle;
+            document.querySelector('.hero p').textContent = langData.heroText;
             
-            // Update header buttons
-            const headerButtons = document.querySelectorAll('.nav-actions .btn');
-            headerButtons[0].innerHTML = `<i class="fas fa-sign-in-alt"></i> ${langData.login}`;
-            headerButtons[1].innerHTML = `<i class="fas fa-user-plus"></i> ${langData.signup}`;
+            // Update feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
+            featureCards[0].querySelector('p').textContent = langData.feature1Text;
+            featureCards[1].querySelector('h3 span').textContent = langData.feature2Title;
+            featureCards[1].querySelector('p').textContent = langData.feature2Text;
+            featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
+            featureCards[2].querySelector('p').textContent = langData.feature3Text;
+            
+            // Update CTA section
+            document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
+            document.querySelector('.cta-section p').textContent = langData.ctaText;
+            
+            // Update buttons
+            document.querySelectorAll('.btn-text')[0].textContent = langData.login;
+            document.querySelectorAll('.btn-text')[1].textContent = langData.signup;
+            document.querySelectorAll('.btn-text')[2].textContent = langData.learnMore;
+            document.querySelectorAll('.btn-text')[3].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[4].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[5].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[6].textContent = langData.getStarted;
+            
+            // Update footer
+            document.querySelector('.copyright').innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
             
             // Update language switcher button
-            document.getElementById('languageToggle').querySelector('span').textContent = langData.language;
+            const languageToggle = document.getElementById('languageToggle');
+            languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
+            
+            // Update year again after language switch
+            document.getElementById('year').textContent = new Date().getFullYear();
             
             // Save language preference
             localStorage.setItem('preferredLang', newLang);
