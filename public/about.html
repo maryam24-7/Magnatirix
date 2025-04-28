@@ -11,8 +11,8 @@
         /* إضافة ستايل لزر ابدأ مجاناً في الموبايل */
         @media (max-width: 768px) {
             .btn-accent {
-                padding: 10px 20px;
-                font-size: 14px;
+                padding: 8px 16px;
+                font-size: 12px;
             }
         }
     </style>
@@ -106,18 +106,41 @@
         // تفعيل زر تحويل اللغة
         document.getElementById('languageToggle').addEventListener('click', function() {
             const languageText = document.getElementById('languageText');
-            
+            const htmlTag = document.documentElement;
+
             if (languageText.textContent === 'English') {
+                // تغيير النص للإنجليزية
                 languageText.textContent = 'العربية';
-                // هنا يمكنك إضافة كود لتحويل المحتوى للإنجليزية
-                // document.documentElement.lang = 'en';
-                // document.documentElement.dir = 'ltr';
-                // يمكنك إضافة المزيد من الكود لترجمة العناصر
+                htmlTag.lang = 'en';
+                htmlTag.dir = 'ltr';
+
+                // ترجمة نصوص الصفحة
+                document.getElementById('about-title').textContent = 'About Magnatirix';
+                document.getElementById('about-subtitle').textContent = 'Secure end-to-end encrypted messaging system';
+                document.getElementById('security-title').textContent = 'Security & Privacy';
+                document.getElementById('security-text').textContent = 'Magnatirix uses the latest encryption technologies to protect your communications. All messages are end-to-end encrypted, meaning no one, including us, can read your messages.';
+                document.getElementById('encryption-title').textContent = 'Advanced Encryption';
+                document.getElementById('encryption-text').textContent = 'We use a combination of RSA-2048, AES-256, and HMAC-SHA256 to secure your communications. Each message is encrypted with a unique key, and no keys are stored on our servers.';
+                document.getElementById('team-title').textContent = 'Our Team';
+                document.getElementById('team-text').textContent = 'We are a team of cybersecurity experts and developers committed to protecting your privacy. Our mission is to provide a secure communication platform that cannot be breached.';
+                document.getElementById('ready-title').textContent = 'Ready to start using Magnatirix?';
+                document.querySelector('.btn-accent .btn-text').textContent = 'Start for Free Now';
             } else {
+                // إعادة النصوص للعربية
                 languageText.textContent = 'English';
-                // هنا يمكنك إضافة كود لتحويل المحتوى للعربية
-                // document.documentElement.lang = 'ar';
-                // document.documentElement.dir = 'rtl';
+                htmlTag.lang = 'ar';
+                htmlTag.dir = 'rtl';
+
+                document.getElementById('about-title').textContent = 'عن نظام Magnatirix';
+                document.getElementById('about-subtitle').textContent = 'نظام التراسل المشفر الآمن من طرف إلى طرف';
+                document.getElementById('security-title').textContent = 'الأمان والخصوصية';
+                document.getElementById('security-text').textContent = 'نظام Magnatirix يستخدم أحدث تقنيات التشفير لحماية اتصالاتك. جميع الرسائل مشفرة من طرف إلى طرف، مما يعني أنه لا يمكن لأي شخص، بما في ذلك نحن، قراءة محتوى رسائلك.';
+                document.getElementById('encryption-title').textContent = 'تشفير متقدم';
+                document.getElementById('encryption-text').textContent = 'نستخدم مزيجًا من تشفير RSA-2048 و AES-256 و HMAC-SHA256 لتأمين اتصالاتك. كل رسالة يتم تشفيرها بمفتاح فريد ولا يتم تخزين أي مفاتيح على خوادمنا.';
+                document.getElementById('team-title').textContent = 'فريقنا';
+                document.getElementById('team-text').textContent = 'نحن فريق من خبراء الأمن السيبراني والمطورين الملتزمين بحماية خصوصيتك. مهمتنا هي توفير وسيلة اتصال آمنة لا يمكن اختراقها.';
+                document.getElementById('ready-title').textContent = 'جاهز لبدء استخدام Magnatirix؟';
+                document.querySelector('.btn-accent .btn-text').textContent = 'ابدأ مجاناً الآن';
             }
         });
     </script>
