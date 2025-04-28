@@ -109,16 +109,16 @@
     </footer>
 
     <script>
-        // تفعيل زر تحويل اللغة
-        document.getElementById('languageToggle').addEventListener('click', function() {
+        // دالة لتغيير اللغة
+        function changeLanguage(lang) {
             const languageText = document.getElementById('languageText');
             
-            if (languageText.textContent === 'English') {
+            if (lang === 'en') {
                 languageText.textContent = 'العربية';
                 document.documentElement.lang = 'en';
                 document.documentElement.dir = 'ltr';
                 
-                // تغيير النصوص إلى الإنجليزية (يمكن إضافة المزيد حسب الحاجة)
+                // تغيير النصوص إلى الإنجليزية
                 document.getElementById('about-title').textContent = 'About Magnatirix System';
                 document.getElementById('about-subtitle').textContent = 'End-to-End Encrypted Secure Messaging System';
                 document.getElementById('security-title').textContent = 'Security & Privacy';
@@ -150,6 +150,27 @@
                 document.querySelector('.btn-primary .btn-text').textContent = 'تسجيل الدخول';
                 document.querySelector('.btn-secondary .btn-text').textContent = 'إنشاء حساب';
             }
+            
+            // حفظ اللغة المختارة في localStorage
+            localStorage.setItem('selectedLanguage', lang);
+        }
+
+        // عند تحميل الصفحة، التحقق من اللغة المحفوظة
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage === 'en') {
+                changeLanguage('en');
+            }
+            
+            // إضافة حدث النقر على زر اللغة
+            document.getElementById('languageToggle').addEventListener('click', function() {
+                const currentLang = document.documentElement.lang;
+                if (currentLang === 'ar') {
+                    changeLanguage('en');
+                } else {
+                    changeLanguage('ar');
+                }
+            });
         });
     </script>
 </body>
