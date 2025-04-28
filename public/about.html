@@ -108,22 +108,7 @@
     </div>
 </footer>
 
-<script>
-    // تفعيل زر تحويل اللغة
-    document.getElementById('languageToggle').addEventListener('click', function() {
-        const languageText = document.getElementById('languageText');
-
-        if (languageText.textContent === 'English') {
-            languageText.textContent = 'العربية';
-            document.documentElement.lang = 'en';
-            document.documentElement.dir = 'ltr';
-        } else {
-            languageText.textContent = 'English';
-            document.documentElement.lang = 'ar';
-            document.documentElement.dir = 'rtl';
-        }
-    });
-</script>
+<script src="public/script.js"></script>
 
 </body>
 </html>
