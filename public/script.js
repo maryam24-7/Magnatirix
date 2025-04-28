@@ -1,5 +1,8 @@
 // Set current year in footer
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearElement = document.getElementById('year');
+if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+}
 
 // Translations object
 const translations = {
@@ -20,6 +23,8 @@ const translations = {
         learnMore: "تعرف أكثر",
         getStarted: "ابدأ مجاناً الآن",
         moreDetails: "المزيد من التفاصيل",
+        aboutTitle: "عن Magnatirix",
+        aboutText: "Magnatirix هو نظام مراسلة آمن يوفر حماية كاملة لبياناتك واتصالاتك باستخدام تقنيات التشفير الحديثة.",
         language: "English",
         copyright: "جميع الحقوق محفوظة"
     },
@@ -40,6 +45,8 @@ const translations = {
         learnMore: "Learn More",
         getStarted: "Get Started for Free",
         moreDetails: "More Details",
+        aboutTitle: "About Magnatirix",
+        aboutText: "Magnatirix is a secure messaging system providing full protection for your data and communications using modern encryption technologies.",
         language: "العربية",
         copyright: "All Rights Reserved"
     }
@@ -74,49 +81,74 @@ function switchLanguage() {
     // Get the translation object for the new language
     const langData = translations[newLang];
     
-    // Update all text elements
-    document.querySelector('.logo').textContent = langData.logo;
-    document.querySelector('.hero h1').textContent = langData.heroTitle;
-    document.querySelector('.hero p').textContent = langData.heroText;
+    // Update logo
+    const logo = document.querySelector('.logo');
+    if (logo) logo.textContent = langData.logo;
+
+    // Update hero section
+    const heroTitle = document.querySelector('.hero h1');
+    const heroText = document.querySelector('.hero p');
+    if (heroTitle) heroTitle.textContent = langData.heroTitle;
+    if (heroText) heroText.textContent = langData.heroText;
     
     // Update feature cards
     const featureCards = document.querySelectorAll('.feature-card');
-    featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
-    featureCards[0].querySelector('p').textContent = langData.feature1Text;
-    featureCards[1].querySelector('h3 span').textContent = langData.feature2Title;
-    featureCards[1].querySelector('p').textContent = langData.feature2Text;
-    featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
-    featureCards[2].querySelector('p').textContent = langData.feature3Text;
-    
+    if (featureCards.length >= 3) {
+        featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
+        featureCards[0].querySelector('p').textContent = langData.feature1Text;
+        featureCards[1].querySelector('h3 span').textContent = langData.feature2Title;
+        featureCards[1].querySelector('p').textContent = langData.feature2Text;
+        featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
+        featureCards[2].querySelector('p').textContent = langData.feature3Text;
+    }
+
     // Update CTA section
-    document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
-    document.querySelector('.cta-section p').textContent = langData.ctaText;
+    const ctaTitle = document.querySelector('.cta-section h2');
+    const ctaText = document.querySelector('.cta-section p');
+    if (ctaTitle) ctaTitle.textContent = langData.ctaTitle;
+    if (ctaText) ctaText.textContent = langData.ctaText;
     
     // Update buttons
-    document.querySelectorAll('.btn-text')[0].textContent = langData.login;
-    document.querySelectorAll('.btn-text')[1].textContent = langData.signup;
-    document.querySelectorAll('.btn-text')[2].textContent = langData.learnMore;
-    document.querySelectorAll('.btn-text')[3].textContent = langData.moreDetails;
-    document.querySelectorAll('.btn-text')[4].textContent = langData.moreDetails;
-    document.querySelectorAll('.btn-text')[5].textContent = langData.moreDetails;
-    document.querySelectorAll('.btn-text')[6].textContent = langData.getStarted;
+    const btnTexts = document.querySelectorAll('.btn-text');
+    if (btnTexts.length >= 7) {
+        btnTexts[0].textContent = langData.login;
+        btnTexts[1].textContent = langData.signup;
+        btnTexts[2].textContent = langData.learnMore;
+        btnTexts[3].textContent = langData.moreDetails;
+        btnTexts[4].textContent = langData.moreDetails;
+        btnTexts[5].textContent = langData.moreDetails;
+        btnTexts[6].textContent = langData.getStarted;
+    }
+
+    // Update About Page if exists
+    const aboutTitle = document.querySelector('.about-title');
+    const aboutText = document.querySelector('.about-text');
+    if (aboutTitle) aboutTitle.textContent = langData.aboutTitle;
+    if (aboutText) aboutText.textContent = langData.aboutText;
     
     // Update footer
-    document.querySelector('.copyright').innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
+    const copyright = document.querySelector('.copyright');
+    if (copyright) {
+        copyright.innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
+        const year = document.getElementById('year');
+        if (year) year.textContent = new Date().getFullYear();
+    }
     
     // Update language switcher button
     const languageToggle = document.getElementById('languageToggle');
-    languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
-    
-    // Update year again after language switch
-    document.getElementById('year').textContent = new Date().getFullYear();
+    if (languageToggle) {
+        languageToggle.querySelector('span').textContent = currentLang === 'ar' ? 'العربية' : 'English';
+    }
     
     // Save language preference
     localStorage.setItem('preferredLang', newLang);
 }
 
 // Initialize language switcher
-document.getElementById('languageToggle').addEventListener('click', switchLanguage);
+const languageToggleButton = document.getElementById('languageToggle');
+if (languageToggleButton) {
+    languageToggleButton.addEventListener('click', switchLanguage);
+}
 
 // Check for preferred language in localStorage
 document.addEventListener('DOMContentLoaded', () => {
