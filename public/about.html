@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>About - Magnatirix</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <!-- محتوى الصفحة هنا -->
+
+    <!-- Language Toggle Button -->
+    <button id="languageToggle" class="language-toggle">
+        <span>العربية</span>
+    </button>
+
     <header>
         <div class="logo">Magnatirix</div>
-        <!-- زر تغيير اللغة -->
-        <div id="languageToggle" style="cursor: pointer;">
-            <span>العربية</span>
-        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </nav>
     </header>
 
     <section class="hero">
@@ -24,32 +37,29 @@
     <section class="features">
         <div class="feature-card">
             <h3><span>End-to-End Encryption</span></h3>
-            <p>Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications</p>
+            <p>Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications.</p>
         </div>
         <div class="feature-card">
             <h3><span>Absolute Privacy</span></h3>
-            <p>We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us</p>
+            <p>We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us.</p>
         </div>
         <div class="feature-card">
             <h3><span>Secure File Sharing</span></h3>
-            <p>Send your files with the same strong encryption level we use for text messages, with files up to 2GB each</p>
+            <p>Send your files with the same strong encryption level we use for text messages, with files up to 2GB each.</p>
         </div>
     </section>
 
     <section class="cta-section">
         <h2>Ready to start using Magnatirix?</h2>
-        <p>Join thousands of users who trust us to protect their daily communications</p>
-        <div class="cta-buttons">
-            <button class="btn-text">Get Started for Free</button>
-            <button class="btn-text">Learn More</button>
-        </div>
+        <p>Join thousands of users who trust us to protect their daily communications.</p>
+        <button class="btn-text">Get Started for Free</button>
     </section>
 
     <footer>
         <p class="copyright">All Rights Reserved &copy; <span id="year"></span> Magnatirix</p>
     </footer>
 
-    <!-- ربط ملف script.js -->
     <script src="script.js"></script>
 </body>
+
 </html>
