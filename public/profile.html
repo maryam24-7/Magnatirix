@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملف الشخصي | Magnatirix</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -138,7 +138,7 @@
 <body>
     <header class="header">
         <div class="container header-content">
-            <a href="index.html" class="logo-text">
+            <a href="/index.html" class="logo-text">
                 <i class="fas fa-lock"></i>
                 <span class="logo">Magnatirix</span>
             </a>
@@ -149,12 +149,12 @@
                 </button>
                 <div class="user-dropdown">
                     <button class="btn btn-secondary" id="userMenu">
-                        <i class="fas fa-user-circle"></i> <span id="username-display">مستخدم</span>
+                        <i class="fas fa-user-circle"></i> <span id="username-display"></span>
                     </button>
                     <div class="dropdown-content">
-                        <a href="profile.html" id="profile-link"><i class="fas fa-user"></i> الملف الشخصي</a>
-                        <a href="settings.html" id="settings-link"><i class="fas fa-cog"></i> الإعدادات</a>
-                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                        <a href="/public/profile.html" id="profile-link"><i class="fas fa-user"></i> <span>الملف الشخصي</span></a>
+                        <a href="/public/settings.html" id="settings-link"><i class="fas fa-cog"></i> <span>الإعدادات</span></a>
+                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span></a>
                     </div>
                 </div>
             </div>
@@ -167,44 +167,44 @@
                 <div class="profile-avatar">
                     <i class="fas fa-user"></i>
                 </div>
-                <h1 class="profile-name" id="profile-name">مريم أحمد</h1>
-                <p class="profile-email" id="profile-email">maryam@magnatirix.com</p>
+                <h1 class="profile-name" id="profile-name"></h1>
+                <p class="profile-email" id="profile-email"></p>
             </div>
             
             <div class="profile-body">
                 <div class="profile-section">
-                    <h3>معلومات أساسية</h3>
+                    <h3 id="basic-info-title">معلومات أساسية</h3>
                     <div class="info-row">
-                        <div class="info-label">الاسم الكامل:</div>
-                        <div class="info-value" id="fullname">مريم أحمد محمد</div>
+                        <div class="info-label" id="fullname-label">الاسم الكامل:</div>
+                        <div class="info-value" id="fullname-value"></div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label">البريد الإلكتروني:</div>
-                        <div class="info-value" id="email">maryam@magnatirix.com</div>
+                        <div class="info-label" id="email-label">البريد الإلكتروني:</div>
+                        <div class="info-value" id="email-value"></div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label">رقم الهاتف:</div>
-                        <div class="info-value" id="phone">+966 50 123 4567</div>
+                        <div class="info-label" id="phone-label">رقم الهاتف:</div>
+                        <div class="info-value" id="phone-value"></div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label">تاريخ الانضمام:</div>
-                        <div class="info-value" id="join-date">15 يناير 2023</div>
+                        <div class="info-label" id="join-date-label">تاريخ الانضمام:</div>
+                        <div class="info-value" id="join-date-value"></div>
                     </div>
                 </div>
                 
                 <div class="profile-section">
-                    <h3>الأمان</h3>
+                    <h3 id="security-title">الأمان</h3>
                     <div class="security-badge">
                         <i class="fas fa-shield-alt"></i>
                         <div>
-                            <h4>حساب آمن</h4>
-                            <p>تم التحقق من بريدك الإلكتروني وهاتفك المحمول</p>
+                            <h4 id="secure-account-text">حساب آمن</h4>
+                            <p id="verified-text">تم التحقق من بريدك الإلكتروني وهاتفك المحمول</p>
                         </div>
                     </div>
                 </div>
                 
-                <button class="edit-btn" onclick="location.href='settings.html'">
-                    <i class="fas fa-edit"></i> تعديل الملف الشخصي
+                <button class="edit-btn" id="edit-profile-btn">
+                    <i class="fas fa-edit"></i> <span>تعديل الملف الشخصي</span>
                 </button>
             </div>
         </div>
@@ -217,11 +217,11 @@
                 <span>Magnatirix</span>
             </div>
             <div class="footer-links">
-                <a href="#" class="footer-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link">سياسة الخصوصية</a>
-                <a href="about.html" class="footer-link">عن النظام</a>
-                <a href="#" class="footer-link">الأسئلة الشائعة</a>
-                <a href="#" class="footer-link">اتصل بنا</a>
+                <a href="#" class="footer-link" id="terms-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link" id="privacy-link">سياسة الخصوصية</a>
+                <a href="/about.html" class="footer-link" id="about-link">عن النظام</a>
+                <a href="#" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link" id="contact-link">اتصل بنا</a>
             </div>
             <div class="footer-social">
                 <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
@@ -234,72 +234,144 @@
     </footer>
 
     <script>
-        // Set current year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
+        // العناصر المترجمة
+        const translations = {
+            ar: {
+                profile: "الملف الشخصي",
+                settings: "الإعدادات",
+                logout: "تسجيل الخروج",
+                basicInfo: "معلومات أساسية",
+                fullname: "الاسم الكامل",
+                email: "البريد الإلكتروني",
+                phone: "رقم الهاتف",
+                joinDate: "تاريخ الانضمام",
+                security: "الأمان",
+                secureAccount: "حساب آمن",
+                verified: "تم التحقق من بريدك الإلكتروني وهاتفك المحمول",
+                editProfile: "تعديل الملف الشخصي",
+                terms: "الشروط والأحكام",
+                privacy: "سياسة الخصوصية",
+                about: "عن النظام",
+                faq: "الأسئلة الشائعة",
+                contact: "اتصل بنا"
+            },
+            en: {
+                profile: "Profile",
+                settings: "Settings",
+                logout: "Logout",
+                basicInfo: "Basic Information",
+                fullname: "Full Name",
+                email: "Email",
+                phone: "Phone",
+                joinDate: "Join Date",
+                security: "Security",
+                secureAccount: "Secure Account",
+                verified: "Your email and phone have been verified",
+                editProfile: "Edit Profile",
+                terms: "Terms",
+                privacy: "Privacy Policy",
+                about: "About",
+                faq: "FAQ",
+                contact: "Contact Us"
+            }
+        };
 
-        // Load user data
-        document.addEventListener('DOMContentLoaded', function() {
-            const userData = JSON.parse(localStorage.getItem('userData')) || {
-                name: 'مريم أحمد',
-                email: 'maryam@magnatirix.com',
-                fullname: 'مريم أحمد محمد',
-                phone: '+966 50 123 4567',
-                joinDate: '15 يناير 2023'
-            };
-
-            document.getElementById('profile-name').textContent = userData.name;
-            document.getElementById('profile-email').textContent = userData.email;
-            document.getElementById('fullname').textContent = userData.fullname;
-            document.getElementById('email').textContent = userData.email;
-            document.getElementById('phone').textContent = userData.phone;
-            document.getElementById('join-date').textContent = userData.joinDate;
-            document.getElementById('username-display').textContent = userData.name;
-        });
-
-        // Language switching function
-        document.getElementById('languageToggle').addEventListener('click', function() {
-            const html = document.documentElement;
-            const currentLang = html.lang;
-            const newLang = currentLang === 'ar' ? 'en' : 'ar';
-
-            // Update HTML attributes
-            html.lang = newLang;
-            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-
-            // Save preference to localStorage
-            localStorage.setItem('preferredLang', newLang);
+        // تحميل بيانات المستخدم
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
             
-            // Reload to apply language changes
-            location.reload();
-        });
-
-        // Check for saved language preference
-        const savedLang = localStorage.getItem('preferredLang');
-        if (savedLang && savedLang !== document.documentElement.lang) {
-            document.getElementById('languageToggle').click();
+            document.getElementById('profile-name').textContent = userData.name || 'مستخدم';
+            document.getElementById('profile-email').textContent = userData.email || 'غير محدد';
+            document.getElementById('fullname-value').textContent = userData.fullname || 'غير محدد';
+            document.getElementById('email-value').textContent = userData.email || 'غير محدد';
+            document.getElementById('phone-value').textContent = userData.phone || 'غير محدد';
+            document.getElementById('join-date-value').textContent = userData.joinDate || 'غير محدد';
+            document.getElementById('username-display').textContent = userData.name || 'مستخدم';
         }
 
-        // Logout functionality
-        document.getElementById('logout-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('userData');
-            window.location.href = 'login.html';
-        });
+        // تغيير اللغة
+        function updateLanguage(lang) {
+            const elements = {
+                'basic-info-title': translations[lang].basicInfo,
+                'fullname-label': translations[lang].fullname,
+                'email-label': translations[lang].email,
+                'phone-label': translations[lang].phone,
+                'join-date-label': translations[lang].joinDate,
+                'security-title': translations[lang].security,
+                'secure-account-text': translations[lang].secureAccount,
+                'verified-text': translations[lang].verified,
+                'edit-profile-btn span': translations[lang].editProfile,
+                'profile-link span': translations[lang].profile,
+                'settings-link span': translations[lang].settings,
+                'logout-link span': translations[lang].logout,
+                'terms-link': translations[lang].terms,
+                'privacy-link': translations[lang].privacy,
+                'about-link': translations[lang].about,
+                'faq-link': translations[lang].faq,
+                'contact-link': translations[lang].contact
+            };
+            
+            for (const [id, text] of Object.entries(elements)) {
+                const element = document.getElementById(id);
+                if (element) element.textContent = text;
+            }
+        }
 
-        // Toggle user dropdown
-        document.getElementById('userMenu').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
-            const dropdowns = document.querySelectorAll('.dropdown-content');
-            dropdowns.forEach(dropdown => {
-                dropdown.style.display = 'none';
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // سنة حقوق النشر
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // تحميل بيانات المستخدم
+            loadUserData();
+            
+            // تهيئة اللغة
+            const lang = localStorage.getItem('preferredLang') || 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            updateLanguage(lang);
+            
+            // تغيير اللغة
+            document.getElementById('languageToggle').addEventListener('click', function() {
+                const currentLang = document.documentElement.lang;
+                const newLang = currentLang === 'ar' ? 'en' : 'ar';
+                
+                document.documentElement.lang = newLang;
+                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+                localStorage.setItem('preferredLang', newLang);
+                updateLanguage(newLang);
+                
+                // تحديث نص زر اللغة
+                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
+            });
+            
+            // تسجيل الخروج
+            document.getElementById('logout-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm(lang === 'ar' ? 'هل أنت متأكد من تسجيل الخروج؟' : 'Are you sure you want to logout?')) {
+                    window.location.href = '/login.html';
+                }
+            });
+            
+            // القائمة المنسدلة للمستخدم
+            document.getElementById('userMenu').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // إغلاق القوائم عند النقر خارجها
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            });
+            
+            // تعديل الملف الشخصي
+            document.getElementById('edit-profile-btn').addEventListener('click', function() {
+                window.location.href = '/public/settings.html';
             });
         });
     </script>
 </body>
-  </html>
+</html>
