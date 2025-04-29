@@ -1,63 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receive Message</title>
-    <link rel="stylesheet" href="style.css">
+    <title>استلام الرسالة</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsrsasign"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js"></script>
+    <script>
+        // الدالة لفك التشفير
+        function decryptMessage() {
+            // استلام البيانات من المدخلات
+            var encryptedMessage = document.getElementById("encryptedMessage").value;
+            var encryptedKey = document.getElementById("encryptedKey").value;
+            var privateKeyPem = document.getElementById("privateKey").value;
+
+            // تحويل المفتاح الخاص من PEM إلى KeyObject
+            var key = KEYUTIL.getKey(privateKeyPem);
+
+            // فك تشفير مفتاح AES باستخدام RSA
+            var decryptedKey = key.decrypt(encryptedKey);
+
+            // تحويل المفتاح AES إلى صيغة قابل للاستخدام في CryptoJS
+            var aesKey = CryptoJS.enc.Utf8.parse(decryptedKey);
+
+            // فك تشفير الرسالة باستخدام AES
+            var decryptedMessage = CryptoJS.AES.decrypt(encryptedMessage, aesKey, { iv: CryptoJS.enc.Utf8.parse('1234567890123456') }).toString(CryptoJS.enc.Utf8);
+
+            // عرض الرسالة المفكوكة
+            document.getElementById("decryptedMessage").textContent = "الرسالة المفكوكة: " + decryptedMessage;
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>استقبال الرسائل</h1>
-        <div id="messages" class="messages-container"></div>
-        <div id="status">حالة الاتصال: جاري الاتصال...</div>
-        <a href="/" class="btn back-btn">العودة للصفحة الرئيسية</a>
-    </div>
-    <script>
-        const ws = new WebSocket('wss://' + window.location.host);
-        const messagesDiv = document.getElementById('messages');
-        const statusDiv = document.getElementById('status');
-        
-        ws.onopen = () => {
-            statusDiv.textContent = 'متصل بالخادم وجاهز لاستقبال الرسائل';
-            statusDiv.style.color = 'green';
-        };
-        
-        ws.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                const messageElement = document.createElement('div');
-                messageElement.className = 'message';
-                
-                const timeElement = document.createElement('div');
-                timeElement.className = 'message-time';
-                timeElement.textContent = new Date(data.timestamp).toLocaleString();
-                
-                const contentElement = document.createElement('div');
-                contentElement.className = 'message-content';
-                contentElement.textContent = data.content;
-                
-                messageElement.appendChild(timeElement);
-                messageElement.appendChild(contentElement);
-                messagesDiv.appendChild(messageElement);
-                
-                // Scroll to bottom
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            } catch (error) {
-                console.error('Error parsing message:', error);
-            }
-        };
-        
-        ws.onclose = () => {
-            statusDiv.textContent = 'تم قطع الاتصال بالخادم';
-            statusDiv.style.color = 'red';
-        };
-        
-        ws.onerror = (error) => {
-            statusDiv.textContent = 'خطأ في الاتصال بالخادم';
-            statusDiv.style.color = 'red';
-            console.error('WebSocket error:', error);
-        };
-    </script>
+    <h1>استلام الرسالة المشفرة</h1>
+
+    <label for="privateKey">المفتاح الخاص (PEM):</label><br>
+    <textarea id="privateKey" rows="10" cols="50" placeholder="أدخل المفتاح الخاص هنا"></textarea><br><br>
+
+    <label for="encryptedKey">المفتاح المشفر (RSA):</label><br>
+    <textarea id="encryptedKey" rows="2" cols="50" placeholder="أدخل المفتاح المشفر هنا"></textarea><br><br>
+
+    <label for="encryptedMessage">الرسالة المشفرة (AES):</label><br>
+    <textarea id="encryptedMessage" rows="5" cols="50" placeholder="أدخل الرسالة المشفرة هنا"></textarea><br><br>
+
+    <button onclick="decryptMessage()">فك التشفير</button><br><br>
+
+    <div id="decryptedMessage"></div>
 </body>
 </html>
