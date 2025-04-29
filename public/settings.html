@@ -170,24 +170,6 @@
             height: 18px;
         }
 
-        .logout-btn {
-            background: transparent;
-            border: none;
-            color: #333;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #f0f0f0;
-        }
-
         @media (max-width: 768px) {
             .settings-container {
                 margin: 15px;
@@ -214,12 +196,8 @@
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span id="languageText">English</span>
+                    <span>English</span>
                 </button>
-                <a href="/login.html" class="logout-btn" id="logout-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span id="logoutText">تسجيل الخروج</span>
-                </a>
             </div>
         </div>
     </header>
@@ -305,15 +283,21 @@
                 <a href="/faq.html" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
                 <a href="/contact.html" class="footer-link" id="contact-link">اتصل بنا</a>
             </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
             <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
 
     <script>
-        // الترجمات
+        // العناصر المترجمة
         const translations = {
             ar: {
-                title: "الإعدادات",
+                settings: "الإعدادات",
                 personalInfo: "المعلومات الشخصية",
                 name: "الاسم المعروض",
                 fullname: "الاسم الكامل",
@@ -329,8 +313,6 @@
                 dangerZone: "منطقة الخطر",
                 dangerText: "هذه الإجراءات لا يمكن التراجع عنها. الرجاء التأكد قبل المتابعة.",
                 deleteAccount: "حذف الحساب",
-                logout: "تسجيل الخروج",
-                language: "English",
                 terms: "الشروط والأحكام",
                 privacyPolicy: "سياسة الخصوصية",
                 about: "عن النظام",
@@ -338,7 +320,7 @@
                 contact: "اتصل بنا"
             },
             en: {
-                title: "Settings",
+                settings: "Settings",
                 personalInfo: "Personal Information",
                 name: "Display Name",
                 fullname: "Full Name",
@@ -354,8 +336,6 @@
                 dangerZone: "Danger Zone",
                 dangerText: "These actions cannot be undone. Please confirm before proceeding.",
                 deleteAccount: "Delete Account",
-                logout: "Logout",
-                language: "العربية",
                 terms: "Terms",
                 privacyPolicy: "Privacy Policy",
                 about: "About",
@@ -378,35 +358,34 @@
 
         // تغيير اللغة
         function updateLanguage(lang) {
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            const elements = {
+                'settings-title': translations[lang].settings,
+                'personal-info-title': translations[lang].personalInfo,
+                'name-label': translations[lang].name,
+                'fullname-label': translations[lang].fullname,
+                'email-label': translations[lang].email,
+                'phone-label': translations[lang].phone,
+                'privacy-title': translations[lang].privacy,
+                'show-profile-label': translations[lang].showProfile,
+                'show-email-label': translations[lang].showEmail,
+                'save-text': translations[lang].save,
+                'security-title': translations[lang].security,
+                'change-password-text': translations[lang].changePassword,
+                'two-factor-text': translations[lang].twoFactor,
+                'danger-zone-title': translations[lang].dangerZone,
+                'danger-zone-text': translations[lang].dangerText,
+                'delete-account-text': translations[lang].deleteAccount,
+                'terms-link': translations[lang].terms,
+                'privacy-link': translations[lang].privacyPolicy,
+                'about-link': translations[lang].about,
+                'faq-link': translations[lang].faq,
+                'contact-link': translations[lang].contact
+            };
             
-            document.title = `${translations[lang].title} | Magnatirix`;
-            
-            // تحديث النصوص
-            document.getElementById('settings-title').textContent = translations[lang].title;
-            document.getElementById('personal-info-title').textContent = translations[lang].personalInfo;
-            document.getElementById('name-label').textContent = translations[lang].name;
-            document.getElementById('fullname-label').textContent = translations[lang].fullname;
-            document.getElementById('email-label').textContent = translations[lang].email;
-            document.getElementById('phone-label').textContent = translations[lang].phone;
-            document.getElementById('privacy-title').textContent = translations[lang].privacy;
-            document.getElementById('show-profile-label').textContent = translations[lang].showProfile;
-            document.getElementById('show-email-label').textContent = translations[lang].showEmail;
-            document.getElementById('save-text').textContent = translations[lang].save;
-            document.getElementById('security-title').textContent = translations[lang].security;
-            document.getElementById('change-password-text').textContent = translations[lang].changePassword;
-            document.getElementById('two-factor-text').textContent = translations[lang].twoFactor;
-            document.getElementById('danger-zone-title').textContent = translations[lang].dangerZone;
-            document.getElementById('danger-zone-text').textContent = translations[lang].dangerText;
-            document.getElementById('delete-account-text').textContent = translations[lang].deleteAccount;
-            document.getElementById('logoutText').textContent = translations[lang].logout;
-            document.getElementById('languageText').textContent = translations[lang].language;
-            document.getElementById('terms-link').textContent = translations[lang].terms;
-            document.getElementById('privacy-link').textContent = translations[lang].privacyPolicy;
-            document.getElementById('about-link').textContent = translations[lang].about;
-            document.getElementById('faq-link').textContent = translations[lang].faq;
-            document.getElementById('contact-link').textContent = translations[lang].contact;
+            for (const [id, text] of Object.entries(elements)) {
+                const element = document.getElementById(id);
+                if (element) element.textContent = text;
+            }
         }
 
         // تهيئة الصفحة
@@ -414,43 +393,59 @@
             // سنة حقوق النشر
             document.getElementById('year').textContent = new Date().getFullYear();
             
+            // تحديد اللغة المفضلة
+            const lang = localStorage.getItem('preferredLang') || 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            
+            // تحميل الترجمة
+            updateLanguage(lang);
+            
             // تحميل بيانات المستخدم
             loadUserData();
-            
-            // تهيئة اللغة
-            const lang = localStorage.getItem('preferredLang') || 'ar';
-            updateLanguage(lang);
             
             // تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
                 const currentLang = document.documentElement.lang;
                 const newLang = currentLang === 'ar' ? 'en' : 'ar';
+                
+                document.documentElement.lang = newLang;
+                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
                 localStorage.setItem('preferredLang', newLang);
                 updateLanguage(newLang);
+                
+                // تحديث نص زر اللغة
+                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
             });
             
             // حفظ الإعدادات
             document.getElementById('settings-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                // التحقق من صحة البريد الإلكتروني
+                const email = document.getElementById('email').value;
+                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    alert(document.documentElement.lang === 'ar' ? 
+                        'الرجاء إدخال بريد إلكتروني صحيح' : 
+                        'Please enter a valid email address');
+                    return;
+                }
+
+                // إعداد بيانات المستخدم
                 const userData = {
                     name: document.getElementById('name').value.trim(),
+                    email: email,
                     fullname: document.getElementById('fullname').value.trim(),
-                    email: document.getElementById('email').value.trim(),
                     phone: document.getElementById('phone').value.trim(),
                     showProfile: document.getElementById('show-profile').checked,
                     showEmail: document.getElementById('show-email').checked,
                     joinDate: JSON.parse(localStorage.getItem('userData'))?.joinDate || new Date().toLocaleDateString()
                 };
-                
-                if (!userData.name || !userData.email) {
-                    alert(document.documentElement.lang === 'ar' ? 
-                        'الاسم والبريد الإلكتروني حقول مطلوبة' : 
-                        'Name and email are required fields');
-                    return;
-                }
-                
+
+                // حفظ البيانات
                 localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // عرض رسالة نجاح
                 alert(document.documentElement.lang === 'ar' ? 
                     'تم حفظ التغييرات بنجاح' : 
                     'Changes saved successfully');
@@ -459,17 +454,22 @@
             // حذف الحساب
             document.getElementById('delete-account').addEventListener('click', function() {
                 const lang = document.documentElement.lang;
-                const confirmMsg = lang === 'ar' ? 
-                    '⚠️ هل أنت متأكد أنك تريد حذف حسابك؟ سيتم فقدان جميع البيانات بشكل دائم ولا يمكن استرجاعها.' : 
-                    '⚠️ Are you sure you want to delete your account? All data will be permanently lost.';
+                const messages = {
+                    warning: lang === 'ar' ? 
+                        '⚠️ هل أنت متأكد أنك تريد حذف حسابك؟ سيتم فقدان جميع البيانات بشكل دائم ولا يمكن استرجاعها.' : 
+                        '⚠️ Are you sure you want to delete your account? All data will be permanently lost.',
+                    confirm: lang === 'ar' ? 
+                        '❌ تأكيد نهائي: هل أنت متأكد من رغبتك في حذف الحساب؟' : 
+                        '❌ Final confirmation: Are you sure you want to delete your account?',
+                    success: lang === 'ar' ? 
+                        'تم حذف الحساب بنجاح' : 
+                        'Account deleted successfully'
+                };
                 
-                const finalConfirmMsg = lang === 'ar' ? 
-                    '❌ تأكيد نهائي: هل أنت متأكد من رغبتك في حذف الحساب؟' : 
-                    '❌ Final confirmation: Are you absolutely sure you want to delete your account?';
-                
-                if (confirm(confirmMsg)) {
-                    if (confirm(finalConfirmMsg)) {
+                if (confirm(messages.warning)) {
+                    if (confirm(messages.confirm)) {
                         localStorage.removeItem('userData');
+                        alert(messages.success);
                         window.location.href = '/login.html';
                     }
                 }
