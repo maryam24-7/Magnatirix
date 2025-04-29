@@ -18,36 +18,51 @@
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span>English</span>
+                    <span id="languageText">English</span>
                 </button>
+                <a href="login.html" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
+                </a>
                 <a href="signup.html" class="btn btn-secondary">
-                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
+                    <i class="fas fa-user-plus"></i> <span class="btn-text" id="createAccountText">إنشاء حساب</span>
                 </a>
             </div>
         </div>
     </header>
 
-    <main class="container">
-        <section class="auth-form">
-            <h2 id="login-title">تسجيل الدخول</h2>
-            <form id="loginForm">
+    <main class="container auth-container">
+        <div class="auth-card">
+            <h1 id="login-title">تسجيل الدخول</h1>
+            <p id="login-subtitle">أدخل بياناتك للوصول إلى حسابك</p>
+            
+            <form class="auth-form">
                 <div class="form-group">
-                    <label for="login-username" id="username-label">اسم المستخدم</label>
-                    <input type="text" id="login-username" class="form-control" required>
+                    <label for="email" id="email-label">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="login-password" id="password-label">كلمة المرور</label>
-                    <input type="password" id="login-password" class="form-control" required>
+                    <label for="password" id="password-label">كلمة المرور</label>
+                    <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
+                
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember" id="remember-label">تذكرني</label>
+                    </div>
+                    <a href="forgot-password.html" id="forgot-password">نسيت كلمة المرور؟</a>
+                </div>
+                
+                <button type="submit" class="btn btn-accent auth-btn" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
                 </button>
             </form>
-            <div id="login-result" class="result" style="display: none;"></div>
-            <div class="text-center" style="margin-top: 1rem;">
-                <a href="forgot-password.html" id="forgot-password-link">نسيت كلمة المرور؟</a>
+            
+            <div class="auth-footer">
+                <p id="no-account">ليس لديك حساب؟ <a href="signup.html" id="signup-link">إنشاء حساب</a></p>
             </div>
-        </section>
+        </div>
     </main>
 
     <footer class="footer">
@@ -59,7 +74,7 @@
             <div class="footer-links">
                 <a href="#" class="footer-link">الشروط والأحكام</a>
                 <a href="#" class="footer-link">سياسة الخصوصية</a>
-                <a href="#" class="footer-link">عن النظام</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
                 <a href="#" class="footer-link">الأسئلة الشائعة</a>
                 <a href="#" class="footer-link">اتصل بنا</a>
             </div>
@@ -67,85 +82,73 @@
                 <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
                 <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
             </div>
-            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
 
     <script>
-        // Set current year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Translations object
-        const translations = {
-            ar: {
-                loginTitle: "تسجيل الدخول",
-                usernameLabel: "اسم المستخدم",
-                passwordLabel: "كلمة المرور",
-                loginBtn: "تسجيل الدخول",
-                forgotPassword: "نسيت كلمة المرور؟",
-                loginSuccess: "تم تسجيل الدخول بنجاح",
-                loginError: "اسم المستخدم أو كلمة المرور غير صحيحة",
-                languageToggle: "English"
-            },
-            en: {
-                loginTitle: "Login",
-                usernameLabel: "Username",
-                passwordLabel: "Password",
-                loginBtn: "Login",
-                forgotPassword: "Forgot password?",
-                loginSuccess: "Logged in successfully",
-                loginError: "Invalid username or password",
-                languageToggle: "العربية"
+        // دالة لتغيير اللغة
+        function changeLanguage(lang) {
+            const languageText = document.getElementById('languageText');
+            
+            if (lang === 'en') {
+                languageText.textContent = 'العربية';
+                document.documentElement.lang = 'en';
+                document.documentElement.dir = 'ltr';
+                
+                // تغيير النصوص إلى الإنجليزية
+                document.title = 'Login | Magnatirix';
+                document.getElementById('login-title').textContent = 'Login';
+                document.getElementById('login-subtitle').textContent = 'Enter your details to access your account';
+                document.getElementById('email-label').textContent = 'Email';
+                document.getElementById('password-label').textContent = 'Password';
+                document.getElementById('remember-label').textContent = 'Remember me';
+                document.getElementById('forgot-password').textContent = 'Forgot password?';
+                document.getElementById('login-btn').querySelector('span').textContent = 'Login';
+                document.getElementById('no-account').textContent = 'Don\'t have an account?';
+                document.getElementById('signup-link').textContent = 'Sign Up';
+                document.querySelector('.btn-primary .btn-text').textContent = 'Login';
+                document.getElementById('createAccountText').textContent = 'Sign Up';
+            } else {
+                languageText.textContent = 'English';
+                document.documentElement.lang = 'ar';
+                document.documentElement.dir = 'rtl';
+                
+                // إعادة النصوص إلى العربية
+                document.title = 'تسجيل الدخول | Magnatirix';
+                document.getElementById('login-title').textContent = 'تسجيل الدخول';
+                document.getElementById('login-subtitle').textContent = 'أدخل بياناتك للوصول إلى حسابك';
+                document.getElementById('email-label').textContent = 'البريد الإلكتروني';
+                document.getElementById('password-label').textContent = 'كلمة المرور';
+                document.getElementById('remember-label').textContent = 'تذكرني';
+                document.getElementById('forgot-password').textContent = 'نسيت كلمة المرور؟';
+                document.getElementById('login-btn').querySelector('span').textContent = 'تسجيل الدخول';
+                document.getElementById('no-account').textContent = 'ليس لديك حساب؟';
+                document.getElementById('signup-link').textContent = 'إنشاء حساب';
+                document.querySelector('.btn-primary .btn-text').textContent = 'تسجيل الدخول';
+                document.getElementById('createAccountText').textContent = 'إنشاء حساب';
             }
-        };
-
-        // Language switching function
-        document.getElementById('languageToggle').addEventListener('click', function() {
-            const html = document.documentElement;
-            const currentLang = html.lang;
-            const newLang = currentLang === 'ar' ? 'en' : 'ar';
-
-            // Update HTML attributes
-            html.lang = newLang;
-            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-
-            // Update all translatable elements
-            document.getElementById('login-title').textContent = translations[newLang].loginTitle;
-            document.getElementById('username-label').textContent = translations[newLang].usernameLabel;
-            document.getElementById('password-label').textContent = translations[newLang].passwordLabel;
-            document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${translations[newLang].loginBtn}</span>`;
-            document.getElementById('forgot-password-link').textContent = translations[newLang].forgotPassword;
-            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
-
-            // Save preference to localStorage
-            localStorage.setItem('preferredLang', newLang);
-        });
-
-        // Check for saved language preference
-        const savedLang = localStorage.getItem('preferredLang');
-        if (savedLang && savedLang !== document.documentElement.lang) {
-            document.getElementById('languageToggle').click();
+            
+            // حفظ اللغة المختارة في localStorage
+            localStorage.setItem('selectedLanguage', lang);
         }
 
-        // Login form handling
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const resultElement = document.getElementById('login-result');
+        // عند تحميل الصفحة، التحقق من اللغة المحفوظة
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage === 'en') {
+                changeLanguage('en');
+            }
             
-            // Simulate login process
-            setTimeout(() => {
-                const lang = document.documentElement.lang;
-                resultElement.textContent = translations[lang].loginSuccess;
-                resultElement.className = 'result success';
-                resultElement.style.display = 'block';
-                
-                // Redirect to dashboard after successful login
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }, 1000);
+            // إضافة حدث النقر على زر اللغة
+            document.getElementById('languageToggle').addEventListener('click', function() {
+                const currentLang = document.documentElement.lang;
+                if (currentLang === 'ar') {
+                    changeLanguage('en');
+                } else {
+                    changeLanguage('ar');
+                }
+            });
         });
     </script>
 </body>
