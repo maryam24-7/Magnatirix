@@ -21,7 +21,7 @@
                     <span>English</span>
                 </button>
                 <a href="signup.html" class="btn btn-secondary">
-                    <i class="fas fa-user-plus"></i> <span class="btn-text">إنشاء حساب</span>
+                    <i class="fas fa-user-plus"></i> <span class="btn-text" id="signupBtnText">إنشاء حساب</span>
                 </a>
             </div>
         </div>
@@ -87,7 +87,8 @@
                 forgotPassword: "نسيت كلمة المرور؟",
                 loginSuccess: "تم تسجيل الدخول بنجاح",
                 loginError: "اسم المستخدم أو كلمة المرور غير صحيحة",
-                languageToggle: "English"
+                languageToggle: "English",
+                signupBtn: "إنشاء حساب"
             },
             en: {
                 loginTitle: "Login",
@@ -97,7 +98,8 @@
                 forgotPassword: "Forgot password?",
                 loginSuccess: "Logged in successfully",
                 loginError: "Invalid username or password",
-                languageToggle: "العربية"
+                languageToggle: "العربية",
+                signupBtn: "Sign Up"
             }
         };
 
@@ -118,6 +120,7 @@
             document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${translations[newLang].loginBtn}</span>`;
             document.getElementById('forgot-password-link').textContent = translations[newLang].forgotPassword;
             document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+            document.getElementById('signupBtnText').textContent = translations[newLang].signupBtn;
 
             // Save preference to localStorage
             localStorage.setItem('preferredLang', newLang);
