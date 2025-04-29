@@ -7,6 +7,57 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* إضافة بعض الأنماط الإضافية للاحترافية */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            right: 0;
+            top: 100%;
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .no-messages {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .message-item {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .message-item:hover {
+            transform: translateX(-5px);
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -62,6 +113,7 @@
                 <h2 id="recent-messages-title">آخر الرسائل</h2>
                 <div class="messages-list" id="messages-list">
                     <!-- سيتم ملء هذا القسم بالرسائل عبر JavaScript -->
+                    <div class="no-messages">لا توجد رسائل حديثة</div>
                 </div>
             </div>
         </section>
@@ -168,34 +220,9 @@
             const username = localStorage.getItem('username') || 'مستخدم';
             document.getElementById('username-display').textContent = username;
             
-            // Simulate loading recent messages
+            // Clear any existing messages
             const messagesList = document.getElementById('messages-list');
-            const lang = document.documentElement.lang;
-            
-            // Check if there are messages
-            if (Math.random() > 0.5) {
-                // Simulate messages
-                const messages = [
-                    {sender: 'أحمد', preview: 'هذا نص رسالة مشفرة...', time: '10:30 ص'},
-                    {sender: 'محمد', preview: 'مرحباً، كيف حالك؟', time: 'أمس'}
-                ];
-                
-                messages.forEach(msg => {
-                    const messageElement = document.createElement('div');
-                    messageElement.className = 'message-item';
-                    messageElement.innerHTML = `
-                        <div class="message-sender">${msg.sender}</div>
-                        <div class="message-preview">${msg.preview}</div>
-                        <div class="message-time">${msg.time}</div>
-                    `;
-                    messageElement.onclick = function() {
-                        window.location.href = 'message-detail.html?id=' + encodeURIComponent(msg.sender);
-                    };
-                    messagesList.appendChild(messageElement);
-                });
-            } else {
-                messagesList.innerHTML = `<div class="no-messages">${translations[lang].noMessages}</div>`;
-            }
+            messagesList.innerHTML = `<div class="no-messages">${translations[document.documentElement.lang].noMessages}</div>`;
         });
 
         // Logout functionality
@@ -203,6 +230,21 @@
             e.preventDefault();
             localStorage.removeItem('username');
             window.location.href = 'login.html';
+        });
+
+        // Toggle user dropdown on button click
+        document.getElementById('userMenu').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
         });
     </script>
 </body>
