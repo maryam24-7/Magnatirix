@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            margin-bottom: 15px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .profile-avatar i {
+            font-size: 50px;
+            color: #777;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            margin: 10px 0 5px;
+        }
+        
+        .profile-email {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .profile-body {
+            padding: 30px;
+        }
+        
+        .profile-section {
+            margin-bottom: 30px;
+        }
+        
+        .profile-section h3 {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .info-label {
+            width: 150px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .info-value {
+            flex: 1;
+        }
+        
+        .edit-btn {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .security-badge {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .security-badge i {
+            font-size: 24px;
+            color: #28a745;
+            margin-left: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 15px;
+            }
+            
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+                <div class="user-dropdown">
+                    <button class="btn btn-secondary" id="userMenu">
+                        <i class="fas fa-user-circle"></i> <span id="username-display">مستخدم</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="profile.html" id="profile-link"><i class="fas fa-user"></i> الملف الشخصي</a>
+                        <a href="settings.html" id="settings-link"><i class="fas fa-cog"></i> الإعدادات</a>
+                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h1 class="profile-name" id="profile-name">مريم أحمد</h1>
+                <p class="profile-email" id="profile-email">maryam@magnatirix.com</p>
+            </div>
+            
+            <div class="profile-body">
+                <div class="profile-section">
+                    <h3>معلومات أساسية</h3>
+                    <div class="info-row">
+                        <div class="info-label">الاسم الكامل:</div>
+                        <div class="info-value" id="fullname">مريم أحمد محمد</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">البريد الإلكتروني:</div>
+                        <div class="info-value" id="email">maryam@magnatirix.com</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">رقم الهاتف:</div>
+                        <div class="info-value" id="phone">+966 50 123 4567</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">تاريخ الانضمام:</div>
+                        <div class="info-value" id="join-date">15 يناير 2023</div>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>الأمان</h3>
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h4>حساب آمن</h4>
+                            <p>تم التحقق من بريدك الإلكتروني وهاتفك المحمول</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="edit-btn" onclick="location.href='settings.html'">
+                    <i class="fas fa-edit"></i> تعديل الملف الشخصي
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Load user data
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {
+                name: 'مريم أحمد',
+                email: 'maryam@magnatirix.com',
+                fullname: 'مريم أحمد محمد',
+                phone: '+966 50 123 4567',
+                joinDate: '15 يناير 2023'
+            };
+
+            document.getElementById('profile-name').textContent = userData.name;
+            document.getElementById('profile-email').textContent = userData.email;
+            document.getElementById('fullname').textContent = userData.fullname;
+            document.getElementById('email').textContent = userData.email;
+            document.getElementById('phone').textContent = userData.phone;
+            document.getElementById('join-date').textContent = userData.joinDate;
+            document.getElementById('username-display').textContent = userData.name;
+        });
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+            
+            // Reload to apply language changes
+            location.reload();
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Logout functionality
+        document.getElementById('logout-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        });
+
+        // Toggle user dropdown
+        document.getElementById('userMenu').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+  </html>
