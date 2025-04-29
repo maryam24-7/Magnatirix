@@ -1,50 +1,278 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استلام الرسالة</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsrsasign"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js"></script>
-    <script>
-        // الدالة لفك التشفير
-        function decryptMessage() {
-            // استلام البيانات من المدخلات
-            var encryptedMessage = document.getElementById("encryptedMessage").value;
-            var encryptedKey = document.getElementById("encryptedKey").value;
-            var privateKeyPem = document.getElementById("privateKey").value;
-
-            // تحويل المفتاح الخاص من PEM إلى KeyObject
-            var key = KEYUTIL.getKey(privateKeyPem);
-
-            // فك تشفير مفتاح AES باستخدام RSA
-            var decryptedKey = key.decrypt(encryptedKey);
-
-            // تحويل المفتاح AES إلى صيغة قابل للاستخدام في CryptoJS
-            var aesKey = CryptoJS.enc.Utf8.parse(decryptedKey);
-
-            // فك تشفير الرسالة باستخدام AES
-            var decryptedMessage = CryptoJS.AES.decrypt(encryptedMessage, aesKey, { iv: CryptoJS.enc.Utf8.parse('1234567890123456') }).toString(CryptoJS.enc.Utf8);
-
-            // عرض الرسالة المفكوكة
-            document.getElementById("decryptedMessage").textContent = "الرسالة المفكوكة: " + decryptedMessage;
+    <title>استقبال رسالة | Magnatirix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #f8f9fa;
+            --accent-color: #00c851;
+            --error-color: #ff4444;
         }
-    </script>
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7ff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .message-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .message-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .message-subject {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .message-meta {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .message-body {
+            line-height: 1.6;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+        }
+        
+        .decryption-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .attachment {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px dashed #ddd;
+            border-radius: 6px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            font-size: 1.5rem;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+            font-size: 2.5rem;
+        }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .message-box {
+                padding: 20px;
+            }
+            
+            .message-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>استلام الرسالة المشفرة</h1>
+    <div class="container">
+        <div class="message-box">
+            <div class="message-header">
+                <div class="message-subject" id="messageSubject">موضوع الرسالة</div>
+                <div class="message-meta">
+                    <span id="senderInfo"><i class="fas fa-user"></i> المرسل: غير معروف</span>
+                    <span id="receivedDate"><i class="fas fa-clock"></i> تاريخ الاستلام: غير معروف</span>
+                </div>
+            </div>
+            
+            <div class="decryption-status" id="decryptionStatus">
+                <i class="fas fa-lock"></i>
+                <span>جاري فك تشفير الرسالة...</span>
+            </div>
+            
+            <div class="message-body" id="messageBody" style="display: none;">
+                محتوى الرسالة سيظهر هنا بعد فك التشفير
+            </div>
+            
+            <div class="attachment" id="attachmentContainer" style="display: none;">
+                <i class="fas fa-paperclip"></i>
+                <div>
+                    <div id="attachmentName">ملف مرفق</div>
+                    <button class="btn btn-primary" id="downloadAttachment">
+                        <i class="fas fa-download"></i> تنزيل المرفق
+                    </button>
+                </div>
+            </div>
+            
+            <div class="actions" style="margin-top: 30px;">
+                <button class="btn btn-primary" id="replyBtn">
+                    <i class="fas fa-reply"></i> رد
+                </button>
+                <button class="btn" id="deleteBtn">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <label for="privateKey">المفتاح الخاص (PEM):</label><br>
-    <textarea id="privateKey" rows="10" cols="50" placeholder="أدخل المفتاح الخاص هنا"></textarea><br><br>
-
-    <label for="encryptedKey">المفتاح المشفر (RSA):</label><br>
-    <textarea id="encryptedKey" rows="2" cols="50" placeholder="أدخل المفتاح المشفر هنا"></textarea><br><br>
-
-    <label for="encryptedMessage">الرسالة المشفرة (AES):</label><br>
-    <textarea id="encryptedMessage" rows="5" cols="50" placeholder="أدخل الرسالة المشفرة هنا"></textarea><br><br>
-
-    <button onclick="decryptMessage()">فك التشفير</button><br><br>
-
-    <div id="decryptedMessage"></div>
+    <script>
+        // كود JavaScript لفك التشفير وعرض الرسالة
+        document.addEventListener('DOMContentLoaded', async function() {
+            // عرض حالة التحميل
+            const decryptionStatus = document.getElementById('decryptionStatus');
+            const messageBody = document.getElementById('messageBody');
+            
+            try {
+                // 1. محاكاة جلب الرسالة المشفرة من السيرفر
+                // في الواقع الفعلي: سيتم جلب هذه البيانات من API
+                const encryptedMessage = {
+                    id: "12345",
+                    subject: "اجتماع مهم غداً",
+                    sender: "ahmed@example.com",
+                    senderName: "أحمد محمد",
+                    date: "2023-05-20T14:30:00Z",
+                    encryptedMessage: "U2FsdGVkX1+3RQ4VpGJw6Jj7jX7J5X9X...", // مثال لرسالة مشفرة
+                    hmac: "a1b2c3d4e5f6...", // مثال لـ HMAC
+                    encryptedAesKey: "XYZ123...", // مثال لمفتاح AES المشفر
+                    attachment: null // أو معلومات المرفق إذا كان موجوداً
+                };
+                
+                // 2. عرض معلومات الرسالة الأساسية
+                document.getElementById('messageSubject').textContent = encryptedMessage.subject;
+                document.getElementById('senderInfo').innerHTML = `<i class="fas fa-user"></i> المرسل: ${encryptedMessage.senderName} &lt;${encryptedMessage.sender}&gt;`;
+                document.getElementById('receivedDate').innerHTML = `<i class="fas fa-clock"></i> تاريخ الاستلام: ${formatDate(encryptedMessage.date)}`;
+                
+                // 3. فك تشفير الرسالة (محاكاة)
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // في الواقع الفعلي:
+                // - جلب المفتاح الخاص من تخزين آمن
+                // - فك تشفير مفتاح AES باستخدام RSA
+                // - التحقق من HMAC
+                // - فك تشفير المحتوى باستخدام AES
+                
+                // 4. عرض رسالة نجاح فك التشفير
+                decryptionStatus.innerHTML = `
+                    <i class="fas fa-lock-open" style="color: var(--accent-color)"></i>
+                    <span>تم فك تشفير الرسالة بنجاح (AES-256 + RSA-2048)</span>
+                `;
+                
+                // 5. عرض المحتوى (في الواقع الفعلي: decryptedContent)
+                const decryptedContent = "نص الرسالة الأصلية بعد فك التشفير.\n\nهذا مثال لنص الرسالة الذي تم فك تشفيره بنجاح.";
+                messageBody.textContent = decryptedContent;
+                messageBody.style.display = 'block';
+                
+                // 6. معالجة المرفقات إذا وجدت
+                if (encryptedMessage.attachment) {
+                    document.getElementById('attachmentName').textContent = encryptedMessage.attachment.name;
+                    document.getElementById('attachmentContainer').style.display = 'flex';
+                }
+                
+            } catch (err) {
+                console.error("خطأ أثناء فك التشفير:", err);
+                decryptionStatus.innerHTML = `
+                    <i class="fas fa-exclamation-triangle" style="color: var(--error-color)"></i>
+                    <span>تعذر فك تشفير الرسالة: ${err.message}</span>
+                `;
+            }
+        });
+        
+        // دالة مساعدة لتنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-SA', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // دالة تنزيل المرفق
+        document.getElementById('downloadAttachment')?.addEventListener('click', function() {
+            alert('سيتم تنزيل المرفق في الواقع الفعلي');
+        });
+        
+        // دالة الرد على الرسالة
+        document.getElementById('replyBtn')?.addEventListener('click', function() {
+            window.location.href = 'sender.html?replyTo=' + encodeURIComponent("ahmed@example.com");
+        });
+        
+        // دالة حذف الرسالة
+        document.getElementById('deleteBtn')?.addEventListener('click', function() {
+            if (confirm('هل أنت متأكد من حذف هذه الرسالة؟')) {
+                alert('تم حذف الرسالة (محاكاة)');
+                window.location.href = 'inbox.html';
+            }
+        });
+    </script>
 </body>
 </html>
