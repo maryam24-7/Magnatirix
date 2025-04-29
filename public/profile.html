@@ -138,25 +138,19 @@
 <body>
     <header class="header">
         <div class="container header-content">
-            <a href="/index.html" class="logo-text">
+            <a href="/dashboard.html" class="logo-text">
                 <i class="fas fa-lock"></i>
                 <span class="logo">Magnatirix</span>
             </a>
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span>English</span>
+                    <span id="languageText">English</span>
                 </button>
-                <div class="user-dropdown">
-                    <button class="btn btn-secondary" id="userMenu">
-                        <i class="fas fa-user-circle"></i> <span id="username-display"></span>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="/public/profile.html" id="profile-link"><i class="fas fa-user"></i> <span>الملف الشخصي</span></a>
-                        <a href="/public/settings.html" id="settings-link"><i class="fas fa-cog"></i> <span>الإعدادات</span></a>
-                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span></a>
-                    </div>
-                </div>
+                <a href="/login.html" class="logout-btn" id="logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span id="logoutText">تسجيل الخروج</span>
+                </a>
             </div>
         </div>
     </header>
@@ -198,13 +192,13 @@
                         <i class="fas fa-shield-alt"></i>
                         <div>
                             <h4 id="secure-account-text">حساب آمن</h4>
-                            <p id="verified-text">تم التحقق من بريدك الإلكتروني وهاتفك المحمول</p>
+                            <p id="verified-text">تم التحقق من بريدك الإلكتروني</p>
                         </div>
                     </div>
                 </div>
                 
                 <button class="edit-btn" id="edit-profile-btn">
-                    <i class="fas fa-edit"></i> <span>تعديل الملف الشخصي</span>
+                    <i class="fas fa-edit"></i> <span id="edit-profile-text">تعديل الملف الشخصي</span>
                 </button>
             </div>
         </div>
@@ -217,29 +211,21 @@
                 <span>Magnatirix</span>
             </div>
             <div class="footer-links">
-                <a href="#" class="footer-link" id="terms-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link" id="privacy-link">سياسة الخصوصية</a>
+                <a href="/terms.html" class="footer-link" id="terms-link">الشروط والأحكام</a>
+                <a href="/privacy.html" class="footer-link" id="privacy-link">سياسة الخصوصية</a>
                 <a href="/about.html" class="footer-link" id="about-link">عن النظام</a>
-                <a href="#" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
-                <a href="#" class="footer-link" id="contact-link">اتصل بنا</a>
-            </div>
-            <div class="footer-social">
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="/faq.html" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
+                <a href="/contact.html" class="footer-link" id="contact-link">اتصل بنا</a>
             </div>
             <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
 
     <script>
-        // العناصر المترجمة
+        // الترجمات
         const translations = {
             ar: {
-                profile: "الملف الشخصي",
-                settings: "الإعدادات",
-                logout: "تسجيل الخروج",
+                title: "الملف الشخصي",
                 basicInfo: "معلومات أساسية",
                 fullname: "الاسم الكامل",
                 email: "البريد الإلكتروني",
@@ -247,8 +233,10 @@
                 joinDate: "تاريخ الانضمام",
                 security: "الأمان",
                 secureAccount: "حساب آمن",
-                verified: "تم التحقق من بريدك الإلكتروني وهاتفك المحمول",
+                verified: "تم التحقق من بريدك الإلكتروني",
                 editProfile: "تعديل الملف الشخصي",
+                logout: "تسجيل الخروج",
+                language: "English",
                 terms: "الشروط والأحكام",
                 privacy: "سياسة الخصوصية",
                 about: "عن النظام",
@@ -256,18 +244,18 @@
                 contact: "اتصل بنا"
             },
             en: {
-                profile: "Profile",
-                settings: "Settings",
-                logout: "Logout",
+                title: "Profile",
                 basicInfo: "Basic Information",
                 fullname: "Full Name",
                 email: "Email",
-                phone: "Phone",
+                phone: "Phone Number",
                 joinDate: "Join Date",
                 security: "Security",
                 secureAccount: "Secure Account",
-                verified: "Your email and phone have been verified",
+                verified: "Your email has been verified",
                 editProfile: "Edit Profile",
+                logout: "Logout",
+                language: "العربية",
                 terms: "Terms",
                 privacy: "Privacy Policy",
                 about: "About",
@@ -280,41 +268,38 @@
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('userData')) || {};
             
-            document.getElementById('profile-name').textContent = userData.name || 'مستخدم';
-            document.getElementById('profile-email').textContent = userData.email || 'غير محدد';
+            document.getElementById('profile-name').textContent = userData.name || '';
+            document.getElementById('profile-email').textContent = userData.email || '';
             document.getElementById('fullname-value').textContent = userData.fullname || 'غير محدد';
             document.getElementById('email-value').textContent = userData.email || 'غير محدد';
             document.getElementById('phone-value').textContent = userData.phone || 'غير محدد';
             document.getElementById('join-date-value').textContent = userData.joinDate || 'غير محدد';
-            document.getElementById('username-display').textContent = userData.name || 'مستخدم';
         }
 
         // تغيير اللغة
         function updateLanguage(lang) {
-            const elements = {
-                'basic-info-title': translations[lang].basicInfo,
-                'fullname-label': translations[lang].fullname,
-                'email-label': translations[lang].email,
-                'phone-label': translations[lang].phone,
-                'join-date-label': translations[lang].joinDate,
-                'security-title': translations[lang].security,
-                'secure-account-text': translations[lang].secureAccount,
-                'verified-text': translations[lang].verified,
-                'edit-profile-btn span': translations[lang].editProfile,
-                'profile-link span': translations[lang].profile,
-                'settings-link span': translations[lang].settings,
-                'logout-link span': translations[lang].logout,
-                'terms-link': translations[lang].terms,
-                'privacy-link': translations[lang].privacy,
-                'about-link': translations[lang].about,
-                'faq-link': translations[lang].faq,
-                'contact-link': translations[lang].contact
-            };
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             
-            for (const [id, text] of Object.entries(elements)) {
-                const element = document.getElementById(id);
-                if (element) element.textContent = text;
-            }
+            document.title = `${translations[lang].title} | Magnatirix`;
+            
+            // تحديث النصوص
+            document.getElementById('basic-info-title').textContent = translations[lang].basicInfo;
+            document.getElementById('fullname-label').textContent = translations[lang].fullname + ":";
+            document.getElementById('email-label').textContent = translations[lang].email + ":";
+            document.getElementById('phone-label').textContent = translations[lang].phone + ":";
+            document.getElementById('join-date-label').textContent = translations[lang].joinDate + ":";
+            document.getElementById('security-title').textContent = translations[lang].security;
+            document.getElementById('secure-account-text').textContent = translations[lang].secureAccount;
+            document.getElementById('verified-text').textContent = translations[lang].verified;
+            document.getElementById('edit-profile-text').textContent = translations[lang].editProfile;
+            document.getElementById('logoutText').textContent = translations[lang].logout;
+            document.getElementById('languageText').textContent = translations[lang].language;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+            document.getElementById('privacy-link').textContent = translations[lang].privacy;
+            document.getElementById('about-link').textContent = translations[lang].about;
+            document.getElementById('faq-link').textContent = translations[lang].faq;
+            document.getElementById('contact-link').textContent = translations[lang].contact;
         }
 
         // تهيئة الصفحة
@@ -327,49 +312,19 @@
             
             // تهيئة اللغة
             const lang = localStorage.getItem('preferredLang') || 'ar';
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             updateLanguage(lang);
             
             // تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
                 const currentLang = document.documentElement.lang;
                 const newLang = currentLang === 'ar' ? 'en' : 'ar';
-                
-                document.documentElement.lang = newLang;
-                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
                 localStorage.setItem('preferredLang', newLang);
                 updateLanguage(newLang);
-                
-                // تحديث نص زر اللغة
-                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
-            });
-            
-            // تسجيل الخروج
-            document.getElementById('logout-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (confirm(lang === 'ar' ? 'هل أنت متأكد من تسجيل الخروج؟' : 'Are you sure you want to logout?')) {
-                    window.location.href = '/login.html';
-                }
-            });
-            
-            // القائمة المنسدلة للمستخدم
-            document.getElementById('userMenu').addEventListener('click', function(e) {
-                e.stopPropagation();
-                const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
-                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            // إغلاق القوائم عند النقر خارجها
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-                    dropdown.style.display = 'none';
-                });
             });
             
             // تعديل الملف الشخصي
             document.getElementById('edit-profile-btn').addEventListener('click', function() {
-                window.location.href = '/public/settings.html';
+                window.location.href = '/settings.html';
             });
         });
     </script>
