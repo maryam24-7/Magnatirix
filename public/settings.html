@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات | Magnatirix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .settings-header {
+            background: linear-gradient(135deg, #4a6cf7, #2541b2);
+            color: white;
+            padding: 20px 30px;
+        }
+        
+        .settings-body {
+            padding: 30px;
+        }
+        
+        .settings-section {
+            margin-bottom: 40px;
+        }
+        
+        .settings-section h3 {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #4a6cf7;
+            outline: none;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #4a6cf7, #2541b2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .security-actions {
+            margin-top: 30px;
+        }
+        
+        .security-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: right;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .security-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .security-btn i {
+            margin-left: 10px;
+        }
+        
+        .danger-zone {
+            border: 1px solid #ff6b6b;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .danger-zone h3 {
+            color: #ff6b6b;
+        }
+        
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-danger:hover {
+            background: #fa5252;
+        }
+        
+        @media (max-width: 768px) {
+            .settings-container {
+                margin: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo-text">
+                <i class="fas fa-lock"></i>
+                <span class="logo">Magnatirix</span>
+            </a>
+            <div class="nav-actions">
+                <button class="language-switcher" id="languageToggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
+                <div class="user-dropdown">
+                    <button class="btn btn-secondary" id="userMenu">
+                        <i class="fas fa-user-circle"></i> <span id="username-display">مستخدم</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="profile.html" id="profile-link"><i class="fas fa-user"></i> الملف الشخصي</a>
+                        <a href="settings.html" id="settings-link"><i class="fas fa-cog"></i> الإعدادات</a>
+                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="settings-container">
+            <div class="settings-header">
+                <h1>الإعدادات</h1>
+            </div>
+            
+            <div class="settings-body">
+                <form id="settings-form">
+                    <div class="settings-section">
+                        <h3>المعلومات الشخصية</h3>
+                        <div class="form-group">
+                            <label for="name">الاسم</label>
+                            <input type="text" id="name" class="form-control" value="مريم أحمد">
+                        </div>
+                        <div class="form-group">
+                            <label for="fullname">الاسم الكامل</label>
+                            <input type="text" id="fullname" class="form-control" value="مريم أحمد محمد">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" class="form-control" value="maryam@magnatirix.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">رقم الهاتف</label>
+                            <input type="tel" id="phone" class="form-control" value="+966501234567">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>إعدادات الخصوصية</h3>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="show-profile" checked>
+                                إظهار الملف الشخصي للعامة
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="show-email" checked>
+                                إظهار البريد الإلكتروني للأعضاء
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i> حفظ التغييرات
+                    </button>
+                </form>
+                
+                <div class="security-actions">
+                    <h3>الأمان</h3>
+                    <button class="security-btn" onclick="location.href='change-password.html'">
+                        <i class="fas fa-key"></i> تغيير كلمة المرور
+                    </button>
+                    <button class="security-btn" onclick="location.href='two-factor.html'">
+                        <i class="fas fa-mobile-alt"></i> المصادقة الثنائية
+                    </button>
+                    <button class="security-btn" onclick="location.href='sessions.html'">
+                        <i class="fas fa-desktop"></i> جلسات الدخول النشطة
+                    </button>
+                </div>
+                
+                <div class="danger-zone">
+                    <h3>منطقة الخطر</h3>
+                    <p>هذه الإجراءات لا يمكن التراجع عنها. الرجاء التأكد قبل المتابعة.</p>
+                    <button class="btn-danger" id="delete-account">
+                        <i class="fas fa-trash-alt"></i> حذف الحساب
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-lock"></i>
+                <span>Magnatirix</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">الشروط والأحكام</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+                <a href="about.html" class="footer-link">عن النظام</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Load user data
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {
+                name: 'مريم أحمد',
+                email: 'maryam@magnatirix.com',
+                fullname: 'مريم أحمد محمد',
+                phone: '+966501234567'
+            };
+
+            document.getElementById('name').value = userData.name;
+            document.getElementById('fullname').value = userData.fullname;
+            document.getElementById('email').value = userData.email;
+            document.getElementById('phone').value = userData.phone;
+            document.getElementById('username-display').textContent = userData.name;
+        });
+
+        // Save settings
+        document.getElementById('settings-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('name').value,
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+            
+            localStorage.setItem('userData', JSON.stringify(userData));
+            document.getElementById('username-display').textContent = userData.name;
+            
+            alert('تم حفظ التغييرات بنجاح');
+        });
+
+        // Delete account confirmation
+        document.getElementById('delete-account').addEventListener('click', function() {
+            if (confirm('هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                localStorage.removeItem('userData');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Language switching function
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.lang;
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+
+            // Update HTML attributes
+            html.lang = newLang;
+            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Save preference to localStorage
+            localStorage.setItem('preferredLang', newLang);
+            
+            // Reload to apply language changes
+            location.reload();
+        });
+
+        // Check for saved language preference
+        const savedLang = localStorage.getItem('preferredLang');
+        if (savedLang && savedLang !== document.documentElement.lang) {
+            document.getElementById('languageToggle').click();
+        }
+
+        // Logout functionality
+        document.getElementById('logout-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('userData');
+            window.location.href = 'login.html';
+        });
+
+        // Toggle user dropdown
+        document.getElementById('userMenu').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
