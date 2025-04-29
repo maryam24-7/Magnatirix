@@ -8,29 +8,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #6e8efb;
+            --primary-dark: #a777e3;
+            --success-color: #28a745;
+            --text-color: #333;
+            --light-gray: #f8f9fa;
+            --border-color: #ddd;
+        }
+
         .profile-container {
             max-width: 800px;
             margin: 30px auto;
             background: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            animation: fadeIn 0.5s ease;
         }
-        
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .profile-header {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             padding: 30px;
             text-align: center;
             position: relative;
         }
-        
+
         .profile-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             border: 5px solid white;
-            object-fit: cover;
             margin-bottom: 15px;
             background: #eee;
             display: flex;
@@ -38,99 +52,124 @@
             justify-content: center;
             margin: 0 auto 15px;
         }
-        
+
         .profile-avatar i {
             font-size: 50px;
             color: #777;
         }
-        
+
         .profile-name {
             font-size: 24px;
             margin: 10px 0 5px;
+            font-weight: 700;
         }
-        
+
         .profile-email {
             opacity: 0.9;
             font-size: 16px;
         }
-        
+
         .profile-body {
             padding: 30px;
         }
-        
+
         .profile-section {
             margin-bottom: 30px;
         }
-        
+
         .profile-section h3 {
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            color: #555;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            font-weight: 700;
         }
-        
+
         .info-row {
             display: flex;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             align-items: center;
         }
-        
+
         .info-label {
-            width: 150px;
-            font-weight: bold;
-            color: #666;
+            width: 180px;
+            font-weight: 600;
+            color: var(--text-color);
         }
-        
+
         .info-value {
             flex: 1;
+            padding: 12px 15px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            min-height: 20px;
         }
-        
+
         .edit-btn {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 14px 28px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
             transition: all 0.3s;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             margin-top: 20px;
         }
-        
+
         .edit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0.9;
         }
-        
+
         .security-badge {
-            background: #f8f9fa;
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 20px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
             display: flex;
             align-items: center;
+            gap: 15px;
+            border-left: 4px solid var(--success-color);
         }
-        
+
         .security-badge i {
             font-size: 24px;
-            color: #28a745;
-            margin-left: 15px;
+            color: var(--success-color);
         }
-        
+
+        .security-badge-content h4 {
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+
+        .security-badge-content p {
+            margin: 0;
+            color: #666;
+        }
+
         @media (max-width: 768px) {
             .profile-container {
                 margin: 15px;
+                border-radius: 0;
             }
             
             .info-row {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 8px;
             }
             
             .info-label {
                 width: 100%;
-                margin-bottom: 5px;
+            }
+            
+            .info-value {
+                width: 100%;
             }
         }
     </style>
@@ -145,12 +184,8 @@
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span id="languageText">English</span>
+                    <span>English</span>
                 </button>
-                <a href="/login.html" class="logout-btn" id="logout-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span id="logoutText">تسجيل الخروج</span>
-                </a>
             </div>
         </div>
     </header>
@@ -170,19 +205,19 @@
                     <h3 id="basic-info-title">معلومات أساسية</h3>
                     <div class="info-row">
                         <div class="info-label" id="fullname-label">الاسم الكامل:</div>
-                        <div class="info-value" id="fullname-value"></div>
+                        <div class="info-value" id="fullname-value">غير محدد</div>
                     </div>
                     <div class="info-row">
                         <div class="info-label" id="email-label">البريد الإلكتروني:</div>
-                        <div class="info-value" id="email-value"></div>
+                        <div class="info-value" id="email-value">غير محدد</div>
                     </div>
                     <div class="info-row">
                         <div class="info-label" id="phone-label">رقم الهاتف:</div>
-                        <div class="info-value" id="phone-value"></div>
+                        <div class="info-value" id="phone-value">غير محدد</div>
                     </div>
                     <div class="info-row">
                         <div class="info-label" id="join-date-label">تاريخ الانضمام:</div>
-                        <div class="info-value" id="join-date-value"></div>
+                        <div class="info-value" id="join-date-value">غير محدد</div>
                     </div>
                 </div>
                 
@@ -190,7 +225,7 @@
                     <h3 id="security-title">الأمان</h3>
                     <div class="security-badge">
                         <i class="fas fa-shield-alt"></i>
-                        <div>
+                        <div class="security-badge-content">
                             <h4 id="secure-account-text">حساب آمن</h4>
                             <p id="verified-text">تم التحقق من بريدك الإلكتروني</p>
                         </div>
@@ -217,15 +252,20 @@
                 <a href="/faq.html" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
                 <a href="/contact.html" class="footer-link" id="contact-link">اتصل بنا</a>
             </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+            </div>
             <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
 
     <script>
-        // الترجمات
+        // العناصر المترجمة
         const translations = {
             ar: {
-                title: "الملف الشخصي",
                 basicInfo: "معلومات أساسية",
                 fullname: "الاسم الكامل",
                 email: "البريد الإلكتروني",
@@ -235,8 +275,7 @@
                 secureAccount: "حساب آمن",
                 verified: "تم التحقق من بريدك الإلكتروني",
                 editProfile: "تعديل الملف الشخصي",
-                logout: "تسجيل الخروج",
-                language: "English",
+                notSpecified: "غير محدد",
                 terms: "الشروط والأحكام",
                 privacy: "سياسة الخصوصية",
                 about: "عن النظام",
@@ -244,7 +283,6 @@
                 contact: "اتصل بنا"
             },
             en: {
-                title: "Profile",
                 basicInfo: "Basic Information",
                 fullname: "Full Name",
                 email: "Email",
@@ -254,8 +292,7 @@
                 secureAccount: "Secure Account",
                 verified: "Your email has been verified",
                 editProfile: "Edit Profile",
-                logout: "Logout",
-                language: "العربية",
+                notSpecified: "Not specified",
                 terms: "Terms",
                 privacy: "Privacy Policy",
                 about: "About",
@@ -268,38 +305,40 @@
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('userData')) || {};
             
-            document.getElementById('profile-name').textContent = userData.name || '';
-            document.getElementById('profile-email').textContent = userData.email || '';
-            document.getElementById('fullname-value').textContent = userData.fullname || 'غير محدد';
-            document.getElementById('email-value').textContent = userData.email || 'غير محدد';
-            document.getElementById('phone-value').textContent = userData.phone || 'غير محدد';
-            document.getElementById('join-date-value').textContent = userData.joinDate || 'غير محدد';
+            document.getElementById('profile-name').textContent = userData.name || translations[lang].notSpecified;
+            document.getElementById('profile-email').textContent = userData.email || translations[lang].notSpecified;
+            document.getElementById('fullname-value').textContent = userData.fullname || translations[lang].notSpecified;
+            document.getElementById('email-value').textContent = userData.email || translations[lang].notSpecified;
+            document.getElementById('phone-value').textContent = userData.phone || translations[lang].notSpecified;
+            document.getElementById('join-date-value').textContent = userData.joinDate || translations[lang].notSpecified;
         }
 
         // تغيير اللغة
         function updateLanguage(lang) {
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            const elements = {
+                'basic-info-title': translations[lang].basicInfo,
+                'fullname-label': translations[lang].fullname,
+                'email-label': translations[lang].email,
+                'phone-label': translations[lang].phone,
+                'join-date-label': translations[lang].joinDate,
+                'security-title': translations[lang].security,
+                'secure-account-text': translations[lang].secureAccount,
+                'verified-text': translations[lang].verified,
+                'edit-profile-text': translations[lang].editProfile,
+                'terms-link': translations[lang].terms,
+                'privacy-link': translations[lang].privacy,
+                'about-link': translations[lang].about,
+                'faq-link': translations[lang].faq,
+                'contact-link': translations[lang].contact
+            };
             
-            document.title = `${translations[lang].title} | Magnatirix`;
+            for (const [id, text] of Object.entries(elements)) {
+                const element = document.getElementById(id);
+                if (element) element.textContent = text;
+            }
             
-            // تحديث النصوص
-            document.getElementById('basic-info-title').textContent = translations[lang].basicInfo;
-            document.getElementById('fullname-label').textContent = translations[lang].fullname + ":";
-            document.getElementById('email-label').textContent = translations[lang].email + ":";
-            document.getElementById('phone-label').textContent = translations[lang].phone + ":";
-            document.getElementById('join-date-label').textContent = translations[lang].joinDate + ":";
-            document.getElementById('security-title').textContent = translations[lang].security;
-            document.getElementById('secure-account-text').textContent = translations[lang].secureAccount;
-            document.getElementById('verified-text').textContent = translations[lang].verified;
-            document.getElementById('edit-profile-text').textContent = translations[lang].editProfile;
-            document.getElementById('logoutText').textContent = translations[lang].logout;
-            document.getElementById('languageText').textContent = translations[lang].language;
-            document.getElementById('terms-link').textContent = translations[lang].terms;
-            document.getElementById('privacy-link').textContent = translations[lang].privacy;
-            document.getElementById('about-link').textContent = translations[lang].about;
-            document.getElementById('faq-link').textContent = translations[lang].faq;
-            document.getElementById('contact-link').textContent = translations[lang].contact;
+            // تحديث بيانات المستخدم باللغة الجديدة
+            loadUserData();
         }
 
         // تهيئة الصفحة
@@ -307,19 +346,29 @@
             // سنة حقوق النشر
             document.getElementById('year').textContent = new Date().getFullYear();
             
+            // تحديد اللغة المفضلة
+            const lang = localStorage.getItem('preferredLang') || 'ar';
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            
+            // تحميل الترجمة
+            updateLanguage(lang);
+            
             // تحميل بيانات المستخدم
             loadUserData();
-            
-            // تهيئة اللغة
-            const lang = localStorage.getItem('preferredLang') || 'ar';
-            updateLanguage(lang);
             
             // تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
                 const currentLang = document.documentElement.lang;
                 const newLang = currentLang === 'ar' ? 'en' : 'ar';
+                
+                document.documentElement.lang = newLang;
+                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
                 localStorage.setItem('preferredLang', newLang);
                 updateLanguage(newLang);
+                
+                // تحديث نص زر اللغة
+                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
             });
             
             // تعديل الملف الشخصي
