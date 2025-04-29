@@ -21,10 +21,10 @@
                     <span id="languageText">English</span>
                 </button>
                 <a href="login.html" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text" id="loginBtnText">تسجيل الدخول</span>
                 </a>
                 <a href="signup.html" class="btn btn-secondary">
-                    <i class="fas fa-user-plus"></i> <span class="btn-text" id="createAccountText">إنشاء حساب</span>
+                    <i class="fas fa-user-plus"></i> <span class="btn-text" id="signupBtnText">إنشاء حساب</span>
                 </a>
             </div>
         </div>
@@ -55,7 +55,7 @@
                 </div>
                 
                 <button type="submit" class="btn btn-accent auth-btn" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> <span>تسجيل الدخول</span>
+                    <i class="fas fa-sign-in-alt"></i> <span id="loginBtnSpan">تسجيل الدخول</span>
                 </button>
             </form>
             
@@ -104,11 +104,11 @@
                 document.getElementById('password-label').textContent = 'Password';
                 document.getElementById('remember-label').textContent = 'Remember me';
                 document.getElementById('forgot-password').textContent = 'Forgot password?';
-                document.getElementById('login-btn').querySelector('span').textContent = 'Login';
+                document.getElementById('loginBtnSpan').textContent = 'Login';
                 document.getElementById('no-account').textContent = 'Don\'t have an account?';
                 document.getElementById('signup-link').textContent = 'Sign Up';
-                document.querySelector('.btn-primary .btn-text').textContent = 'Login';
-                document.getElementById('createAccountText').textContent = 'Sign Up';
+                document.getElementById('loginBtnText').textContent = 'Login';
+                document.getElementById('signupBtnText').textContent = 'Sign Up';
             } else {
                 languageText.textContent = 'English';
                 document.documentElement.lang = 'ar';
@@ -122,11 +122,11 @@
                 document.getElementById('password-label').textContent = 'كلمة المرور';
                 document.getElementById('remember-label').textContent = 'تذكرني';
                 document.getElementById('forgot-password').textContent = 'نسيت كلمة المرور؟';
-                document.getElementById('login-btn').querySelector('span').textContent = 'تسجيل الدخول';
+                document.getElementById('loginBtnSpan').textContent = 'تسجيل الدخول';
                 document.getElementById('no-account').textContent = 'ليس لديك حساب؟';
                 document.getElementById('signup-link').textContent = 'إنشاء حساب';
-                document.querySelector('.btn-primary .btn-text').textContent = 'تسجيل الدخول';
-                document.getElementById('createAccountText').textContent = 'إنشاء حساب';
+                document.getElementById('loginBtnText').textContent = 'تسجيل الدخول';
+                document.getElementById('signupBtnText').textContent = 'إنشاء حساب';
             }
             
             // حفظ اللغة المختارة في localStorage
