@@ -120,6 +120,18 @@
             font-size: 2.5rem;
         }
         
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
@@ -142,137 +154,133 @@
 </head>
 <body>
     <div class="container">
-        <div class="message-box">
-            <div class="message-header">
-                <div class="message-subject" id="messageSubject">موضوع الرسالة</div>
-                <div class="message-meta">
-                    <span id="senderInfo"><i class="fas fa-user"></i> المرسل: غير معروف</span>
-                    <span id="receivedDate"><i class="fas fa-clock"></i> تاريخ الاستلام: غير معروف</span>
-                </div>
-            </div>
-            
-            <div class="decryption-status" id="decryptionStatus">
-                <i class="fas fa-lock"></i>
-                <span>جاري فك تشفير الرسالة...</span>
-            </div>
-            
-            <div class="message-body" id="messageBody" style="display: none;">
-                محتوى الرسالة سيظهر هنا بعد فك التشفير
-            </div>
-            
-            <div class="attachment" id="attachmentContainer" style="display: none;">
-                <i class="fas fa-paperclip"></i>
-                <div>
-                    <div id="attachmentName">ملف مرفق</div>
-                    <button class="btn btn-primary" id="downloadAttachment">
-                        <i class="fas fa-download"></i> تنزيل المرفق
-                    </button>
-                </div>
-            </div>
-            
-            <div class="actions" style="margin-top: 30px;">
-                <button class="btn btn-primary" id="replyBtn">
-                    <i class="fas fa-reply"></i> رد
-                </button>
-                <button class="btn" id="deleteBtn">
-                    <i class="fas fa-trash"></i> حذف
-                </button>
+        <div class="message-box" id="messageContainer">
+            <!-- سيتم ملء هذا القسم ديناميكيًا عند استقبال رسالة -->
+            <div class="empty-state">
+                <i class="fas fa-envelope-open"></i>
+                <h2>لا توجد رسائل لعرضها</h2>
+                <p>سيتم عرض الرسائل المستقبلة هنا عند وصولها</p>
             </div>
         </div>
     </div>
 
     <script>
-        // كود JavaScript لفك التشفير وعرض الرسالة
+        // كود JavaScript لاستقبال الرسائل وفك تشفيرها
         document.addEventListener('DOMContentLoaded', async function() {
-            // عرض حالة التحميل
-            const decryptionStatus = document.getElementById('decryptionStatus');
-            const messageBody = document.getElementById('messageBody');
+            // جلب معرف الرسالة من URL إذا كان موجوداً
+            const urlParams = new URLSearchParams(window.location.search);
+            const messageId = urlParams.get('id');
+            
+            if (messageId) {
+                await loadAndDecryptMessage(messageId);
+            }
+        });
+        
+        // دالة لجلب الرسالة وفك تشفيرها
+        async function loadAndDecryptMessage(messageId) {
+            const messageContainer = document.getElementById('messageContainer');
             
             try {
-                // 1. محاكاة جلب الرسالة المشفرة من السيرفر
-                // في الواقع الفعلي: سيتم جلب هذه البيانات من API
-                const encryptedMessage = {
-                    id: "12345",
-                    subject: "اجتماع مهم غداً",
-                    sender: "ahmed@example.com",
-                    senderName: "أحمد محمد",
-                    date: "2023-05-20T14:30:00Z",
-                    encryptedMessage: "U2FsdGVkX1+3RQ4VpGJw6Jj7jX7J5X9X...", // مثال لرسالة مشفرة
-                    hmac: "a1b2c3d4e5f6...", // مثال لـ HMAC
-                    encryptedAesKey: "XYZ123...", // مثال لمفتاح AES المشفر
-                    attachment: null // أو معلومات المرفق إذا كان موجوداً
-                };
+                // عرض حالة التحميل
+                messageContainer.innerHTML = `
+                    <div class="loading-overlay" style="position: relative; height: 200px;">
+                        <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+                        <div>جاري تحميل الرسالة...</div>
+                    </div>
+                `;
                 
-                // 2. عرض معلومات الرسالة الأساسية
-                document.getElementById('messageSubject').textContent = encryptedMessage.subject;
-                document.getElementById('senderInfo').innerHTML = `<i class="fas fa-user"></i> المرسل: ${encryptedMessage.senderName} &lt;${encryptedMessage.sender}&gt;`;
-                document.getElementById('receivedDate').innerHTML = `<i class="fas fa-clock"></i> تاريخ الاستلام: ${formatDate(encryptedMessage.date)}`;
+                // 1. جلب الرسالة المشفرة من السيرفر
+                const response = await fetch(`/api/messages/${messageId}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    }
+                });
                 
-                // 3. فك تشفير الرسالة (محاكاة)
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                if (!response.ok) {
+                    throw new Error('فشل في جلب الرسالة');
+                }
                 
-                // في الواقع الفعلي:
-                // - جلب المفتاح الخاص من تخزين آمن
-                // - فك تشفير مفتاح AES باستخدام RSA
-                // - التحقق من HMAC
-                // - فك تشفير المحتوى باستخدام AES
+                const encryptedMessage = await response.json();
                 
-                // 4. عرض رسالة نجاح فك التشفير
-                decryptionStatus.innerHTML = `
+                // 2. عرض هيكل الرسالة
+                messageContainer.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-subject" id="messageSubject">${encryptedMessage.subject || 'بدون موضوع'}</div>
+                        <div class="message-meta">
+                            <span id="senderInfo"><i class="fas fa-user"></i> المرسل: جاري التحميل...</span>
+                            <span id="receivedDate"><i class="fas fa-clock"></i> تاريخ الاستلام: جاري التحميل...</span>
+                        </div>
+                    </div>
+                    <div class="decryption-status" id="decryptionStatus">
+                        <i class="fas fa-lock"></i>
+                        <span>جاري فك تشفير الرسالة...</span>
+                    </div>
+                    <div class="message-body" id="messageBody" style="display: none;"></div>
+                    <div class="attachment" id="attachmentContainer" style="display: none;"></div>
+                    <div class="actions" style="margin-top: 30px;">
+                        <button class="btn btn-primary" id="replyBtn">
+                            <i class="fas fa-reply"></i> رد
+                        </button>
+                        <button class="btn" id="deleteBtn">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </div>
+                `;
+                
+                // 3. عرض معلومات الرسالة الأساسية
+                document.getElementById('senderInfo').innerHTML = 
+                    `<i class="fas fa-user"></i> المرسل: ${encryptedMessage.senderName || 'غير معروف'} &lt;${encryptedMessage.sender || 'غير معروف'}&gt;`;
+                
+                document.getElementById('receivedDate').innerHTML = 
+                    `<i class="fas fa-clock"></i> تاريخ الاستلام: ${formatDate(encryptedMessage.date || new Date().toISOString())}`;
+                
+                // 4. فك تشفير الرسالة
+                const decryptedContent = await decryptMessage(encryptedMessage);
+                
+                // 5. عرض رسالة نجاح فك التشفير
+                document.getElementById('decryptionStatus').innerHTML = `
                     <i class="fas fa-lock-open" style="color: var(--accent-color)"></i>
                     <span>تم فك تشفير الرسالة بنجاح (AES-256 + RSA-2048)</span>
                 `;
                 
-                // 5. عرض المحتوى (في الواقع الفعلي: decryptedContent)
-                const decryptedContent = "نص الرسالة الأصلية بعد فك التشفير.\n\nهذا مثال لنص الرسالة الذي تم فك تشفيره بنجاح.";
+                // 6. عرض المحتوى
+                const messageBody = document.getElementById('messageBody');
                 messageBody.textContent = decryptedContent;
                 messageBody.style.display = 'block';
                 
-                // 6. معالجة المرفقات إذا وجدت
+                // 7. معالجة المرفقات إذا وجدت
                 if (encryptedMessage.attachment) {
-                    document.getElementById('attachmentName').textContent = encryptedMessage.attachment.name;
-                    document.getElementById('attachmentContainer').style.display = 'flex';
+                    const attachmentContainer = document.getElementById('attachmentContainer');
+                    attachmentContainer.innerHTML = `
+                        <i class="fas fa-paperclip"></i>
+                        <div>
+                            <div id="attachmentName">${encryptedMessage.attachment.name}</div>
+                            <button class="btn btn-primary" id="downloadAttachment">
+                                <i class="fas fa-download"></i> تنزيل المرفق
+                            </button>
+                        </div>
+                    `;
+                    attachmentContainer.style.display = 'flex';
+                    
+                    document.getElementById('downloadAttachment').addEventListener('click', function() {
+                        downloadAttachment(encryptedMessage.attachment);
+                    });
                 }
                 
+                // إعداد أحداث الأزرار
+                document.getElementById('replyBtn').addEventListener('click', function() {
+                    window.location.href = 'sender.html?replyTo=' + encodeURIComponent(encryptedMessage.sender);
+                });
+                
+                document.getElementById('deleteBtn').addEventListener('click', function() {
+                    deleteMessage(messageId);
+                });
+                
             } catch (err) {
-                console.error("خطأ أثناء فك التشفير:", err);
-                decryptionStatus.innerHTML = `
-                    <i class="fas fa-exclamation-triangle" style="color: var(--error-color)"></i>
-                    <span>تعذر فك تشفير الرسالة: ${err.message}</span>
-                `;
-            }
-        });
-        
-        // دالة مساعدة لتنسيق التاريخ
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('ar-SA', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-        
-        // دالة تنزيل المرفق
-        document.getElementById('downloadAttachment')?.addEventListener('click', function() {
-            alert('سيتم تنزيل المرفق في الواقع الفعلي');
-        });
-        
-        // دالة الرد على الرسالة
-        document.getElementById('replyBtn')?.addEventListener('click', function() {
-            window.location.href = 'sender.html?replyTo=' + encodeURIComponent("ahmed@example.com");
-        });
-        
-        // دالة حذف الرسالة
-        document.getElementById('deleteBtn')?.addEventListener('click', function() {
-            if (confirm('هل أنت متأكد من حذف هذه الرسالة؟')) {
-                alert('تم حذف الرسالة (محاكاة)');
-                window.location.href = 'inbox.html';
-            }
-        });
-    </script>
-</body>
-</html>
+                console.error("خطأ أثناء جلب أو فك تشفير الرسالة:", err);
+                messageContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h2>حدث خطأ أثناء تحميل الرسالة</h2>
+                        <p>${err.message}</p>
+                        <button class="btn
