@@ -8,132 +8,198 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --primary-dark: #2541b2;
+            --danger-color: #ff6b6b;
+            --danger-dark: #fa5252;
+            --text-color: #333;
+            --light-gray: #f8f9fa;
+            --border-color: #ddd;
+        }
+
         .settings-container {
             max-width: 800px;
             margin: 30px auto;
             background: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            animation: fadeIn 0.5s ease;
         }
-        
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .settings-header {
-            background: linear-gradient(135deg, #4a6cf7, #2541b2);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
-            padding: 20px 30px;
+            padding: 25px 30px;
+            text-align: center;
         }
-        
+
         .settings-body {
             padding: 30px;
         }
-        
+
         .settings-section {
             margin-bottom: 40px;
         }
-        
+
         .settings-section h3 {
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            color: #555;
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            font-weight: 700;
         }
-        
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
-        
+
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
         }
-        
+
         .form-control {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: #4a6cf7;
-            outline: none;
-        }
-        
-        .btn-save {
-            background: linear-gradient(135deg, #4a6cf7, #2541b2);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s;
+            background-color: #fff;
         }
-        
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+            outline: none;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
         .btn-save:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0.9;
         }
-        
+
         .security-actions {
-            margin-top: 30px;
-        }
-        
-        .security-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            text-align: right;
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .security-btn:hover {
-            background: #e9ecef;
-        }
-        
-        .security-btn i {
-            margin-left: 10px;
-        }
-        
-        .danger-zone {
-            border: 1px solid #ff6b6b;
-            border-radius: 5px;
-            padding: 20px;
             margin-top: 40px;
         }
-        
-        .danger-zone h3 {
-            color: #ff6b6b;
-        }
-        
-        .btn-danger {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+
+        .security-btn {
+            display: flex;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 12px;
+            text-align: right;
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            transition: all 0.3s;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .security-btn:hover {
+            background: #e9ecef;
+            transform: translateX(-5px);
+        }
+
+        .security-btn i {
+            font-size: 18px;
+        }
+
+        .danger-zone {
+            border: 1px solid var(--danger-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 50px;
+            background-color: rgba(255, 107, 107, 0.05);
+        }
+
+        .danger-zone h3 {
+            color: var(--danger-color);
+            margin-top: 0;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-dark);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: none;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 5px;
             transition: all 0.3s;
         }
-        
-        .btn-danger:hover {
-            background: #fa5252;
+
+        .logout-btn:hover {
+            background: #f0f0f0;
         }
-        
+
         @media (max-width: 768px) {
             .settings-container {
                 margin: 15px;
+                border-radius: 0;
+            }
+            
+            .settings-header {
+                padding: 20px;
+            }
+            
+            .settings-body {
+                padding: 20px;
             }
         }
     </style>
@@ -141,25 +207,19 @@
 <body>
     <header class="header">
         <div class="container header-content">
-            <a href="/index.html" class="logo-text">
+            <a href="/dashboard.html" class="logo-text">
                 <i class="fas fa-lock"></i>
                 <span class="logo">Magnatirix</span>
             </a>
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span>English</span>
+                    <span id="languageText">English</span>
                 </button>
-                <div class="user-dropdown">
-                    <button class="btn btn-secondary" id="userMenu">
-                        <i class="fas fa-user-circle"></i> <span id="username-display"></span>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="/public/profile.html" id="profile-link"><i class="fas fa-user"></i> الملف الشخصي</a>
-                        <a href="/public/settings.html" id="settings-link"><i class="fas fa-cog"></i> الإعدادات</a>
-                        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
-                    </div>
-                </div>
+                <a href="/login.html" class="logout-btn" id="logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span id="logoutText">تسجيل الخروج</span>
+                </a>
             </div>
         </div>
     </header>
@@ -175,12 +235,12 @@
                     <div class="settings-section">
                         <h3 id="personal-info-title">المعلومات الشخصية</h3>
                         <div class="form-group">
-                            <label for="name" id="name-label">الاسم</label>
+                            <label for="name" id="name-label">الاسم المعروض</label>
                             <input type="text" id="name" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="fullname" id="fullname-label">الاسم الكامل</label>
-                            <input type="text" id="fullname" class="form-control" required>
+                            <input type="text" id="fullname" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="email" id="email-label">البريد الإلكتروني</label>
@@ -194,40 +254,38 @@
                     
                     <div class="settings-section">
                         <h3 id="privacy-title">إعدادات الخصوصية</h3>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="show-profile">
-                                <span id="show-profile-label">إظهار الملف الشخصي للعامة</span>
-                            </label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="show-profile">
+                            <label for="show-profile" id="show-profile-label">إظهار الملف الشخصي للعامة</label>
                         </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="show-email">
-                                <span id="show-email-label">إظهار البريد الإلكتروني للأعضاء</span>
-                            </label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="show-email">
+                            <label for="show-email" id="show-email-label">إظهار البريد الإلكتروني للأعضاء</label>
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn-save" id="save-btn">
-                        <i class="fas fa-save"></i> <span>حفظ التغييرات</span>
+                    <button type="submit" class="btn btn-save" id="save-btn">
+                        <i class="fas fa-save"></i> <span id="save-text">حفظ التغييرات</span>
                     </button>
                 </form>
                 
                 <div class="security-actions">
                     <h3 id="security-title">الأمان</h3>
                     <button class="security-btn" id="change-password-btn">
-                        <i class="fas fa-key"></i> <span>تغيير كلمة المرور</span>
+                        <span><i class="fas fa-key"></i> <span id="change-password-text">تغيير كلمة المرور</span></span>
+                        <i class="fas fa-chevron-left"></i>
                     </button>
                     <button class="security-btn" id="two-factor-btn">
-                        <i class="fas fa-mobile-alt"></i> <span>المصادقة الثنائية</span>
+                        <span><i class="fas fa-mobile-alt"></i> <span id="two-factor-text">المصادقة الثنائية</span></span>
+                        <i class="fas fa-chevron-left"></i>
                     </button>
                 </div>
                 
                 <div class="danger-zone">
                     <h3 id="danger-zone-title">منطقة الخطر</h3>
                     <p id="danger-zone-text">هذه الإجراءات لا يمكن التراجع عنها. الرجاء التأكد قبل المتابعة.</p>
-                    <button class="btn-danger" id="delete-account">
-                        <i class="fas fa-trash-alt"></i> <span>حذف الحساب</span>
+                    <button class="btn btn-danger" id="delete-account">
+                        <i class="fas fa-trash-alt"></i> <span id="delete-account-text">حذف الحساب</span>
                     </button>
                 </div>
             </div>
@@ -241,29 +299,23 @@
                 <span>Magnatirix</span>
             </div>
             <div class="footer-links">
-                <a href="#" class="footer-link" id="terms-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link" id="privacy-link">سياسة الخصوصية</a>
+                <a href="/terms.html" class="footer-link" id="terms-link">الشروط والأحكام</a>
+                <a href="/privacy.html" class="footer-link" id="privacy-link">سياسة الخصوصية</a>
                 <a href="/about.html" class="footer-link" id="about-link">عن النظام</a>
-                <a href="#" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
-                <a href="#" class="footer-link" id="contact-link">اتصل بنا</a>
-            </div>
-            <div class="footer-social">
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="/faq.html" class="footer-link" id="faq-link">الأسئلة الشائعة</a>
+                <a href="/contact.html" class="footer-link" id="contact-link">اتصل بنا</a>
             </div>
             <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
 
     <script>
-        // العناصر المترجمة
+        // الترجمات
         const translations = {
             ar: {
-                settings: "الإعدادات",
+                title: "الإعدادات",
                 personalInfo: "المعلومات الشخصية",
-                name: "الاسم",
+                name: "الاسم المعروض",
                 fullname: "الاسم الكامل",
                 email: "البريد الإلكتروني",
                 phone: "رقم الهاتف",
@@ -277,6 +329,8 @@
                 dangerZone: "منطقة الخطر",
                 dangerText: "هذه الإجراءات لا يمكن التراجع عنها. الرجاء التأكد قبل المتابعة.",
                 deleteAccount: "حذف الحساب",
+                logout: "تسجيل الخروج",
+                language: "English",
                 terms: "الشروط والأحكام",
                 privacyPolicy: "سياسة الخصوصية",
                 about: "عن النظام",
@@ -284,12 +338,12 @@
                 contact: "اتصل بنا"
             },
             en: {
-                settings: "Settings",
+                title: "Settings",
                 personalInfo: "Personal Information",
-                name: "Name",
+                name: "Display Name",
                 fullname: "Full Name",
                 email: "Email",
-                phone: "Phone",
+                phone: "Phone Number",
                 privacy: "Privacy Settings",
                 showProfile: "Show profile publicly",
                 showEmail: "Show email to members",
@@ -300,6 +354,8 @@
                 dangerZone: "Danger Zone",
                 dangerText: "These actions cannot be undone. Please confirm before proceeding.",
                 deleteAccount: "Delete Account",
+                logout: "Logout",
+                language: "العربية",
                 terms: "Terms",
                 privacyPolicy: "Privacy Policy",
                 about: "About",
@@ -316,66 +372,41 @@
             document.getElementById('fullname').value = userData.fullname || '';
             document.getElementById('email').value = userData.email || '';
             document.getElementById('phone').value = userData.phone || '';
-            document.getElementById('show-profile').checked = userData.showProfile !== false;
-            document.getElementById('show-email').checked = userData.showEmail !== false;
-            document.getElementById('username-display').textContent = userData.name || 'مستخدم';
+            document.getElementById('show-profile').checked = userData.showProfile || false;
+            document.getElementById('show-email').checked = userData.showEmail || false;
         }
-
-        // حفظ الإعدادات
-        document.getElementById('settings-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const userData = {
-                name: document.getElementById('name').value.trim(),
-                fullname: document.getElementById('fullname').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                showProfile: document.getElementById('show-profile').checked,
-                showEmail: document.getElementById('show-email').checked,
-                joinDate: new Date().toLocaleDateString('ar-AR')
-            };
-            
-            if (!userData.name || !userData.email) {
-                alert('الاسم والبريد الإلكتروني حقول مطلوبة');
-                return;
-            }
-            
-            localStorage.setItem('userData', JSON.stringify(userData));
-            document.getElementById('username-display').textContent = userData.name;
-            
-            alert('تم حفظ التغييرات بنجاح');
-        });
 
         // تغيير اللغة
         function updateLanguage(lang) {
-            const elements = {
-                'settings-title': translations[lang].settings,
-                'personal-info-title': translations[lang].personalInfo,
-                'name-label': translations[lang].name,
-                'fullname-label': translations[lang].fullname,
-                'email-label': translations[lang].email,
-                'phone-label': translations[lang].phone,
-                'privacy-title': translations[lang].privacy,
-                'show-profile-label': translations[lang].showProfile,
-                'show-email-label': translations[lang].showEmail,
-                'save-btn span': translations[lang].save,
-                'security-title': translations[lang].security,
-                'change-password-btn span': translations[lang].changePassword,
-                'two-factor-btn span': translations[lang].twoFactor,
-                'danger-zone-title': translations[lang].dangerZone,
-                'danger-zone-text': translations[lang].dangerText,
-                'delete-account span': translations[lang].deleteAccount,
-                'terms-link': translations[lang].terms,
-                'privacy-link': translations[lang].privacyPolicy,
-                'about-link': translations[lang].about,
-                'faq-link': translations[lang].faq,
-                'contact-link': translations[lang].contact
-            };
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             
-            for (const [id, text] of Object.entries(elements)) {
-                const element = document.getElementById(id);
-                if (element) element.textContent = text;
-            }
+            document.title = `${translations[lang].title} | Magnatirix`;
+            
+            // تحديث النصوص
+            document.getElementById('settings-title').textContent = translations[lang].title;
+            document.getElementById('personal-info-title').textContent = translations[lang].personalInfo;
+            document.getElementById('name-label').textContent = translations[lang].name;
+            document.getElementById('fullname-label').textContent = translations[lang].fullname;
+            document.getElementById('email-label').textContent = translations[lang].email;
+            document.getElementById('phone-label').textContent = translations[lang].phone;
+            document.getElementById('privacy-title').textContent = translations[lang].privacy;
+            document.getElementById('show-profile-label').textContent = translations[lang].showProfile;
+            document.getElementById('show-email-label').textContent = translations[lang].showEmail;
+            document.getElementById('save-text').textContent = translations[lang].save;
+            document.getElementById('security-title').textContent = translations[lang].security;
+            document.getElementById('change-password-text').textContent = translations[lang].changePassword;
+            document.getElementById('two-factor-text').textContent = translations[lang].twoFactor;
+            document.getElementById('danger-zone-title').textContent = translations[lang].dangerZone;
+            document.getElementById('danger-zone-text').textContent = translations[lang].dangerText;
+            document.getElementById('delete-account-text').textContent = translations[lang].deleteAccount;
+            document.getElementById('logoutText').textContent = translations[lang].logout;
+            document.getElementById('languageText').textContent = translations[lang].language;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+            document.getElementById('privacy-link').textContent = translations[lang].privacyPolicy;
+            document.getElementById('about-link').textContent = translations[lang].about;
+            document.getElementById('faq-link').textContent = translations[lang].faq;
+            document.getElementById('contact-link').textContent = translations[lang].contact;
         }
 
         // تهيئة الصفحة
@@ -388,64 +419,70 @@
             
             // تهيئة اللغة
             const lang = localStorage.getItem('preferredLang') || 'ar';
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             updateLanguage(lang);
             
             // تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
                 const currentLang = document.documentElement.lang;
                 const newLang = currentLang === 'ar' ? 'en' : 'ar';
-                
-                document.documentElement.lang = newLang;
-                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
                 localStorage.setItem('preferredLang', newLang);
                 updateLanguage(newLang);
-                
-                // تحديث نص زر اللغة
-                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
             });
             
-            // تسجيل الخروج
-            document.getElementById('logout-link').addEventListener('click', function(e) {
+            // حفظ الإعدادات
+            document.getElementById('settings-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                if (confirm(lang === 'ar' ? 'هل أنت متأكد من تسجيل الخروج؟' : 'Are you sure you want to logout?')) {
-                    window.location.href = '/login.html';
+                
+                const userData = {
+                    name: document.getElementById('name').value.trim(),
+                    fullname: document.getElementById('fullname').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    showProfile: document.getElementById('show-profile').checked,
+                    showEmail: document.getElementById('show-email').checked,
+                    joinDate: JSON.parse(localStorage.getItem('userData'))?.joinDate || new Date().toLocaleDateString()
+                };
+                
+                if (!userData.name || !userData.email) {
+                    alert(document.documentElement.lang === 'ar' ? 
+                        'الاسم والبريد الإلكتروني حقول مطلوبة' : 
+                        'Name and email are required fields');
+                    return;
                 }
-            });
-            
-            // القائمة المنسدلة للمستخدم
-            document.getElementById('userMenu').addEventListener('click', function(e) {
-                e.stopPropagation();
-                const dropdown = this.closest('.user-dropdown').querySelector('.dropdown-content');
-                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            // إغلاق القوائم عند النقر خارجها
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-                    dropdown.style.display = 'none';
-                });
+                
+                localStorage.setItem('userData', JSON.stringify(userData));
+                alert(document.documentElement.lang === 'ar' ? 
+                    'تم حفظ التغييرات بنجاح' : 
+                    'Changes saved successfully');
             });
             
             // حذف الحساب
             document.getElementById('delete-account').addEventListener('click', function() {
-                if (confirm(lang === 'ar' ? 
-                    'هل أنت متأكد من حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.' : 
-                    'Are you sure you want to delete your account? This action cannot be undone.')) {
-                    localStorage.removeItem('userData');
-                    window.location.href = '/login.html';
+                const lang = document.documentElement.lang;
+                const confirmMsg = lang === 'ar' ? 
+                    '⚠️ هل أنت متأكد أنك تريد حذف حسابك؟ سيتم فقدان جميع البيانات بشكل دائم ولا يمكن استرجاعها.' : 
+                    '⚠️ Are you sure you want to delete your account? All data will be permanently lost.';
+                
+                const finalConfirmMsg = lang === 'ar' ? 
+                    '❌ تأكيد نهائي: هل أنت متأكد من رغبتك في حذف الحساب؟' : 
+                    '❌ Final confirmation: Are you absolutely sure you want to delete your account?';
+                
+                if (confirm(confirmMsg)) {
+                    if (confirm(finalConfirmMsg)) {
+                        localStorage.removeItem('userData');
+                        window.location.href = '/login.html';
+                    }
                 }
             });
             
             // تغيير كلمة المرور
             document.getElementById('change-password-btn').addEventListener('click', function() {
-                window.location.href = '/public/change-password.html';
+                window.location.href = '/change-password.html';
             });
             
             // المصادقة الثنائية
             document.getElementById('two-factor-btn').addEventListener('click', function() {
-                window.location.href = '/public/two-factor.html';
+                window.location.href = '/two-factor.html';
             });
         });
     </script>
