@@ -1,83 +1,472 @@
-<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
-<script>
-    async function sendMessage() {
-        const submitBtn = document.querySelector('#messageForm [type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-        submitBtn.disabled = true;
-
-        try {
-            // 1. جمع البيانات
-            const recipients = Array.from(document.querySelectorAll('input[name="recipients[]"]')).map(i => i.value);
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-
-            // 2. توليد مفتاح AES عشوائي
-            const aesKey = CryptoJS.lib.WordArray.random(32); // 256-bit
-
-            // 3. تشفير الرسالة باستخدام AES
-            const encryptedMessage = CryptoJS.AES.encrypt(message, aesKey).toString();
-
-            // 4. توليد HMAC للتحقق من سلامة البيانات
-            const hmac = CryptoJS.HmacSHA256(encryptedMessage, aesKey).toString();
-
-            // 5. تحميل مفتاح RSA العمومي للمستلم من API (أو توليده وهميًا هنا لأغراض العرض)
-            // مثال: مفتاح عمومي ثابت بصيغة PEM أو JWK (يفترض أن يكون حقيقيًا من جهة السيرفر)
-            const publicKeyPem = `-----BEGIN PUBLIC KEY-----
-... RSA PUBLIC KEY هنا ...
------END PUBLIC KEY-----`;
-
-            const publicKey = await importRSAPublicKey(publicKeyPem, 'RSA-OAEP');
-
-            // 6. تشفير مفتاح AES باستخدام RSA
-            const encryptedAesKey = await window.crypto.subtle.encrypt(
-                { name: "RSA-OAEP" },
-                publicKey,
-                aesKey.words.reduce((arr, word) => arr.concat([
-                    (word >> 24) & 0xff,
-                    (word >> 16) & 0xff,
-                    (word >> 8) & 0xff,
-                    word & 0xff
-                ]), [])
-            );
-
-            // 7. تجهيز البيانات للإرسال
-            const payload = {
-                to: recipients,
-                subject,
-                encryptedMessage,
-                hmac,
-                encryptedAesKey: btoa(String.fromCharCode(...new Uint8Array(encryptedAesKey)))
-            };
-
-            // 8. إرسال البيانات للسيرفر (مثال: console.log فقط حالياً)
-            console.log("بيانات مشفرة:", payload);
-
-            alert("تم إرسال الرسالة المشفرة بنجاح");
-        } catch (err) {
-            console.error("خطأ أثناء التشفير أو الإرسال:", err);
-            alert("حدث خطأ أثناء التشفير");
-        } finally {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إرسال رسالة | Magnatirix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #f8f9fa;
+            --accent-color: #00c851;
+            --error-color: #ff4444;
         }
-    }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7ff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .message-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: none;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5bef;
+            transform: translateY(-2px);
+        }
 
-    // مساعد لتحويل PEM إلى مفتاح RSA
-    async function importRSAPublicKey(pem, algorithm) {
-        // إزالة رأس وذيل الشهادة وتحويلها إلى binary
-        const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s/g, '');
-        const binaryDer = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        .recipients-input {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            min-height: 44px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
 
-        return window.crypto.subtle.importKey(
-            'spki',
-            binaryDer,
-            {
-                name: algorithm,
-                hash: 'SHA-256',
-            },
-            true,
-            ['encrypt']
-        );
-    }
-</script>
+        .recipient-tag {
+            background-color: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .remove-recipient {
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        #recipientEmail {
+            border: none;
+            flex-grow: 1;
+            min-width: 150px;
+            outline: none;
+        }
+
+        .suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .recipients-container {
+            position: relative;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            font-size: 1.5rem;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+            font-size: 2.5rem;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .encryption-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .message-box {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-box">
+            <h1>إرسال رسالة جديدة</h1>
+            
+            <form id="messageForm">
+                <div class="form-group">
+                    <label for="recipients">المستلمون</label>
+                    <div class="recipients-container">
+                        <div class="recipients-input" id="recipientsInput">
+                            <input type="text" id="recipientEmail" placeholder="أدخل بريد المستلم أو اسمه">
+                        </div>
+                        <div class="suggestions" id="suggestions"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">الموضوع</label>
+                    <input type="text" id="subject" placeholder="أدخل موضوع الرسالة" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">الرسالة</label>
+                    <textarea id="message" rows="8" placeholder="أدخل نص الرسالة هنا..." required></textarea>
+                    <div class="encryption-status">
+                        <i class="fas fa-lock"></i>
+                        <span>سيتم تشفير هذه الرسالة من طرف إلى طرف</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attachment">إرفاق ملف (اختياري)</label>
+                    <input type="file" id="attachment">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> إرسال
+                    </button>
+                    <button type="button" id="saveDraft" class="btn btn-secondary">
+                        <i class="fas fa-save"></i> حفظ كمسودة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // كود JavaScript للوظائف الأساسية
+        document.addEventListener('DOMContentLoaded', function() {
+            const recipientsInput = document.getElementById('recipientEmail');
+            const recipientsContainer = document.getElementById('recipientsInput');
+            const suggestionsBox = document.getElementById('suggestions');
+            let recipients = [];
+            
+            // قائمة جهات الاتصال (يمكن استبدالها بطلب API)
+            const contacts = [
+                {id: 1, name: 'محمد أحمد', email: 'mohamed@example.com', publicKey: '...'},
+                {id: 2, name: 'أحمد محمد', email: 'ahmed@example.com', publicKey: '...'},
+                {id: 3, name: 'سارة علي', email: 'sara@example.com', publicKey: '...'}
+            ];
+            
+            // إدخال المستلمين
+            recipientsInput.addEventListener('input', function(e) {
+                const input = e.target.value.trim();
+                if (input.length > 0) {
+                    showSuggestions(input);
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+            
+            recipientsInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    addRecipient(recipientsInput.value.trim());
+                    recipientsInput.value = '';
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+            
+            function showSuggestions(input) {
+                suggestionsBox.innerHTML = '';
+                const filtered = contacts.filter(contact => 
+                    contact.name.includes(input) || 
+                    contact.email.includes(input)
+                );
+                
+                if (filtered.length > 0) {
+                    filtered.forEach(contact => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.textContent = `${contact.name} <${contact.email}>`;
+                        div.addEventListener('click', () => {
+                            addRecipient(contact);
+                            recipientsInput.value = '';
+                            suggestionsBox.style.display = 'none';
+                        });
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.style.display = 'block';
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            }
+            
+            function addRecipient(contact) {
+                if (!contact) return;
+                
+                // التحقق من عدم تكرار المستلم
+                if (recipients.some(r => r.id === contact.id)) {
+                    alert('هذا المستلم مضاف بالفعل');
+                    return;
+                }
+                
+                const tag = document.createElement('div');
+                tag.className = 'recipient-tag';
+                tag.innerHTML = `
+                    ${contact.name} <${contact.email}>
+                    <span class="remove-recipient">&times;</span>
+                    <input type="hidden" name="recipients[]" value="${contact.id}">
+                `;
+                
+                tag.querySelector('.remove-recipient').addEventListener('click', function() {
+                    recipients = recipients.filter(r => r.id !== contact.id);
+                    tag.remove();
+                });
+                
+                recipientsContainer.insertBefore(tag, recipientsInput);
+                recipients.push(contact);
+            }
+            
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // إدارة إرسال النموذج
+            document.getElementById('messageForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (recipients.length === 0) {
+                    alert('الرجاء إدخال مستلم واحد على الأقل');
+                    return;
+                }
+                
+                sendEncryptedMessage();
+            });
+            
+            // وظيفة حفظ المسودة
+            document.getElementById('saveDraft').addEventListener('click', function() {
+                if (recipients.length === 0) {
+                    alert('الرجاء إدخال مستلم واحد على الأقل');
+                    return;
+                }
+                saveAsDraft();
+            });
+        });
+        
+        // دالة إرسال الرسالة المشفرة
+        async function sendEncryptedMessage() {
+            const submitBtn = document.querySelector('#messageForm [type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            try {
+                // عرض شاشة التحميل
+                const overlay = document.createElement('div');
+                overlay.className = 'loading-overlay';
+                overlay.innerHTML = `
+                    <div class="spinner"><i class="fas fa-circle-notch"></i></div>
+                    <div>جاري تشفير وإرسال الرسالة...</div>
+                    <div style="font-size: 0.9rem; color: #ccc;">تشفير من طرف إلى طرف (AES-256 + RSA-2048)</div>
+                `;
+                document.body.appendChild(overlay);
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+                submitBtn.disabled = true;
+                
+                // 1. جمع البيانات
+                const recipients = Array.from(document.querySelectorAll('input[name="recipients[]"]')).map(i => i.value);
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                
+                // 2. توليد مفتاح AES عشوائي
+                const aesKey = CryptoJS.lib.WordArray.random(32); // 256-bit
+                
+                // 3. تشفير الرسالة باستخدام AES
+                const encryptedMessage = CryptoJS.AES.encrypt(message, aesKey).toString();
+                
+                // 4. توليد HMAC للتحقق من سلامة البيانات
+                const hmac = CryptoJS.HmacSHA256(encryptedMessage, aesKey).toString();
+                
+                // 5. تشفير مفتاح AES لكل مستلم باستخدام RSA
+                const encryptedKeys = {};
+                for (const recipientId of recipients) {
+                    // في الواقع الفعلي: جلب المفتاح العمومي من API لكل مستلم
+                    // هنا نستخدم مفتاح وهمي للتوضيح
+                    const publicKeyPem = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz7Z5O0Qz0ZgZ6L6Yw9hU
+... المفتاح العمومي للمستلم ...
+-----END PUBLIC KEY-----`;
+                    
+                    const publicKey = await importRSAPublicKey(publicKeyPem, 'RSA-OAEP');
+                    
+                    const encryptedAesKey = await window.crypto.subtle.encrypt(
+                        { name: "RSA-OAEP" },
+                        publicKey,
+                        aesKey.words.reduce((arr, word) => arr.concat([
+                            (word >> 24) & 0xff,
+                            (word >> 16) & 0xff,
+                            (word >> 8) & 0xff,
+                            word & 0xff
+                        ]), [])
+                    );
+                    
+                    encryptedKeys[recipientId] = btoa(String.fromCharCode(...new Uint8Array(encryptedAesKey)));
+                }
+                
+                // 6. تجهيز البيانات للإرسال
+                const payload = {
+                    to: recipients,
+                    subject,
+                    encryptedMessage,
+                    hmac,
+                    encryptedKeys
+                };
+                
+                // 7. إرسال البيانات للسيرفر (في الواقع الفعلي: fetch API)
+                console.log("بيانات مشفرة جاهزة للإرسال:", payload);
+                
+                // محاكاة إرسال البيانات
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // عرض رسالة نجاح
+                alert("تم إرسال الرسالة المشفرة بنجاح");
+                
+                // إعادة تعيين النموذج
+                document.getElementById('messageForm').reset();
+                document.getElementById('recipientsInput').innerHTML = 
+                    '<input type="text" id="recipientEmail" placeholder="أدخل بريد المستلم أو اسمه">';
+                
+            } catch (err) {
+                console.error("خطأ أثناء التشفير أو الإرسال:", err);
+                alert("حدث خطأ أثناء التشفير: " + err.message);
+            } finally {
+                // إخفاء شاشة التحميل
+                const overlay = document.querySelector('.loading-overlay');
+                if (overlay) overlay.remove();
+                
+                // إعادة تعيين الزر
+                const submitBtn = document.querySelector('#messageForm [type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            }
+        }
+        
+        // دالة حفظ المسودة
+        function saveAsDraft() {
+            alert('تم حفظ الرسالة كمسودة');
+        }
+        
+        // مساعد لتحويل PEM إلى مفتاح RSA
+        async function importRSAPublicKey(pem, algorithm) {
+            // إزالة رأس وذيل الشهادة وتحويلها إلى binary
+            const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s/g, '');
+            const binaryDer = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+            
+            return window.crypto.subtle.importKey(
+                'spki',
+                binaryDer,
+                {
+                    name: algorithm,
+                    hash: 'SHA-256',
+                },
+                true,
+                ['encrypt']
+            );
+        }
+    </script>
+</body>
+</html>
