@@ -1,54 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Message</title>
-    <link rel="stylesheet" href="style.css">
+    <title>إرسال رسالة | Magnatirix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #f8f9fa;
+            --accent-color: #00c851;
+            --error-color: #ff4444;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f7ff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .message-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: none;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5bef;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .message-box {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>إرسال رسالة</h1>
-        <form id="sendForm">
-            <textarea id="message" placeholder="اكتب رسالتك هنا..." required></textarea>
-            <button type="submit" class="btn">إرسال</button>
-        </form>
-        <div id="status"></div>
-        <a href="/" class="btn back-btn">العودة للصفحة الرئيسية</a>
-    </div>
-    <script>
-        const ws = new WebSocket('wss://' + window.location.host);
-        const form = document.getElementById('sendForm');
-        const statusDiv = document.getElementById('status');
-        
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const message = document.getElementById('message').value;
+        <div class="message-box">
+            <h1>إرسال رسالة جديدة</h1>
             
-            if (ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({
-                    type: 'message',
-                    content: message,
-                    timestamp: new Date().toISOString()
-                }));
-                statusDiv.textContent = 'تم إرسال الرسالة بنجاح';
-                statusDiv.style.color = 'green';
-            } else {
-                statusDiv.textContent = 'غير متصل بالخادم. يرجى المحاولة لاحقاً';
-                statusDiv.style.color = 'red';
-            }
+            <form id="messageForm">
+                <div class="form-group">
+                    <label for="recipient">المستلم</label>
+                    <select id="recipient" required>
+                        <option value="">اختر مستلم</option>
+                        <!-- سيتم ملء هذا من خلال JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">الموضوع</label>
+                    <input type="text" id="subject" placeholder="أدخل موضوع الرسالة" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">الرسالة</label>
+                    <textarea id="message" rows="8" placeholder="أدخل نص الرسالة هنا..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attachment">إرفاق ملف (اختياري)</label>
+                    <input type="file" id="attachment">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> إرسال
+                    </button>
+                    <button type="button" id="saveDraft" class="btn btn-secondary">
+                        <i class="fas fa-save"></i> حفظ كمسودة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // كود JavaScript لتحسين الوظائف
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل جهات الاتصال
+            loadContacts();
+            
+            // إدارة إرسال النموذج
+            document.getElementById('messageForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                sendMessage();
+            });
+            
+            // وظيفة حفظ المسودة
+            document.getElementById('saveDraft').addEventListener('click', saveAsDraft);
         });
         
-        ws.onopen = () => {
-            statusDiv.textContent = 'متصل بالخادم وجاهز للإرسال';
-            statusDiv.style.color = 'green';
-        };
+        function loadContacts() {
+            // هنا كود لجلب جهات الاتصال من الخادم
+            // يمكن استبدالها بطلب API فعلي
+            const contacts = [
+                {id: 1, name: 'محمد أحمد'},
+                {id: 2, name: 'أحمد محمد'},
+                {id: 3, name: 'سارة علي'}
+            ];
+            
+            const select = document.getElementById('recipient');
+            contacts.forEach(contact => {
+                const option = document.createElement('option');
+                option.value = contact.id;
+                option.textContent = contact.name;
+                select.appendChild(option);
+            });
+        }
         
-        ws.onerror = (error) => {
-            statusDiv.textContent = 'خطأ في الاتصال بالخادم';
-            statusDiv.style.color = 'red';
-            console.error('WebSocket error:', error);
-        };
+        function sendMessage() {
+            // عرض مؤشر تحميل
+            const submitBtn = document.querySelector('#messageForm [type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            submitBtn.disabled = true;
+            
+            // محاكاة إرسال الرسالة (استبدل هذا بطلب API فعلي)
+            setTimeout(() => {
+                // إعادة تعيين الزر
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // عرض رسالة نجاح
+                alert('تم إرسال الرسالة بنجاح!');
+                
+                // إعادة تعيين النموذج
+                document.getElementById('messageForm').reset();
+            }, 2000);
+        }
+        
+        function saveAsDraft() {
+            // كود لحفظ المسودة
+            alert('تم حفظ الرسالة كمسودة');
+        }
     </script>
 </body>
 </html>
