@@ -15,10 +15,11 @@
             --text-color: #333;
             --light-gray: #f8f9fa;
             --border-color: #ddd;
+            --container-width: 800px;
         }
 
         .profile-container {
-            max-width: 800px;
+            max-width: var(--container-width);
             margin: 30px auto;
             background: #fff;
             border-radius: 10px;
@@ -45,12 +46,12 @@
             height: 120px;
             border-radius: 50%;
             border: 5px solid white;
-            margin-bottom: 15px;
+            object-fit: cover;
+            margin: 0 auto 15px;
             background: #eee;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 15px;
         }
 
         .profile-avatar i {
@@ -101,7 +102,7 @@
             flex: 1;
             padding: 12px 15px;
             background: var(--light-gray);
-            border-radius: 8px;
+            border-radius: 6px;
             min-height: 20px;
         }
 
@@ -109,7 +110,7 @@
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
@@ -117,7 +118,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            margin-top: 20px;
+            font-size: 16px;
         }
 
         .edit-btn:hover {
@@ -130,26 +131,29 @@
             background: var(--light-gray);
             border-radius: 8px;
             padding: 20px;
-            margin-top: 25px;
+            margin-top: 30px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            border-left: 4px solid var(--success-color);
+            border: 1px solid rgba(40, 167, 69, 0.2);
         }
 
         .security-badge i {
-            font-size: 24px;
+            font-size: 28px;
             color: var(--success-color);
+            margin-left: 20px;
+            flex-shrink: 0;
         }
 
         .security-badge-content h4 {
             margin: 0 0 5px 0;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--text-color);
         }
 
         .security-badge-content p {
             margin: 0;
             color: #666;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -170,6 +174,15 @@
             
             .info-value {
                 width: 100%;
+            }
+            
+            .security-badge {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .security-badge i {
+                margin: 0 0 15px 0;
             }
         }
     </style>
@@ -263,7 +276,7 @@
     </footer>
 
     <script>
-        // العناصر المترجمة
+        // الترجمات
         const translations = {
             ar: {
                 basicInfo: "معلومات أساسية",
@@ -280,12 +293,13 @@
                 privacy: "سياسة الخصوصية",
                 about: "عن النظام",
                 faq: "الأسئلة الشائعة",
-                contact: "اتصل بنا"
+                contact: "اتصل بنا",
+                languageBtn: "English"
             },
             en: {
                 basicInfo: "Basic Information",
                 fullname: "Full Name",
-                email: "Email",
+                email: "Email Address",
                 phone: "Phone Number",
                 joinDate: "Join Date",
                 security: "Security",
@@ -297,7 +311,8 @@
                 privacy: "Privacy Policy",
                 about: "About",
                 faq: "FAQ",
-                contact: "Contact Us"
+                contact: "Contact Us",
+                languageBtn: "العربية"
             }
         };
 
@@ -313,32 +328,31 @@
             document.getElementById('join-date-value').textContent = userData.joinDate || translations[lang].notSpecified;
         }
 
-        // تغيير اللغة
+        // تحديث اللغة
         function updateLanguage(lang) {
-            const elements = {
-                'basic-info-title': translations[lang].basicInfo,
-                'fullname-label': translations[lang].fullname,
-                'email-label': translations[lang].email,
-                'phone-label': translations[lang].phone,
-                'join-date-label': translations[lang].joinDate,
-                'security-title': translations[lang].security,
-                'secure-account-text': translations[lang].secureAccount,
-                'verified-text': translations[lang].verified,
-                'edit-profile-text': translations[lang].editProfile,
-                'terms-link': translations[lang].terms,
-                'privacy-link': translations[lang].privacy,
-                'about-link': translations[lang].about,
-                'faq-link': translations[lang].faq,
-                'contact-link': translations[lang].contact
-            };
+            document.getElementById('basic-info-title').textContent = translations[lang].basicInfo;
+            document.getElementById('fullname-label').textContent = translations[lang].fullname + ':';
+            document.getElementById('email-label').textContent = translations[lang].email + ':';
+            document.getElementById('phone-label').textContent = translations[lang].phone + ':';
+            document.getElementById('join-date-label').textContent = translations[lang].joinDate + ':';
+            document.getElementById('security-title').textContent = translations[lang].security;
+            document.getElementById('secure-account-text').textContent = translations[lang].secureAccount;
+            document.getElementById('verified-text').textContent = translations[lang].verified;
+            document.getElementById('edit-profile-text').textContent = translations[lang].editProfile;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+            document.getElementById('privacy-link').textContent = translations[lang].privacy;
+            document.getElementById('about-link').textContent = translations[lang].about;
+            document.getElementById('faq-link').textContent = translations[lang].faq;
+            document.getElementById('contact-link').textContent = translations[lang].contact;
+            document.getElementById('languageToggle').querySelector('span').textContent = translations[lang].languageBtn;
             
-            for (const [id, text] of Object.entries(elements)) {
-                const element = document.getElementById(id);
-                if (element) element.textContent = text;
+            // تحديث القيم في حالة عدم وجود بيانات
+            if (!localStorage.getItem('userData')) {
+                document.getElementById('fullname-value').textContent = translations[lang].notSpecified;
+                document.getElementById('email-value').textContent = translations[lang].notSpecified;
+                document.getElementById('phone-value').textContent = translations[lang].notSpecified;
+                document.getElementById('join-date-value').textContent = translations[lang].notSpecified;
             }
-            
-            // تحديث بيانات المستخدم باللغة الجديدة
-            loadUserData();
         }
 
         // تهيئة الصفحة
@@ -346,18 +360,16 @@
             // سنة حقوق النشر
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // تحديد اللغة المفضلة
+            // تحديد اللغة
             const lang = localStorage.getItem('preferredLang') || 'ar';
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             
-            // تحميل الترجمة
+            // تحميل البيانات وتحديث الواجهة
+            loadUserData();
             updateLanguage(lang);
             
-            // تحميل بيانات المستخدم
-            loadUserData();
-            
-            // تغيير اللغة
+            // زر تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
                 const currentLang = document.documentElement.lang;
                 const newLang = currentLang === 'ar' ? 'en' : 'ar';
@@ -365,13 +377,12 @@
                 document.documentElement.lang = newLang;
                 document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
                 localStorage.setItem('preferredLang', newLang);
-                updateLanguage(newLang);
                 
-                // تحديث نص زر اللغة
-                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
+                updateLanguage(newLang);
+                loadUserData();
             });
             
-            // تعديل الملف الشخصي
+            // زر تعديل الملف الشخصي
             document.getElementById('edit-profile-btn').addEventListener('click', function() {
                 window.location.href = '/settings.html';
             });
