@@ -16,10 +16,11 @@
             --text-color: #333;
             --light-gray: #f8f9fa;
             --border-color: #ddd;
+            --container-width: 800px;
         }
 
         .settings-container {
-            max-width: 800px;
+            max-width: var(--container-width);
             margin: 30px auto;
             background: #fff;
             border-radius: 10px;
@@ -205,7 +206,7 @@
     <main class="container">
         <div class="settings-container">
             <div class="settings-header">
-                <h1 id="settings-title">الإعدادات</h1>
+                <h1 id="page-title">الإعدادات</h1>
             </div>
             
             <div class="settings-body">
@@ -294,7 +295,7 @@
     </footer>
 
     <script>
-        // العناصر المترجمة
+        // الترجمات
         const translations = {
             ar: {
                 settings: "الإعدادات",
@@ -317,14 +318,15 @@
                 privacyPolicy: "سياسة الخصوصية",
                 about: "عن النظام",
                 faq: "الأسئلة الشائعة",
-                contact: "اتصل بنا"
+                contact: "اتصل بنا",
+                languageBtn: "English"
             },
             en: {
                 settings: "Settings",
                 personalInfo: "Personal Information",
                 name: "Display Name",
                 fullname: "Full Name",
-                email: "Email",
+                email: "Email Address",
                 phone: "Phone Number",
                 privacy: "Privacy Settings",
                 showProfile: "Show profile publicly",
@@ -340,7 +342,8 @@
                 privacyPolicy: "Privacy Policy",
                 about: "About",
                 faq: "FAQ",
-                contact: "Contact Us"
+                contact: "Contact Us",
+                languageBtn: "العربية"
             }
         };
 
@@ -356,36 +359,30 @@
             document.getElementById('show-email').checked = userData.showEmail || false;
         }
 
-        // تغيير اللغة
+        // تحديث اللغة
         function updateLanguage(lang) {
-            const elements = {
-                'settings-title': translations[lang].settings,
-                'personal-info-title': translations[lang].personalInfo,
-                'name-label': translations[lang].name,
-                'fullname-label': translations[lang].fullname,
-                'email-label': translations[lang].email,
-                'phone-label': translations[lang].phone,
-                'privacy-title': translations[lang].privacy,
-                'show-profile-label': translations[lang].showProfile,
-                'show-email-label': translations[lang].showEmail,
-                'save-text': translations[lang].save,
-                'security-title': translations[lang].security,
-                'change-password-text': translations[lang].changePassword,
-                'two-factor-text': translations[lang].twoFactor,
-                'danger-zone-title': translations[lang].dangerZone,
-                'danger-zone-text': translations[lang].dangerText,
-                'delete-account-text': translations[lang].deleteAccount,
-                'terms-link': translations[lang].terms,
-                'privacy-link': translations[lang].privacyPolicy,
-                'about-link': translations[lang].about,
-                'faq-link': translations[lang].faq,
-                'contact-link': translations[lang].contact
-            };
-            
-            for (const [id, text] of Object.entries(elements)) {
-                const element = document.getElementById(id);
-                if (element) element.textContent = text;
-            }
+            document.getElementById('page-title').textContent = translations[lang].settings;
+            document.getElementById('personal-info-title').textContent = translations[lang].personalInfo;
+            document.getElementById('name-label').textContent = translations[lang].name;
+            document.getElementById('fullname-label').textContent = translations[lang].fullname;
+            document.getElementById('email-label').textContent = translations[lang].email;
+            document.getElementById('phone-label').textContent = translations[lang].phone;
+            document.getElementById('privacy-title').textContent = translations[lang].privacy;
+            document.getElementById('show-profile-label').textContent = translations[lang].showProfile;
+            document.getElementById('show-email-label').textContent = translations[lang].showEmail;
+            document.getElementById('save-text').textContent = translations[lang].save;
+            document.getElementById('security-title').textContent = translations[lang].security;
+            document.getElementById('change-password-text').textContent = translations[lang].changePassword;
+            document.getElementById('two-factor-text').textContent = translations[lang].twoFactor;
+            document.getElementById('danger-zone-title').textContent = translations[lang].dangerZone;
+            document.getElementById('danger-zone-text').textContent = translations[lang].dangerText;
+            document.getElementById('delete-account-text').textContent = translations[lang].deleteAccount;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+            document.getElementById('privacy-link').textContent = translations[lang].privacyPolicy;
+            document.getElementById('about-link').textContent = translations[lang].about;
+            document.getElementById('faq-link').textContent = translations[lang].faq;
+            document.getElementById('contact-link').textContent = translations[lang].contact;
+            document.getElementById('languageToggle').querySelector('span').textContent = translations[lang].languageBtn;
         }
 
         // تهيئة الصفحة
@@ -393,18 +390,16 @@
             // سنة حقوق النشر
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // تحديد اللغة المفضلة
+            // تحديد اللغة
             const lang = localStorage.getItem('preferredLang') || 'ar';
             document.documentElement.lang = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             
-            // تحميل الترجمة
+            // تحميل البيانات وتحديث الواجهة
+            loadUserData();
             updateLanguage(lang);
             
-            // تحميل بيانات المستخدم
-            loadUserData();
-            
-            // تغيير اللغة
+            // زر تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
                 const currentLang = document.documentElement.lang;
                 const newLang = currentLang === 'ar' ? 'en' : 'ar';
@@ -412,66 +407,36 @@
                 document.documentElement.lang = newLang;
                 document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
                 localStorage.setItem('preferredLang', newLang);
-                updateLanguage(newLang);
                 
-                // تحديث نص زر اللغة
-                this.querySelector('span').textContent = newLang === 'ar' ? 'English' : 'العربية';
+                updateLanguage(newLang);
             });
             
             // حفظ الإعدادات
             document.getElementById('settings-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // التحقق من صحة البريد الإلكتروني
-                const email = document.getElementById('email').value;
-                if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    alert(document.documentElement.lang === 'ar' ? 
-                        'الرجاء إدخال بريد إلكتروني صحيح' : 
-                        'Please enter a valid email address');
-                    return;
-                }
-
-                // إعداد بيانات المستخدم
                 const userData = {
                     name: document.getElementById('name').value.trim(),
-                    email: email,
                     fullname: document.getElementById('fullname').value.trim(),
+                    email: document.getElementById('email').value.trim(),
                     phone: document.getElementById('phone').value.trim(),
                     showProfile: document.getElementById('show-profile').checked,
                     showEmail: document.getElementById('show-email').checked,
                     joinDate: JSON.parse(localStorage.getItem('userData'))?.joinDate || new Date().toLocaleDateString()
                 };
-
-                // حفظ البيانات
+                
                 localStorage.setItem('userData', JSON.stringify(userData));
                 
-                // عرض رسالة نجاح
-                alert(document.documentElement.lang === 'ar' ? 
-                    'تم حفظ التغييرات بنجاح' : 
-                    'Changes saved successfully');
+                alert(lang === 'ar' ? 'تم حفظ التغييرات بنجاح' : 'Changes saved successfully');
             });
             
             // حذف الحساب
             document.getElementById('delete-account').addEventListener('click', function() {
-                const lang = document.documentElement.lang;
-                const messages = {
-                    warning: lang === 'ar' ? 
-                        '⚠️ هل أنت متأكد أنك تريد حذف حسابك؟ سيتم فقدان جميع البيانات بشكل دائم ولا يمكن استرجاعها.' : 
-                        '⚠️ Are you sure you want to delete your account? All data will be permanently lost.',
-                    confirm: lang === 'ar' ? 
-                        '❌ تأكيد نهائي: هل أنت متأكد من رغبتك في حذف الحساب؟' : 
-                        '❌ Final confirmation: Are you sure you want to delete your account?',
-                    success: lang === 'ar' ? 
-                        'تم حذف الحساب بنجاح' : 
-                        'Account deleted successfully'
-                };
-                
-                if (confirm(messages.warning)) {
-                    if (confirm(messages.confirm)) {
-                        localStorage.removeItem('userData');
-                        alert(messages.success);
-                        window.location.href = '/login.html';
-                    }
+                if (confirm(lang === 'ar' ? 
+                    'هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.' : 
+                    'Are you sure you want to delete your account? This action cannot be undone.')) {
+                    localStorage.removeItem('userData');
+                    window.location.href = '/login.html';
                 }
             });
             
