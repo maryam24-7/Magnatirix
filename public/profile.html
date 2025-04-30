@@ -135,17 +135,19 @@
             display: flex;
             align-items: center;
             border: 1px solid rgba(40, 167, 69, 0.2);
+            justify-content: flex-start; /* تغيير من center إلى flex-start */
         }
 
         .security-badge i {
             font-size: 28px;
             color: var(--success-color);
-            margin-left: 10px; /* تم تقليل المسافة هنا من 20px إلى 10px */
+            margin-left: 10px;
             flex-shrink: 0;
         }
 
         .security-badge-content {
-            margin-right: 10px; /* إضافة margin-right لجعل النص أقرب لليسار */
+            margin-right: 10px;
+            text-align: right; /* إضافة محاذاة النص لليمين */
         }
 
         .security-badge-content h4 {
@@ -178,19 +180,24 @@
             
             .info-value {
                 width: 100%;
+                padding: 10px 12px; /* تقليل الحشو */
+                max-width: 100%; /* التأكد من عدم تجاوز العرض */
+                box-sizing: border-box; /* تضمين الحشو في العرض */
             }
             
             .security-badge {
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row; /* الحفاظ على الاتجاه الأفقي */
+                text-align: right; /* محاذاة النص لليمين */
+                padding: 15px; /* تقليل الحشو */
             }
             
             .security-badge i {
-                margin: 0 0 15px 0;
+                margin: 0 0 0 10px; /* تعديل الهوامش */
             }
             
             .security-badge-content {
                 margin-right: 0;
+                flex: 1; /* السماح للمحتوى بالتوسع */
             }
         }
     </style>
