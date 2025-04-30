@@ -197,7 +197,7 @@
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span>English</span>
+                    <span id="languageText">English</span>
                 </button>
             </div>
         </div>
@@ -316,6 +316,11 @@
             }
         };
 
+        // تحديد اللغة الحالية
+        let lang = localStorage.getItem('preferredLang') || 'ar';
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
         // تحميل بيانات المستخدم
         function loadUserData() {
             const userData = JSON.parse(localStorage.getItem('userData')) || {};
@@ -329,7 +334,7 @@
         }
 
         // تحديث اللغة
-        function updateLanguage(lang) {
+        function updateLanguage() {
             document.getElementById('basic-info-title').textContent = translations[lang].basicInfo;
             document.getElementById('fullname-label').textContent = translations[lang].fullname + ':';
             document.getElementById('email-label').textContent = translations[lang].email + ':';
@@ -344,7 +349,7 @@
             document.getElementById('about-link').textContent = translations[lang].about;
             document.getElementById('faq-link').textContent = translations[lang].faq;
             document.getElementById('contact-link').textContent = translations[lang].contact;
-            document.getElementById('languageToggle').querySelector('span').textContent = translations[lang].languageBtn;
+            document.getElementById('languageText').textContent = translations[lang].languageBtn;
             
             // تحديث القيم في حالة عدم وجود بيانات
             if (!localStorage.getItem('userData')) {
@@ -360,25 +365,19 @@
             // سنة حقوق النشر
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // تحديد اللغة
-            const lang = localStorage.getItem('preferredLang') || 'ar';
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
             // تحميل البيانات وتحديث الواجهة
             loadUserData();
-            updateLanguage(lang);
+            updateLanguage();
             
             // زر تغيير اللغة
             document.getElementById('languageToggle').addEventListener('click', function() {
-                const currentLang = document.documentElement.lang;
-                const newLang = currentLang === 'ar' ? 'en' : 'ar';
+                lang = lang === 'ar' ? 'en' : 'ar';
                 
-                document.documentElement.lang = newLang;
-                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-                localStorage.setItem('preferredLang', newLang);
+                document.documentElement.lang = lang;
+                document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+                localStorage.setItem('preferredLang', lang);
                 
-                updateLanguage(newLang);
+                updateLanguage();
                 loadUserData();
             });
             
