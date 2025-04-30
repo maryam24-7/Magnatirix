@@ -271,7 +271,7 @@
         .feature-card h3 {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
-            font-size: 2rem; /* تم زيادة حجم الخط هنا */
+            font-size: 2rem; /* تم تكبير حجم الخط هنا */
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -281,12 +281,12 @@
         .feature-card p {
             color: #666;
             margin-bottom: 2rem;
-            font-size: 1.05rem;
+            font-size: 1.1rem; /* تم تكبير حجم الخط هنا */
             line-height: 1.7;
         }
 
         .feature-icon {
-            font-size: 1.8rem;
+            font-size: 2rem; /* تم تكبير حجم الأيقونة هنا */
             color: var(--secondary-color);
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
@@ -433,7 +433,7 @@
             }
             
             .feature-card h3 {
-                font-size: 1.8rem; /* تعديل حجم الخط للهواتف */
+                font-size: 1.6rem;
             }
         }
 
@@ -467,6 +467,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="public/script.js" defer></script>
 </head>
 <body>
     <header class="header">
@@ -511,9 +512,7 @@
                 </h3>
                 <p>افحص الملفات والروابط المشبوهة مباشرة من الموقع باستخدام قاعدة بيانات ضخمة للبرمجيات الخبيثة.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> تحليل وصف الملف أو سلوك المستخدم لتقدير درجة الخطر.</p>
-                <button class="btn btn-primary" onclick="goToGenerate()" aria-label="المزيد من التفاصيل">
-                    <span class="btn-text">المزيد من التفاصيل</span>
-                </button>
+                <button class="btn btn-primary" onclick="goToGenerate()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -523,9 +522,7 @@
                 </h3>
                 <p>احصل على تحليلات فورية للتهديدات السيبرانية العالمية.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> تصنيف التهديدات أو المجالات الخطرة باستخدام تحليل لغوي (NLP).</p>
-                <button class="btn btn-primary" onclick="goToConnect()" aria-label="المزيد من التفاصيل">
-                    <span class="btn-text">المزيد من التفاصيل</span>
-                </button>
+                <button class="btn btn-primary" onclick="goToConnect()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -535,9 +532,7 @@
                 </h3>
                 <p>حلّل سجلات النظام أو الشبكة لاكتشاف الأنماط الغريبة.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> اكتشاف السلوك غير الطبيعي باستخدام نماذج تعلم الآلة.</p>
-                <button class="btn btn-primary" onclick="goToAILogAnalyzer()" aria-label="المزيد من التفاصيل">
-                    <span class="btn-text">المزيد من التفاصيل</span>
-                </button>
+                <button class="btn btn-primary" onclick="goToAILogAnalyzer()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -547,9 +542,7 @@
                 </h3>
                 <p>فحص المواقع لاكتشاف الثغرات الأمنية المعروفة وتقييم خطورتها.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> تحليل النتائج وتوليد توصيات تلقائية باستخدام الذكاء اللغوي.</p>
-                <button class="btn btn-primary" onclick="goToNucleiAnalyzer()" aria-label="المزيد من التفاصيل">
-                    <span class="btn-text">المزيد من التفاصيل</span>
-                </button>
+                <button class="btn btn-primary" onclick="goToNucleiAnalyzer()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
         </section>
 
@@ -584,7 +577,5 @@
             <p class="copyright">جميع الحقوق محفوظة &copy; <span id="year"></span> Magnatirix</p>
         </div>
     </footer>
-
-    <script src="public/script.js"></script>
 </body>
-</html>
+                    </html>
