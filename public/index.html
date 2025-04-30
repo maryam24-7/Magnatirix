@@ -226,6 +226,14 @@
             margin-bottom: 4rem;
         }
 
+        .features-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            grid-column: 1 / -1;
+        }
+
         .feature-card {
             background: white;
             border-radius: var(--border-radius);
@@ -453,6 +461,7 @@
         .feature-card:nth-child(1) { animation-delay: 0.2s; }
         .feature-card:nth-child(2) { animation-delay: 0.4s; }
         .feature-card:nth-child(3) { animation-delay: 0.6s; }
+        .feature-card:nth-child(4) { animation-delay: 0.8s; }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -493,30 +502,45 @@
         </section>
 
         <section class="features">
+            <h2 class="features-title">أدوات الأمن السيبراني المدعومة بالذكاء الاصطناعي</h2>
+            
             <div class="feature-card">
                 <h3>
-                    <i class="fas fa-shield-alt feature-icon"></i>
-                    <span>تشفير من طرف إلى طرف</span>
+                    <i class="fas fa-shield-virus feature-icon"></i>
+                    <span>VirusTotal API</span>
                 </h3>
-                <p>رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك</p>
+                <p>افحص الملفات والروابط المشبوهة مباشرة من الموقع باستخدام قاعدة بيانات ضخمة للبرمجيات الخبيثة.</p>
+                <p><strong>دمج الذكاء الاصطناعي:</strong> تحليل وصف الملف أو سلوك المستخدم لتقدير درجة الخطر.</p>
                 <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
                 <h3>
-                    <i class="fas fa-user-secret feature-icon"></i>
-                    <span>خصوصية مطلقة</span>
+                    <i class="fas fa-robot feature-icon"></i>
+                    <span>IBM X-Force Exchange</span>
                 </h3>
-                <p>لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن</p>
+                <p>احصل على تحليلات فورية للتهديدات السيبرانية العالمية.</p>
+                <p><strong>دمج الذكاء الاصطناعي:</strong> تصنيف التهديدات أو المجالات الخطرة باستخدام تحليل لغوي (NLP).</p>
                 <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
                 <h3>
-                    <i class="fas fa-file-export feature-icon"></i>
-                    <span>مشاركة ملفات آمنة</span>
+                    <i class="fas fa-chart-line feature-icon"></i>
+                    <span>AI Log Analyzer</span>
                 </h3>
-                <p>أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف</p>
+                <p>حلّل سجلات النظام أو الشبكة لاكتشاف الأنماط الغريبة.</p>
+                <p><strong>دمج الذكاء الاصطناعي:</strong> اكتشاف السلوك غير الطبيعي باستخدام نماذج تعلم الآلة.</p>
+                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
+            </div>
+
+            <div class="feature-card">
+                <h3>
+                    <i class="fas fa-bug feature-icon"></i>
+                    <span>Nuclei + AI Analyzer</span>
+                </h3>
+                <p>فحص المواقع لاكتشاف الثغرات الأمنية المعروفة وتقييم خطورتها.</p>
+                <p><strong>دمج الذكاء الاصطناعي:</strong> تحليل النتائج وتوليد توصيات تلقائية باستخدام الذكاء اللغوي.</p>
                 <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
         </section>
@@ -566,12 +590,19 @@
                 logo: "Magnatirix",
                 heroTitle: "نظام التراسل المشفر الآمن",
                 heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير",
-                feature1Title: "تشفير من طرف إلى طرف",
-                feature1Text: "رسائلك مشفرة قبل مغادرة جهازك ولا يمكن فك تشفيرها إلا من قبل المستقبل المقصود، مما يضمن خصوصية كاملة لاتصالاتك",
-                feature2Title: "خصوصية مطلقة",
-                feature2Text: "لا نقوم بتخزين رسائلك على خوادمنا، مما يضمن عدم إمكانية الوصول إليها من قبل أي طرف ثالث، بما في ذلك نحن",
-                feature3Title: "مشاركة ملفات آمنة",
-                feature3Text: "أرسل ملفاتك مع نفس مستوى التشفير القوي الذي نستخدمه للرسائل النصية، بحجم يصل إلى 2GB لكل ملف",
+                featuresTitle: "أدوات الأمن السيبراني المدعومة بالذكاء الاصطناعي",
+                feature1Title: "VirusTotal API",
+                feature1Text: "افحص الملفات والروابط المشبوهة مباشرة من الموقع باستخدام قاعدة بيانات ضخمة للبرمجيات الخبيثة.",
+                feature1AI: "دمج الذكاء الاصطناعي: تحليل وصف الملف أو سلوك المستخدم لتقدير درجة الخطر.",
+                feature2Title: "IBM X-Force Exchange",
+                feature2Text: "احصل على تحليلات فورية للتهديدات السيبرانية العالمية.",
+                feature2AI: "دمج الذكاء الاصطناعي: تصنيف التهديدات أو المجالات الخطرة باستخدام تحليل لغوي (NLP).",
+                feature3Title: "AI Log Analyzer",
+                feature3Text: "حلّل سجلات النظام أو الشبكة لاكتشاف الأنماط الغريبة.",
+                feature3AI: "دمج الذكاء الاصطناعي: اكتشاف السلوك غير الطبيعي باستخدام نماذج تعلم الآلة.",
+                feature4Title: "Nuclei + AI Analyzer",
+                feature4Text: "فحص المواقع لاكتشاف الثغرات الأمنية المعروفة وتقييم خطورتها.",
+                feature4AI: "دمج الذكاء الاصطناعي: تحليل النتائج وتوليد توصيات تلقائية باستخدام الذكاء اللغوي.",
                 ctaTitle: "جاهز لبدء استخدام Magnatirix؟",
                 ctaText: "انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية",
                 login: "تسجيل الدخول",
@@ -586,12 +617,19 @@
                 logo: "Magnatirix",
                 heroTitle: "Secure Encrypted Messaging",
                 heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system that secures your communications using the latest encryption technologies",
-                feature1Title: "End-to-End Encryption",
-                feature1Text: "Your messages are encrypted before leaving your device and can only be decrypted by the intended recipient, ensuring complete privacy for your communications",
-                feature2Title: "Absolute Privacy",
-                feature2Text: "We don't store your messages on our servers, ensuring they can't be accessed by any third parties, including us",
-                feature3Title: "Secure File Sharing",
-                feature3Text: "Send your files with the same strong encryption level we use for text messages, with files up to 2GB each",
+                featuresTitle: "AI-Powered Cybersecurity Tools",
+                feature1Title: "VirusTotal API",
+                feature1Text: "Scan suspicious files and URLs directly from the site using a huge malware database.",
+                feature1AI: "AI Integration: Analyze file description or user behavior to estimate risk level.",
+                feature2Title: "IBM X-Force Exchange",
+                feature2Text: "Get instant analysis of global cyber threats.",
+                feature2AI: "AI Integration: Classify threats or dangerous domains using NLP analysis.",
+                feature3Title: "AI Log Analyzer",
+                feature3Text: "Analyze system or network logs to detect unusual patterns.",
+                feature3AI: "AI Integration: Detect abnormal behavior using machine learning models.",
+                feature4Title: "Nuclei + AI Analyzer",
+                feature4Text: "Scan websites to discover known security vulnerabilities and assess their severity.",
+                feature4AI: "AI Integration: Analyze results and generate automatic recommendations using linguistic AI.",
                 ctaTitle: "Ready to start using Magnatirix?",
                 ctaText: "Join thousands of users who trust us to protect their daily communications",
                 login: "Login",
@@ -637,15 +675,25 @@
             document.querySelector('.logo').textContent = langData.logo;
             document.querySelector('.hero h1').textContent = langData.heroTitle;
             document.querySelector('.hero p').textContent = langData.heroText;
+            document.querySelector('.features-title').textContent = langData.featuresTitle;
             
             // Update feature cards
             const featureCards = document.querySelectorAll('.feature-card');
             featureCards[0].querySelector('h3 span').textContent = langData.feature1Title;
-            featureCards[0].querySelector('p').textContent = langData.feature1Text;
+            featureCards[0].querySelectorAll('p')[0].textContent = langData.feature1Text;
+            featureCards[0].querySelectorAll('p')[1].innerHTML = '<strong>' + (newLang === 'ar' ? 'دمج الذكاء الاصطناعي:' : 'AI Integration:') + '</strong> ' + langData.feature1AI;
+            
             featureCards[1].querySelector('h3 span').textContent = langData.feature2Title;
-            featureCards[1].querySelector('p').textContent = langData.feature2Text;
+            featureCards[1].querySelectorAll('p')[0].textContent = langData.feature2Text;
+            featureCards[1].querySelectorAll('p')[1].innerHTML = '<strong>' + (newLang === 'ar' ? 'دمج الذكاء الاصطناعي:' : 'AI Integration:') + '</strong> ' + langData.feature2AI;
+            
             featureCards[2].querySelector('h3 span').textContent = langData.feature3Title;
-            featureCards[2].querySelector('p').textContent = langData.feature3Text;
+            featureCards[2].querySelectorAll('p')[0].textContent = langData.feature3Text;
+            featureCards[2].querySelectorAll('p')[1].innerHTML = '<strong>' + (newLang === 'ar' ? 'دمج الذكاء الاصطناعي:' : 'AI Integration:') + '</strong> ' + langData.feature3AI;
+            
+            featureCards[3].querySelector('h3 span').textContent = langData.feature4Title;
+            featureCards[3].querySelectorAll('p')[0].textContent = langData.feature4Text;
+            featureCards[3].querySelectorAll('p')[1].innerHTML = '<strong>' + (newLang === 'ar' ? 'دمج الذكاء الاصطناعي:' : 'AI Integration:') + '</strong> ' + langData.feature4AI;
             
             // Update CTA section
             document.querySelector('.cta-section h2').textContent = langData.ctaTitle;
@@ -658,7 +706,8 @@
             document.querySelectorAll('.btn-text')[3].textContent = langData.moreDetails;
             document.querySelectorAll('.btn-text')[4].textContent = langData.moreDetails;
             document.querySelectorAll('.btn-text')[5].textContent = langData.moreDetails;
-            document.querySelectorAll('.btn-text')[6].textContent = langData.getStarted;
+            document.querySelectorAll('.btn-text')[6].textContent = langData.moreDetails;
+            document.querySelectorAll('.btn-text')[7].textContent = langData.getStarted;
             
             // Update footer
             document.querySelector('.copyright').innerHTML = langData.copyright + ' &copy; <span id="year"></span> Magnatirix';
