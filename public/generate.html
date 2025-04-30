@@ -1,55 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Keys</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      color: #333;
+      font-size: 3rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>توليد المفاتيح</h1>
-        <div class="key-generation">
-            <button id="generateKeys" class="btn">توليد مفاتيح جديدة</button>
-            <div class="keys-container">
-                <div class="key-pair">
-                    <h3>المفتاح العام</h3>
-                    <textarea id="publicKey" readonly></textarea>
-                    <button class="btn copy-btn" onclick="copyToClipboard('publicKey')">نسخ</button>
-                </div>
-                <div class="key-pair">
-                    <h3>المفتاح الخاص</h3>
-                    <textarea id="privateKey" readonly></textarea>
-                    <button class="btn copy-btn" onclick="copyToClipboard('privateKey')">نسخ</button>
-                </div>
-            </div>
-        </div>
-        <div id="status"></div>
-        <a href="/" class="btn back-btn">العودة للصفحة الرئيسية</a>
-    </div>
-    <script>
-        document.getElementById('generateKeys').addEventListener('click', () => {
-            // This is a simulation - in a real app, use a proper crypto library
-            const publicKey = '-----BEGIN PUBLIC KEY-----\n' + 
-                Array(10).fill().map(() => Math.random().toString(36).substring(2, 15)).join('') + 
-                '\n-----END PUBLIC KEY-----';
-            
-            const privateKey = '-----BEGIN PRIVATE KEY-----\n' + 
-                Array(20).fill().map(() => Math.random().toString(36).substring(2, 15)).join('') + 
-                '\n-----END PRIVATE KEY-----';
-            
-            document.getElementById('publicKey').value = publicKey;
-            document.getElementById('privateKey').value = privateKey;
-            document.getElementById('status').textContent = 'تم توليد المفاتيح بنجاح';
-            document.getElementById('status').style.color = 'green';
-        });
-        
-        function copyToClipboard(elementId) {
-            const copyText = document.getElementById(elementId);
-            copyText.select();
-            document.execCommand('copy');
-            alert('تم نسخ المفتاح إلى الحافظة');
-        }
-    </script>
+  <h1>Coming Soon</h1>
 </body>
 </html>
