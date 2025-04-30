@@ -4,38 +4,38 @@ document.getElementById('year').textContent = new Date().getFullYear();
 // Navigation functions
 function goToLogin() {
     const lang = document.documentElement.lang;
-    window.location.href = lang === 'ar' ? '/login-ar' : '/login';
+    window.location.href = lang === 'ar' ? 'login-ar.html' : 'login.html';
 }
 
 function goToSignup() {
     const lang = document.documentElement.lang;
-    window.location.href = lang === 'ar' ? '/signup-ar' : '/signup';
+    window.location.href = lang === 'ar' ? 'signup-ar.html' : 'signup.html';
 }
 
 function learnMore() {
     const lang = document.documentElement.lang;
-    window.location.href = lang === 'ar' ? '/about-ar' : '/about';
+    window.location.href = lang === 'ar' ? 'about-ar.html' : 'about.html';
 }
 
 // Feature page navigation functions
 function goToGenerate() {
     const lang = document.documentElement.lang;
-    window.location.href = 'public/generate.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'generate.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 function goToConnect() {
     const lang = document.documentElement.lang;
-    window.location.href = 'public/connect.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'connect.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 function goToAILogAnalyzer() {
     const lang = document.documentElement.lang;
-    window.location.href = 'public/ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 function goToNucleiAnalyzer() {
     const lang = document.documentElement.lang;
-    window.location.href = 'public/nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 const translations = {
