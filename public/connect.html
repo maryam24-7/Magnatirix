@@ -1,81 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect to Server</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      color: #333;
+      font-size: 3rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>الاتصال بالخادم</h1>
-        <div class="connection-form">
-            <div class="form-group">
-                <label for="serverUrl">رابط الخادم:</label>
-                <input type="text" id="serverUrl" value="wss://localhost:3000" readonly>
-            </div>
-            <button id="connectBtn" class="btn">الاتصال</button>
-            <button id="disconnectBtn" class="btn" disabled>قطع الاتصال</button>
-        </div>
-        <div id="connectionStatus">الحالة: غير متصل</div>
-        <div id="serverMessages" class="messages-container"></div>
-        <a href="/" class="btn back-btn">العودة للصفحة الرئيسية</a>
-    </div>
-    <script>
-        let ws;
-        const connectBtn = document.getElementById('connectBtn');
-        const disconnectBtn = document.getElementById('disconnectBtn');
-        const statusDiv = document.getElementById('connectionStatus');
-        const messagesDiv = document.getElementById('serverMessages');
-        
-        connectBtn.addEventListener('click', () => {
-            const serverUrl = document.getElementById('serverUrl').value;
-            statusDiv.textContent = 'جاري الاتصال...';
-            statusDiv.style.color = 'blue';
-            
-            ws = new WebSocket(serverUrl);
-            
-            ws.onopen = () => {
-                statusDiv.textContent = 'متصل بالخادم بنجاح';
-                statusDiv.style.color = 'green';
-                connectBtn.disabled = true;
-                disconnectBtn.disabled = false;
-                
-                // Send a test message
-                ws.send(JSON.stringify({
-                    type: 'connection',
-                    message: 'Client connected',
-                    timestamp: new Date().toISOString()
-                }));
-            };
-            
-            ws.onmessage = (event) => {
-                const messageElement = document.createElement('div');
-                messageElement.className = 'message';
-                messageElement.textContent = `الخادم: ${event.data}`;
-                messagesDiv.appendChild(messageElement);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            };
-            
-            ws.onclose = () => {
-                statusDiv.textContent = 'تم قطع الاتصال';
-                statusDiv.style.color = 'red';
-                connectBtn.disabled = false;
-                disconnectBtn.disabled = true;
-            };
-            
-            ws.onerror = (error) => {
-                statusDiv.textContent = 'خطأ في الاتصال';
-                statusDiv.style.color = 'red';
-                console.error('WebSocket error:', error);
-            };
-        });
-        
-        disconnectBtn.addEventListener('click', () => {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.close();
-            }
-        });
-    </script>
+  <h1>Coming Soon</h1>
 </body>
 </html>
