@@ -279,18 +279,18 @@
         }
 
         .feature-card h3 span {
-            font-size: 1.8rem; /* تكبير حجم العناوين الفرعية */
+            font-size: 1.8rem; /* Increased sub-heading size */
         }
 
         .feature-card p {
             color: #666;
             margin-bottom: 2rem;
-            font-size: 1.1rem; /* تكبير حجم النص قليلاً */
+            font-size: 1.05rem;
             line-height: 1.7;
         }
 
         .feature-icon {
-            font-size: 2rem; /* تكبير حجم الأيقونات */
+            font-size: 1.8rem;
             color: var(--secondary-color);
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
@@ -421,6 +421,10 @@
             .features {
                 grid-template-columns: 1fr;
             }
+            
+            .feature-card h3 span {
+                font-size: 1.6rem; /* Adjusted for mobile */
+            }
         }
 
         @media (max-width: 576px) {
@@ -441,7 +445,7 @@
             }
             
             .feature-card h3 span {
-                font-size: 1.5rem;
+                font-size: 1.5rem; /* Adjusted for small mobile */
             }
         }
 
@@ -605,7 +609,7 @@
             window.location.href = lang === 'ar' ? '/about-ar' : '/about';
         }
 
-        // Functions for feature pages
+        // Feature page navigation functions
         function goToGenerate() {
             const lang = document.documentElement.lang;
             window.location.href = 'public/generate.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
