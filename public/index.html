@@ -531,7 +531,7 @@
                 </h3>
                 <p>حلّل سجلات النظام أو الشبكة لاكتشاف الأنماط الغريبة.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> اكتشاف السلوك غير الطبيعي باستخدام نماذج تعلم الآلة.</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" onclick="goToAILogAnalyzer()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -541,7 +541,7 @@
                 </h3>
                 <p>فحص المواقع لاكتشاف الثغرات الأمنية المعروفة وتقييم خطورتها.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> تحليل النتائج وتوليد توصيات تلقائية باستخدام الذكاء اللغوي.</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" onclick="goToNucleiAnalyzer()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
         </section>
 
@@ -577,14 +577,38 @@
         </div>
     </footer>
 
-    <script src="js/auth.js"></script>
-    <script src="js/main.js"></script>
-
     <script>
         // Set current year in footer
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Translations object
+        // Navigation functions
+        function goToLogin() {
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/login-ar' : '/login';
+        }
+
+        function goToSignup() {
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/signup-ar' : '/signup';
+        }
+
+        function learnMore() {
+            const lang = document.documentElement.lang;
+            window.location.href = lang === 'ar' ? '/about-ar' : '/about';
+        }
+
+        // New functions for feature pages
+        function goToAILogAnalyzer() {
+            const lang = document.documentElement.lang;
+            window.location.href = 'ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+        }
+
+        function goToNucleiAnalyzer() {
+            const lang = document.documentElement.lang;
+            window.location.href = 'nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+        }
+
+        // باقي كود JavaScript يبقى كما هو
         const translations = {
             ar: {
                 logo: "Magnatirix",
@@ -641,22 +665,6 @@
                 copyright: "All Rights Reserved"
             }
         };
-
-        // Navigation functions
-        function goToLogin() {
-            const lang = document.documentElement.lang;
-            window.location.href = lang === 'ar' ? '/login-ar' : '/login';
-        }
-
-        function goToSignup() {
-            const lang = document.documentElement.lang;
-            window.location.href = lang === 'ar' ? '/signup-ar' : '/signup';
-        }
-
-        function learnMore() {
-            const lang = document.documentElement.lang;
-            window.location.href = lang === 'ar' ? '/about-ar' : '/about';
-        }
 
         // Language switching function
         function switchLanguage() {
