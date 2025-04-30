@@ -140,8 +140,12 @@
         .security-badge i {
             font-size: 28px;
             color: var(--success-color);
-            margin-left: 20px;
+            margin-left: 10px; /* تم تقليل المسافة هنا من 20px إلى 10px */
             flex-shrink: 0;
+        }
+
+        .security-badge-content {
+            margin-right: 10px; /* إضافة margin-right لجعل النص أقرب لليسار */
         }
 
         .security-badge-content h4 {
@@ -183,6 +187,10 @@
             
             .security-badge i {
                 margin: 0 0 15px 0;
+            }
+            
+            .security-badge-content {
+                margin-right: 0;
             }
         }
     </style>
