@@ -278,15 +278,19 @@
             gap: 15px;
         }
 
+        .feature-card h3 span {
+            font-size: 1.8rem; /* تكبير حجم العناوين الفرعية */
+        }
+
         .feature-card p {
             color: #666;
             margin-bottom: 2rem;
-            font-size: 1.05rem;
+            font-size: 1.1rem; /* تكبير حجم النص قليلاً */
             line-height: 1.7;
         }
 
         .feature-icon {
-            font-size: 1.8rem;
+            font-size: 2rem; /* تكبير حجم الأيقونات */
             color: var(--secondary-color);
             background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
             -webkit-background-clip: text;
@@ -435,6 +439,10 @@
             .feature-card h3 {
                 font-size: 1.5rem;
             }
+            
+            .feature-card h3 span {
+                font-size: 1.5rem;
+            }
         }
 
         /* Animation */
@@ -511,7 +519,7 @@
                 </h3>
                 <p>افحص الملفات والروابط المشبوهة مباشرة من الموقع باستخدام قاعدة بيانات ضخمة للبرمجيات الخبيثة.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> تحليل وصف الملف أو سلوك المستخدم لتقدير درجة الخطر.</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" onclick="goToGenerate()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -521,7 +529,7 @@
                 </h3>
                 <p>احصل على تحليلات فورية للتهديدات السيبرانية العالمية.</p>
                 <p><strong>دمج الذكاء الاصطناعي:</strong> تصنيف التهديدات أو المجالات الخطرة باستخدام تحليل لغوي (NLP).</p>
-                <button class="btn btn-primary" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
+                <button class="btn btn-primary" onclick="goToConnect()" aria-label="المزيد من التفاصيل"><span class="btn-text">المزيد من التفاصيل</span></button>
             </div>
 
             <div class="feature-card">
@@ -597,18 +605,27 @@
             window.location.href = lang === 'ar' ? '/about-ar' : '/about';
         }
 
-        // New functions for feature pages
+        // Functions for feature pages
+        function goToGenerate() {
+            const lang = document.documentElement.lang;
+            window.location.href = 'public/generate.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+        }
+
+        function goToConnect() {
+            const lang = document.documentElement.lang;
+            window.location.href = 'public/connect.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+        }
+
         function goToAILogAnalyzer() {
             const lang = document.documentElement.lang;
-            window.location.href = 'ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+            window.location.href = 'public/ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
         }
 
         function goToNucleiAnalyzer() {
             const lang = document.documentElement.lang;
-            window.location.href = 'nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+            window.location.href = 'public/nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
         }
 
-        // باقي كود JavaScript يبقى كما هو
         const translations = {
             ar: {
                 logo: "Magnatirix",
