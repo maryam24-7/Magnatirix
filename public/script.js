@@ -17,28 +17,27 @@ function learnMore() {
     window.location.href = lang === 'ar' ? '/about-ar' : '/about';
 }
 
-// Feature pages navigation
+// Feature page navigation functions
 function goToGenerate() {
     const lang = document.documentElement.lang;
-    window.location.href = 'generate.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'public/generate.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 function goToConnect() {
     const lang = document.documentElement.lang;
-    window.location.href = 'connect.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'public/connect.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 function goToAILogAnalyzer() {
     const lang = document.documentElement.lang;
-    window.location.href = 'ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'public/ai-log-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
 function goToNucleiAnalyzer() {
     const lang = document.documentElement.lang;
-    window.location.href = 'nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
+    window.location.href = 'public/nuclei-analyzer.html?lang=' + (lang === 'ar' ? 'ar' : 'en');
 }
 
-// Language translations
 const translations = {
     ar: {
         logo: "Magnatirix",
