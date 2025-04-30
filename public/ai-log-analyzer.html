@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html id="langContainer" lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Magnatirix - محلل السجلات بالذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3a4f6c;
+            --secondary-color: #1e88e5;
+            --accent-color: #ff5252;
+            --light-color: #f5f7fa;
+            --dark-color: #263238;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .feature-detail {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .back-btn {
+            margin-top: 20px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <!-- نفس الهيدر من index.html -->
+    </header>
+
+    <main class="container">
+        <section class="feature-detail">
+            <h1><i class="fas fa-chart-line"></i> <span id="featureTitle">محلل السجلات بالذكاء الاصطناعي</span></h1>
+            
+            <h2 id="featuresHeading">الميزات الرئيسية:</h2>
+            <ul id="featuresList">
+                <li>تحليل تلقائي لسجلات النظام والشبكة</li>
+                <li>كشف الأنماط غير الطبيعية باستخدام خوارزميات الذكاء الاصطناعي</li>
+                <li>تنبيهات فورية عند اكتشاف نشاط مشبوه</li>
+                <li>لوحة تحكم تفاعلية لعرض النتائج</li>
+            </ul>
+            
+            <h2 id="howItWorks">كيف يعمل:</h2>
+            <p id="featureDescription">يقوم النظام بجمع وتحليل سجلات الأحداث من مختلف مصادر النظام والشبكة، ثم يستخدم نماذج تعلم الآلة لاكتشاف الأنماط غير الطبيعية التي قد تشير إلى هجمات أو اختراقات أمنية.</p>
+            
+            <button class="btn btn-primary back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i> <span id="backButtonText">العودة</span>
+            </button>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <!-- نفس الفوتر من index.html -->
+    </footer>
+
+    <script>
+        // تحديد اللغة من query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang') || 'ar';
+        
+        // تحديث اللغة والاتجاه
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        
+        // ترجمة المحتوى
+        const translations = {
+            ar: {
+                title: "Magnatirix - محلل السجلات بالذكاء الاصطناعي",
+                featureTitle: "محلل السجلات بالذكاء الاصطناعي",
+                featuresHeading: "الميزات الرئيسية:",
+                featuresList: [
+                    "تحليل تلقائي لسجلات النظام والشبكة",
+                    "كشف الأنماط غير الطبيعية باستخدام خوارزميات الذكاء الاصطناعي",
+                    "تنبيهات فورية عند اكتشاف نشاط مشبوه",
+                    "لوحة تحكم تفاعلية لعرض النتائج"
+                ],
+                howItWorks: "كيف يعمل:",
+                featureDescription: "يقوم النظام بجمع وتحليل سجلات الأحداث من مختلف مصادر النظام والشبكة، ثم يستخدم نماذج تعلم الآلة لاكتشاف الأنماط غير الطبيعية التي قد تشير إلى هجمات أو اختراقات أمنية.",
+                backButtonText: "العودة"
+            },
+            en: {
+               
