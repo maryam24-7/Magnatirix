@@ -1,221 +1,134 @@
-// تأكد من تحميل DOM بالكامل قبل تنفيذ الجافاسكربت
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("تم تحميل الصفحة بالكامل وجاهز للتنفيذ");
-    
-    // تعيين سنة حقوق النشر
-    updateCopyrightYear();
-    
-    // تهيئة الترجمة
-    initTranslations();
-    
-    // ربط الأزرار
-    setupEventListeners();
-});
-
-// وظائف مساعدة
-function updateCopyrightYear() {
-    const yearElement = document.getElementById('year');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
-}
-
-function initTranslations() {
-    // تحميل تفضيل اللغة من localStorage
-    const savedLang = localStorage.getItem('preferredLang');
-    if (savedLang) {
-        applyLanguage(savedLang);
-    }
-}
-
-function setupEventListeners() {
-    // ربط الأزرار العامة
-    const buttons = {
-        'loginButton': goToLogin,
-        'signupButton': goToSignup,
-        'learnMoreButton': learnMore,
-        'generateButton': goToGenerate,
-        'connectButton': goToConnect,
-        'aiLogButton': goToAILogAnalyzer,
-        'nucleiButton': goToNucleiAnalyzer,
-        'startNowButton': goToSignup,
-        'languageToggle': switchLanguage
-    };
-
-    Object.entries(buttons).forEach(([id, handler]) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.addEventListener('click', handler);
-        }
-    });
-}
-
-// دوال التنقل
-function goToLogin() {
-    navigateToPage('login');
-}
-
-function goToSignup() {
-    navigateToPage('signup');
-}
-
-function learnMore() {
-    navigateToPage('about');
-}
-
-function goToGenerate() {
-    navigateToPage('generate');
-}
-
-function goToConnect() {
-    navigateToPage('connect');
-}
-
-function goToAILogAnalyzer() {
-    navigateToPage('ai-log-analyzer');
-}
-
-function goToNucleiAnalyzer() {
-    navigateToPage('nuclei-analyzer');
-}
-
-function navigateToPage(page) {
-    const currentLang = document.documentElement.lang || 'ar';
-    window.location.href = `${page}.html?lang=${currentLang}`;
-}
-
-// الترجمة
-const translations = {
+// Translation Manager
+const TranslationManager = {
+  translations: {
     ar: {
-        logo: "Magnatirix",
-        heroTitle: "نظام التراسل المشفر الآمن",
-        heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير",
-        featuresTitle: "أدوات الأمن السيبراني المدعومة بالذكاء الاصطناعي",
-        feature1Title: "VirusTotal API",
-        feature1Text: "افحص الملفات والروابط المشبوهة مباشرة من الموقع باستخدام قاعدة بيانات ضخمة للبرمجيات الخبيثة.",
-        feature1AI: "دمج الذكاء الاصطناعي: تحليل وصف الملف أو سلوك المستخدم لتقدير درجة الخطر.",
-        feature2Title: "IBM X-Force Exchange",
-        feature2Text: "احصل على تحليلات فورية للتهديدات السيبرانية العالمية.",
-        feature2AI: "دمج الذكاء الاصطناعي: تصنيف التهديدات أو المجالات الخطرة باستخدام تحليل لغوي (NLP).",
-        feature3Title: "AI Log Analyzer",
-        feature3Text: "حلّل سجلات النظام أو الشبكة لاكتشاف الأنماط الغريبة.",
-        feature3AI: "دمج الذكاء الاصطناعي: اكتشاف السلوك غير الطبيعي باستخدام نماذج تعلم الآلة.",
-        feature4Title: "Nuclei + AI Analyzer",
-        feature4Text: "فحص المواقع لاكتشاف الثغرات الأمنية المعروفة وتقييم خطورتها.",
-        feature4AI: "دمج الذكاء الاصطناعي: تحليل النتائج وتوليد توصيات تلقائية باستخدام الذكاء اللغوي.",
-        ctaTitle: "جاهز لبدء استخدام Magnatirix؟",
-        ctaText: "انضم إلى آلاف المستخدمين الذين يثقون بنا لحماية اتصالاتهم اليومية",
-        login: "تسجيل الدخول",
-        signup: "إنشاء حساب",
-        learnMore: "تعرف أكثر",
-        getStarted: "ابدأ مجاناً الآن",
-        moreDetails: "المزيد من التفاصيل",
-        language: "English",
-        copyright: "جميع الحقوق محفوظة"
+      logo: "Magnatirix",
+      login: "تسجيل الدخول",
+      signup: "إنشاء حساب",
+      learnMore: "تعرف أكثر",
+      moreDetails: "المزيد من التفاصيل",
+      getStarted: "ابدأ مجاناً الآن",
+      language: "English",
+      copyright: "جميع الحقوق محفوظة",
+      back: "العودة"
     },
     en: {
-        logo: "Magnatirix",
-        heroTitle: "Secure Encrypted Messaging",
-        heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system that secures your communications using the latest encryption technologies",
-        featuresTitle: "AI-Powered Cybersecurity Tools",
-        feature1Title: "VirusTotal API",
-        feature1Text: "Scan suspicious files and URLs directly from the site using a huge malware database.",
-        feature1AI: "AI Integration: Analyze file description or user behavior to estimate risk level.",
-        feature2Title: "IBM X-Force Exchange",
-        feature2Text: "Get instant analysis of global cyber threats.",
-        feature2AI: "AI Integration: Classify threats or dangerous domains using NLP analysis.",
-        feature3Title: "AI Log Analyzer",
-        feature3Text: "Analyze system or network logs to detect unusual patterns.",
-        feature3AI: "AI Integration: Detect abnormal behavior using machine learning models.",
-        feature4Title: "Nuclei + AI Analyzer",
-        feature4Text: "Scan websites to discover known security vulnerabilities and assess their severity.",
-        feature4AI: "AI Integration: Analyze results and generate automatic recommendations using linguistic AI.",
-        ctaTitle: "Ready to start using Magnatirix?",
-        ctaText: "Join thousands of users who trust us to protect their daily communications",
-        login: "Login",
-        signup: "Sign Up",
-        learnMore: "Learn More",
-        getStarted: "Get Started for Free",
-        moreDetails: "More Details",
-        language: "العربية",
-        copyright: "All Rights Reserved"
+      logo: "Magnatirix",
+      login: "Login",
+      signup: "Sign Up",
+      learnMore: "Learn More",
+      moreDetails: "More Details",
+      getStarted: "Get Started for Free",
+      language: "العربية",
+      copyright: "All Rights Reserved",
+      back: "Back"
     }
-};
+  },
 
-// تبديل اللغة
-function switchLanguage() {
-    const html = document.documentElement;
-    const currentLang = html.lang || 'ar';
-    const newLang = currentLang === 'ar' ? 'en' : 'ar';
-    
-    applyLanguage(newLang);
-    updateLanguageToggle(currentLang);
-    saveLanguagePreference(newLang);
-}
+  init() {
+    this.loadLanguagePreference();
+    this.setupEventListeners();
+    this.updateCopyrightYear();
+  },
 
-function applyLanguage(lang) {
-    const html = document.documentElement;
-    html.lang = lang;
-    html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  loadLanguagePreference() {
+    const savedLang = localStorage.getItem('preferredLang') || 'ar';
+    this.applyLanguage(savedLang);
+  },
+
+  applyLanguage(lang) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     
-    const langData = translations[lang];
+    const langData = this.translations[lang];
     if (!langData) return;
 
-    // تحديث العناصر المشتركة في جميع الصفحات
-    updateElementText('.logo', langData.logo);
-    updateElementText('.copyright', `${langData.copyright} &copy; <span id="year"></span> Magnatirix`);
-    
-    // تحديث الأزرار المشتركة
-    updateButtonTexts(langData);
-    
-    // تحديث السنة بعد تغيير اللغة
-    updateCopyrightYear();
-}
+    this.updateElements(langData);
+    this.updateButtons(langData);
+  },
 
-function updateElementText(selector, text) {
-    const element = document.querySelector(selector);
-    if (element) {
-        element.innerHTML = text;
-    }
-}
+  updateElements(langData) {
+    const elements = {
+      '.logo': langData.logo,
+      '.copyright': `${langData.copyright} &copy; <span id="year"></span> Magnatirix`,
+      '#backButton span': langData.back
+    };
 
-function updateButtonTexts(langData) {
+    Object.entries(elements).forEach(([selector, text]) => {
+      const element = document.querySelector(selector);
+      if (element) element.innerHTML = text;
+    });
+  },
+
+  updateButtons(langData) {
     const buttons = [
-        { id: 'loginButton', text: langData.login },
-        { id: 'signupButton', text: langData.signup },
-        { id: 'learnMoreButton', text: langData.learnMore },
-        { id: 'generateButton', text: langData.moreDetails },
-        { id: 'connectButton', text: langData.moreDetails },
-        { id: 'aiLogButton', text: langData.moreDetails },
-        { id: 'nucleiButton', text: langData.moreDetails },
-        { id: 'startNowButton', text: langData.getStarted }
+      { id: 'loginButton', text: langData.login },
+      { id: 'signupButton', text: langData.signup },
+      { id: 'learnMoreButton', text: langData.learnMore },
+      { id: 'generateButton', text: langData.moreDetails },
+      { id: 'connectButton', text: langData.moreDetails },
+      { id: 'aiLogButton', text: langData.moreDetails },
+      { id: 'nucleiButton', text: langData.moreDetails },
+      { id: 'startNowButton', text: langData.getStarted }
     ];
 
-    buttons.forEach(button => {
-        const element = document.getElementById(button.id);
-        if (element) {
-            const textElement = element.querySelector('.btn-text') || element;
-            textElement.textContent = button.text;
-        }
+    buttons.forEach(btn => {
+      const element = document.getElementById(btn.id);
+      if (element) {
+        const textElement = element.querySelector('.btn-text') || element;
+        textElement.textContent = btn.text;
+      }
     });
-}
+  },
 
-function updateLanguageToggle(currentLang) {
-    const languageToggle = document.getElementById('languageToggle');
-    if (languageToggle) {
-        const span = languageToggle.querySelector('span');
-        if (span) {
-            span.textContent = currentLang === 'ar' ? 'العربية' : 'English';
-        }
+  updateLanguageToggle(currentLang) {
+    const toggle = document.getElementById('languageToggle');
+    if (toggle) {
+      const span = toggle.querySelector('span');
+      if (span) span.textContent = this.translations[currentLang].language;
     }
-}
+  },
 
-function saveLanguagePreference(lang) {
-    localStorage.setItem('preferredLang', lang);
-}
+  updateCopyrightYear() {
+    const yearElement = document.getElementById('year');
+    if (yearElement) yearElement.textContent = new Date().getFullYear();
+  },
 
-// تهيئة اللغة عند التحميل
-const savedLang = localStorage.getItem('preferredLang');
-if (savedLang) {
-    applyLanguage(savedLang);
-        }
+  setupEventListeners() {
+    // Navigation Buttons
+    const navButtons = {
+      'loginButton': () => this.navigateTo('login'),
+      'signupButton': () => this.navigateTo('signup'),
+      'learnMoreButton': () => this.navigateTo('about'),
+      'generateButton': () => this.navigateTo('generate'),
+      'connectButton': () => this.navigateTo('connect'),
+      'aiLogButton': () => this.navigateTo('ai-log-analyzer'),
+      'nucleiButton': () => this.navigateTo('nuclei-analyzer'),
+      'startNowButton': () => this.navigateTo('signup'),
+      'languageToggle': () => this.switchLanguage(),
+      'backButton': () => window.history.back()
+    };
+
+    Object.entries(navButtons).forEach(([id, handler]) => {
+      const element = document.getElementById(id);
+      if (element) element.addEventListener('click', handler);
+    });
+  },
+
+  navigateTo(page) {
+    const lang = document.documentElement.lang || 'ar';
+    window.location.href = `${page}.html?lang=${lang}`;
+  },
+
+  switchLanguage() {
+    const currentLang = document.documentElement.lang || 'ar';
+    const newLang = currentLang === 'ar' ? 'en' : 'ar';
+    
+    this.applyLanguage(newLang);
+    this.updateLanguageToggle(currentLang);
+    localStorage.setItem('preferredLang', newLang);
+  }
+};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => TranslationManager.init());
