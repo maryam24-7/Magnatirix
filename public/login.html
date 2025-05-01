@@ -7,6 +7,206 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* أنماط أساسية */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        [dir="rtl"] {
+            text-align: right;
+        }
+
+        [dir="ltr"] {
+            text-align: left;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* أنماط الهيدر */
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text i {
+            margin-left: 10px;
+        }
+
+        /* أنماط الأزرار */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        /* أنماط تبديل اللغة */
+        .language-switcher {
+            background: transparent;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+        }
+
+        /* أنماط الفوتر */
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .copyright {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* أنماط نموذج التسجيل */
+        .auth-form {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .result {
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -18,7 +218,7 @@
             <div class="nav-actions">
                 <button class="language-switcher" id="languageToggle">
                     <i class="fas fa-globe"></i>
-                    <span>English</span>
+                    <span id="languageText">English</span>
                 </button>
                 <a href="signup.html" class="btn btn-secondary">
                     <i class="fas fa-user-plus"></i> <span class="btn-text" id="signupBtnText">إنشاء حساب</span>
@@ -40,7 +240,7 @@
                     <input type="password" id="login-password" class="form-control" required>
                 </div>
                 <button type="submit" class="btn btn-primary" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
+                    <i class="fas fa-sign-in-alt"></i> <span class="btn-text" id="loginBtnText">تسجيل الدخول</span>
                 </button>
             </form>
             <div id="login-result" class="result" style="display: none;"></div>
@@ -104,7 +304,7 @@
         };
 
         // Language switching function
-        document.getElementById('languageToggle').addEventListener('click', function() {
+        function switchLanguage() {
             const html = document.documentElement;
             const currentLang = html.lang;
             const newLang = currentLang === 'ar' ? 'en' : 'ar';
@@ -117,19 +317,22 @@
             document.getElementById('login-title').textContent = translations[newLang].loginTitle;
             document.getElementById('username-label').textContent = translations[newLang].usernameLabel;
             document.getElementById('password-label').textContent = translations[newLang].passwordLabel;
-            document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${translations[newLang].loginBtn}</span>`;
+            document.getElementById('loginBtnText').textContent = translations[newLang].loginBtn;
             document.getElementById('forgot-password-link').textContent = translations[newLang].forgotPassword;
-            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
+            document.getElementById('languageText').textContent = translations[newLang].languageToggle;
             document.getElementById('signupBtnText').textContent = translations[newLang].signupBtn;
 
             // Save preference to localStorage
             localStorage.setItem('preferredLang', newLang);
-        });
+        }
+
+        // Add event listener to language toggle button
+        document.getElementById('languageToggle').addEventListener('click', switchLanguage);
 
         // Check for saved language preference
         const savedLang = localStorage.getItem('preferredLang');
         if (savedLang && savedLang !== document.documentElement.lang) {
-            document.getElementById('languageToggle').click();
+            switchLanguage();
         }
 
         // Login form handling
@@ -146,7 +349,7 @@
                 
                 // Redirect to dashboard after successful login
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
+                    window.location.href = 'dashboard.html?lang=' + lang;
                 }, 1500);
             }, 1000);
         });
