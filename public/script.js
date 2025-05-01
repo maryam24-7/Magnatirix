@@ -1,8 +1,10 @@
-// Translation Manager
-const TranslationManager = {
+// كائن إدارة الترجمة
+const LanguageManager = {
+  currentLanguage: 'ar',
+  
   translations: {
     ar: {
-      logo: "Magnatirix",
+      // نصوص القوائم والأزرار
       login: "تسجيل الدخول",
       signup: "إنشاء حساب",
       learnMore: "تعرف أكثر",
@@ -10,10 +12,14 @@ const TranslationManager = {
       getStarted: "ابدأ مجاناً الآن",
       language: "English",
       copyright: "جميع الحقوق محفوظة",
-      back: "العودة"
+      back: "العودة",
+      
+      // نصوص الصفحة الرئيسية
+      heroTitle: "نظام التراسل المشفر الآمن",
+      heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف"
     },
     en: {
-      logo: "Magnatirix",
+      // نصوص القوائم والأزرار
       login: "Login",
       signup: "Sign Up",
       learnMore: "Learn More",
@@ -21,81 +27,31 @@ const TranslationManager = {
       getStarted: "Get Started for Free",
       language: "العربية",
       copyright: "All Rights Reserved",
-      back: "Back"
+      back: "Back",
+      
+      // نصوص الصفحة الرئيسية
+      heroTitle: "Secure Encrypted Messaging",
+      heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system"
     }
   },
 
+  // تهيئة المدير
   init() {
-    this.loadLanguagePreference();
+    this.loadLanguage();
     this.setupEventListeners();
-    this.updateCopyrightYear();
+    this.updatePage();
   },
 
-  loadLanguagePreference() {
-    const savedLang = localStorage.getItem('preferredLang') || 'ar';
-    this.applyLanguage(savedLang);
+  // تحميل اللغة المحفوظة
+  loadLanguage() {
+    this.currentLanguage = localStorage.getItem('preferredLang') || 'ar';
+    document.documentElement.lang = this.currentLanguage;
+    document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
   },
 
-  applyLanguage(lang) {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    
-    const langData = this.translations[lang];
-    if (!langData) return;
-
-    this.updateElements(langData);
-    this.updateButtons(langData);
-  },
-
-  updateElements(langData) {
-    const elements = {
-      '.logo': langData.logo,
-      '.copyright': `${langData.copyright} &copy; <span id="year"></span> Magnatirix`,
-      '#backButton span': langData.back
-    };
-
-    Object.entries(elements).forEach(([selector, text]) => {
-      const element = document.querySelector(selector);
-      if (element) element.innerHTML = text;
-    });
-  },
-
-  updateButtons(langData) {
-    const buttons = [
-      { id: 'loginButton', text: langData.login },
-      { id: 'signupButton', text: langData.signup },
-      { id: 'learnMoreButton', text: langData.learnMore },
-      { id: 'generateButton', text: langData.moreDetails },
-      { id: 'connectButton', text: langData.moreDetails },
-      { id: 'aiLogButton', text: langData.moreDetails },
-      { id: 'nucleiButton', text: langData.moreDetails },
-      { id: 'startNowButton', text: langData.getStarted }
-    ];
-
-    buttons.forEach(btn => {
-      const element = document.getElementById(btn.id);
-      if (element) {
-        const textElement = element.querySelector('.btn-text') || element;
-        textElement.textContent = btn.text;
-      }
-    });
-  },
-
-  updateLanguageToggle(currentLang) {
-    const toggle = document.getElementById('languageToggle');
-    if (toggle) {
-      const span = toggle.querySelector('span');
-      if (span) span.textContent = this.translations[currentLang].language;
-    }
-  },
-
-  updateCopyrightYear() {
-    const yearElement = document.getElementById('year');
-    if (yearElement) yearElement.textContent = new Date().getFullYear();
-  },
-
+  // إعداد مستمعي الأحداث
   setupEventListeners() {
-    // Navigation Buttons
+    // أزرار التنقل
     const navButtons = {
       'loginButton': () => this.navigateTo('login'),
       'signupButton': () => this.navigateTo('signup'),
@@ -109,26 +65,75 @@ const TranslationManager = {
       'backButton': () => window.history.back()
     };
 
-    Object.entries(navButtons).forEach(([id, handler]) => {
+    for (const [id, handler] of Object.entries(navButtons)) {
       const element = document.getElementById(id);
       if (element) element.addEventListener('click', handler);
-    });
+    }
   },
 
-  navigateTo(page) {
-    const lang = document.documentElement.lang || 'ar';
-    window.location.href = `${page}.html?lang=${lang}`;
-  },
-
-  switchLanguage() {
-    const currentLang = document.documentElement.lang || 'ar';
-    const newLang = currentLang === 'ar' ? 'en' : 'ar';
+  // تحديث الصفحة حسب اللغة
+  updatePage() {
+    const langData = this.translations[this.currentLanguage];
     
-    this.applyLanguage(newLang);
-    this.updateLanguageToggle(currentLang);
-    localStorage.setItem('preferredLang', newLang);
+    // تحديث العناصر العامة
+    this.updateElement('.logo', 'Magnatirix');
+    this.updateElement('.copyright', `${langData.copyright} &copy; ${new Date().getFullYear()} Magnatirix`);
+    
+    // تحديث الأزرار
+    this.updateButton('loginButton', langData.login);
+    this.updateButton('signupButton', langData.signup);
+    this.updateButton('learnMoreButton', langData.learnMore);
+    this.updateButton('generateButton', langData.moreDetails);
+    this.updateButton('connectButton', langData.moreDetails);
+    this.updateButton('aiLogButton', langData.moreDetails);
+    this.updateButton('nucleiButton', langData.moreDetails);
+    this.updateButton('startNowButton', langData.getStarted);
+    this.updateButton('backButton', langData.back);
+    
+    // تحديث زر تبديل اللغة
+    const toggle = document.getElementById('languageToggle');
+    if (toggle) {
+      const span = toggle.querySelector('span');
+      if (span) span.textContent = langData.language;
+    }
+    
+    // تحديث النصوص الخاصة بالصفحة الرئيسية
+    if (document.querySelector('.hero h1')) {
+      this.updateElement('.hero h1', langData.heroTitle);
+      this.updateElement('.hero p', langData.heroText);
+    }
+  },
+
+  // تبديل اللغة
+  switchLanguage() {
+    this.currentLanguage = this.currentLanguage === 'ar' ? 'en' : 'ar';
+    document.documentElement.lang = this.currentLanguage;
+    document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    
+    localStorage.setItem('preferredLang', this.currentLanguage);
+    this.updatePage();
+  },
+
+  // التنقل بين الصفحات
+  navigateTo(page) {
+    window.location.href = `${page}.html?lang=${this.currentLanguage}`;
+  },
+
+  // تحديث عنصر HTML
+  updateElement(selector, text) {
+    const element = document.querySelector(selector);
+    if (element) element.textContent = text;
+  },
+
+  // تحديث نص الزر
+  updateButton(buttonId, text) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+      const textElement = button.querySelector('.btn-text') || button;
+      textElement.textContent = text;
+    }
   }
 };
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => TranslationManager.init());
+// بدء التشغيل عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => LanguageManager.init());
