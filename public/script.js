@@ -1,5 +1,5 @@
-// كائن إدارة الترجمة
-const LanguageManager = {
+// كائن إدارة التطبيق
+const AppManager = {
   currentLanguage: 'ar',
   
   translations: {
@@ -35,7 +35,7 @@ const LanguageManager = {
     }
   },
 
-  // تهيئة المدير
+  // تهيئة التطبيق
   init() {
     this.loadLanguage();
     this.setupEventListeners();
@@ -44,31 +44,56 @@ const LanguageManager = {
 
   // تحميل اللغة المحفوظة
   loadLanguage() {
-    this.currentLanguage = localStorage.getItem('preferredLang') || 'ar';
+    const savedLang = localStorage.getItem('preferredLang');
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlLang = urlParams.get('lang');
+    
+    this.currentLanguage = urlLang || savedLang || 'ar';
     document.documentElement.lang = this.currentLanguage;
     document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    localStorage.setItem('preferredLang', this.currentLanguage);
   },
 
   // إعداد مستمعي الأحداث
   setupEventListeners() {
     // أزرار التنقل
-    const navButtons = {
-      'loginButton': () => this.navigateTo('login'),
-      'signupButton': () => this.navigateTo('signup'),
-      'learnMoreButton': () => this.navigateTo('about'),
-      'generateButton': () => this.navigateTo('generate'),
-      'connectButton': () => this.navigateTo('connect'),
-      'aiLogButton': () => this.navigateTo('ai-log-analyzer'),
-      'nucleiButton': () => this.navigateTo('nuclei-analyzer'),
-      'startNowButton': () => this.navigateTo('signup'),
-      'languageToggle': () => this.switchLanguage(),
-      'backButton': () => window.history.back()
-    };
+    document.addEventListener('click', (e) => {
+      const button = e.target.closest('button');
+      if (!button) return;
 
-    for (const [id, handler] of Object.entries(navButtons)) {
-      const element = document.getElementById(id);
-      if (element) element.addEventListener('click', handler);
-    }
+      switch(button.id) {
+        case 'loginButton':
+          this.navigateTo('login');
+          break;
+        case 'signupButton':
+          this.navigateTo('signup');
+          break;
+        case 'learnMoreButton':
+          this.navigateTo('about');
+          break;
+        case 'generateButton':
+          this.navigateTo('generate');
+          break;
+        case 'connectButton':
+          this.navigateTo('connect');
+          break;
+        case 'aiLogButton':
+          this.navigateTo('ai-log-analyzer');
+          break;
+        case 'nucleiButton':
+          this.navigateTo('nuclei-analyzer');
+          break;
+        case 'startNowButton':
+          this.navigateTo('signup');
+          break;
+        case 'languageToggle':
+          this.switchLanguage();
+          break;
+        case 'backButton':
+          window.history.back();
+          break;
+      }
+    });
   },
 
   // تحديث الصفحة حسب اللغة
@@ -80,15 +105,15 @@ const LanguageManager = {
     this.updateElement('.copyright', `${langData.copyright} &copy; ${new Date().getFullYear()} Magnatirix`);
     
     // تحديث الأزرار
-    this.updateButton('loginButton', langData.login);
-    this.updateButton('signupButton', langData.signup);
-    this.updateButton('learnMoreButton', langData.learnMore);
-    this.updateButton('generateButton', langData.moreDetails);
-    this.updateButton('connectButton', langData.moreDetails);
-    this.updateButton('aiLogButton', langData.moreDetails);
-    this.updateButton('nucleiButton', langData.moreDetails);
-    this.updateButton('startNowButton', langData.getStarted);
-    this.updateButton('backButton', langData.back);
+    this.updateButtonText('loginButton', langData.login);
+    this.updateButtonText('signupButton', langData.signup);
+    this.updateButtonText('learnMoreButton', langData.learnMore);
+    this.updateButtonText('generateButton', langData.moreDetails);
+    this.updateButtonText('connectButton', langData.moreDetails);
+    this.updateButtonText('aiLogButton', langData.moreDetails);
+    this.updateButtonText('nucleiButton', langData.moreDetails);
+    this.updateButtonText('startNowButton', langData.getStarted);
+    this.updateButtonText('backButton', langData.back);
     
     // تحديث زر تبديل اللغة
     const toggle = document.getElementById('languageToggle');
@@ -112,6 +137,11 @@ const LanguageManager = {
     
     localStorage.setItem('preferredLang', this.currentLanguage);
     this.updatePage();
+    
+    // تحديث معلمة اللغة في URL بدون إعادة تحميل الصفحة
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', this.currentLanguage);
+    window.history.pushState({}, '', url);
   },
 
   // التنقل بين الصفحات
@@ -121,12 +151,14 @@ const LanguageManager = {
 
   // تحديث عنصر HTML
   updateElement(selector, text) {
-    const element = document.querySelector(selector);
-    if (element) element.textContent = text;
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+      element.textContent = text;
+    });
   },
 
   // تحديث نص الزر
-  updateButton(buttonId, text) {
+  updateButtonText(buttonId, text) {
     const button = document.getElementById(buttonId);
     if (button) {
       const textElement = button.querySelector('.btn-text') || button;
@@ -136,4 +168,4 @@ const LanguageManager = {
 };
 
 // بدء التشغيل عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => LanguageManager.init());
+document.addEventListener('DOMContentLoaded', () => AppManager.init());
