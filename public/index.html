@@ -581,6 +581,51 @@
     <script>
         // إضافة سنة حقوق النشر تلقائياً
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // جعل جميع الأزرار تعمل
+        document.addEventListener('DOMContentLoaded', function() {
+            // زر تبديل اللغة
+            document.getElementById('languageToggle').addEventListener('click', function() {
+                alert('سيتم تنفيذ تبديل اللغة هنا');
+            });
+
+            // زر تسجيل الدخول
+            document.getElementById('loginButton').addEventListener('click', function() {
+                alert('سيتم فتح نموذج تسجيل الدخول');
+            });
+
+            // زر إنشاء حساب
+            document.getElementById('signupButton').addEventListener('click', function() {
+                alert('سيتم فتح نموذج إنشاء حساب');
+            });
+
+            // زر تعرف أكثر
+            document.getElementById('learnMoreButton').addEventListener('click', function() {
+                alert('سيتم عرض المزيد من المعلومات');
+            });
+
+            // أزرار الميزات
+            document.getElementById('generateButton').addEventListener('click', function() {
+                alert('سيتم عرض تفاصيل VirusTotal API');
+            });
+
+            document.getElementById('connectButton').addEventListener('click', function() {
+                alert('سيتم عرض تفاصيل IBM X-Force Exchange');
+            });
+
+            document.getElementById('aiLogButton').addEventListener('click', function() {
+                alert('سيتم عرض تفاصيل AI Log Analyzer');
+            });
+
+            document.getElementById('nucleiButton').addEventListener('click', function() {
+                alert('سيتم عرض تفاصيل Nuclei + AI Analyzer');
+            });
+
+            // زر ابدأ الآن
+            document.getElementById('startNowButton').addEventListener('click', function() {
+                alert('سيتم توجيهك إلى صفحة البدء');
+            });
+        });
     </script>
 </body>
 </html>
