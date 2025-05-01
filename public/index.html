@@ -577,55 +577,57 @@
         </div>
     </footer>
 
-    <script src="/js/translate.js"></script>
     <script>
         // إضافة سنة حقوق النشر تلقائياً
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // جعل جميع الأزرار تعمل
-        document.addEventListener('DOMContentLoaded', function() {
-            // زر تبديل اللغة
-            document.getElementById('languageToggle').addEventListener('click', function() {
-                alert('سيتم تنفيذ تبديل اللغة هنا');
-            });
-
-            // زر تسجيل الدخول
-            document.getElementById('loginButton').addEventListener('click', function() {
-                alert('سيتم فتح نموذج تسجيل الدخول');
-            });
-
-            // زر إنشاء حساب
-            document.getElementById('signupButton').addEventListener('click', function() {
-                alert('سيتم فتح نموذج إنشاء حساب');
-            });
-
-            // زر تعرف أكثر
-            document.getElementById('learnMoreButton').addEventListener('click', function() {
-                alert('سيتم عرض المزيد من المعلومات');
-            });
-
-            // أزرار الميزات
-            document.getElementById('generateButton').addEventListener('click', function() {
-                alert('سيتم عرض تفاصيل VirusTotal API');
-            });
-
-            document.getElementById('connectButton').addEventListener('click', function() {
-                alert('سيتم عرض تفاصيل IBM X-Force Exchange');
-            });
-
-            document.getElementById('aiLogButton').addEventListener('click', function() {
-                alert('سيتم عرض تفاصيل AI Log Analyzer');
-            });
-
-            document.getElementById('nucleiButton').addEventListener('click', function() {
-                alert('سيتم عرض تفاصيل Nuclei + AI Analyzer');
-            });
-
-            // زر ابدأ الآن
-            document.getElementById('startNowButton').addEventListener('click', function() {
-                alert('سيتم توجيهك إلى صفحة البدء');
-            });
+        // معالجات أحداث لجميع الأزرار
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            console.log('تم النقر على زر تبديل اللغة');
+            // هنا يمكنك إضافة منطق تبديل اللغة
         });
+
+        document.getElementById('loginButton').addEventListener('click', function() {
+            console.log('تم النقر على زر تسجيل الدخول');
+            // هنا يمكنك إضافة منطق تسجيل الدخول
+        });
+
+        document.getElementById('signupButton').addEventListener('click', function() {
+            console.log('تم النقر على زر إنشاء حساب');
+            // هنا يمكنك إضافة منطق إنشاء حساب
+        });
+
+        document.getElementById('learnMoreButton').addEventListener('click', function() {
+            console.log('تم النقر على زر تعرف أكثر');
+            // هنا يمكنك إضافة منطق عرض المزيد من المعلومات
+        });
+
+        document.getElementById('generateButton').addEventListener('click', function() {
+            console.log('تم النقر على زر VirusTotal API');
+            // هنا يمكنك إضافة منطق عرض تفاصيل VirusTotal API
+        });
+
+        document.getElementById('connectButton').addEventListener('click', function() {
+            console.log('تم النقر على زر IBM X-Force Exchange');
+            // هنا يمكنك إضافة منطق عرض تفاصيل IBM X-Force Exchange
+        });
+
+        document.getElementById('aiLogButton').addEventListener('click', function() {
+            console.log('تم النقر على زر AI Log Analyzer');
+            // هنا يمكنك إضافة منطق عرض تفاصيل AI Log Analyzer
+        });
+
+        document.getElementById('nucleiButton').addEventListener('click', function() {
+            console.log('تم النقر على زر Nuclei + AI Analyzer');
+            // هنا يمكنك إضافة منطق عرض تفاصيل Nuclei + AI Analyzer
+        });
+
+        document.getElementById('startNowButton').addEventListener('click', function() {
+            console.log('تم النقر على زر ابدأ الآن');
+            // هنا يمكنك إضافة منطق البدء
+        });
+
+        // يمكنك استبدال console.log بأي منطق تريده
     </script>
 </body>
 </html>
