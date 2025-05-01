@@ -13,8 +13,8 @@ mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log("✅ Connected to MongoDB"))
-.catch(err => console.error("❌ MongoDB connection error:", err));
+.then(() => console.log("✅ تم الاتصال بقاعدة البيانات بنجاح"))
+.catch(err => console.error("❌ خطأ في الاتصال بقاعدة البيانات:", err));
 
 // Middleware
 app.use(cors());
@@ -52,11 +52,11 @@ app.get('/:page', (req, res) => {
 // Error Handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Server Error');
+  res.status(500).send('خطأ في الخادم');
 });
 
 // Start Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ الخادم يعمل على المنفذ ${PORT}`);
 });
