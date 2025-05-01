@@ -37,10 +37,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Serve all other HTML files with language support
+// Handle all pages with language support
 app.get('/:page', (req, res) => {
-  const page = req.params.page;
-  const lang = req.query.lang || 'ar';
+  const page = req.params.page.replace('.html', '');
   const filePath = path.join(__dirname, 'public', `${page}.html`);
   
   res.sendFile(filePath, {}, (err) => {
