@@ -1,4 +1,3 @@
-// كائن إدارة التطبيق
 const AppManager = {
   currentLanguage: 'ar',
   
@@ -11,7 +10,6 @@ const AppManager = {
       getStarted: "ابدأ مجاناً الآن",
       language: "English",
       copyright: "جميع الحقوق محفوظة",
-      back: "العودة",
       heroTitle: "نظام التراسل المشفر الآمن",
       heroText: "حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف"
     },
@@ -23,7 +21,6 @@ const AppManager = {
       getStarted: "Get Started for Free",
       language: "العربية",
       copyright: "All Rights Reserved",
-      back: "Back",
       heroTitle: "Secure Encrypted Messaging",
       heroText: "Protect your privacy with Magnatirix's end-to-end encrypted messaging system"
     }
@@ -33,7 +30,7 @@ const AppManager = {
     this.loadLanguage();
     this.setupEventListeners();
     this.updatePage();
-    this.debugButtons(); // إضافة للتحقق من الأزرار
+    this.debug();
   },
 
   loadLanguage() {
@@ -42,31 +39,31 @@ const AppManager = {
     const urlLang = urlParams.get('lang');
     
     this.currentLanguage = urlLang || savedLang || 'ar';
+    this.applyLanguage();
+  },
+
+  applyLanguage() {
     document.documentElement.lang = this.currentLanguage;
     document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
     localStorage.setItem('preferredLang', this.currentLanguage);
   },
 
   setupEventListeners() {
-    // استخدام event delegation بشكل أكثر دقة
+    // معالج واحد لجميع الأحداث
     document.addEventListener('click', (e) => {
-      // البحث عن أقرب زر أو عنصر قابل للنقر
-      const button = e.target.closest('button, [data-action]');
+      const button = e.target.closest('button');
       if (!button) return;
 
-      // التحقق من ID أو data-action
-      const buttonId = button.id || button.getAttribute('data-action');
-      if (!buttonId) return;
+      console.log('تم النقر على:', button.id);
 
-      console.log('تم النقر على:', buttonId); // لأغراض debugging
-
-      switch(buttonId) {
+      switch(button.id) {
+        case 'languageToggle':
+          this.handleLanguageToggle();
+          break;
         case 'loginButton':
-        case 'nav-login':
           this.navigateTo('login');
           break;
         case 'signupButton':
-        case 'nav-signup':
           this.navigateTo('signup');
           break;
         case 'learnMoreButton':
@@ -87,55 +84,13 @@ const AppManager = {
         case 'startNowButton':
           this.navigateTo('signup');
           break;
-        case 'languageToggle':
-        case 'lang-switcher':
-          this.switchLanguage();
-          break;
-        case 'backButton':
-          window.history.back();
-          break;
       }
     });
   },
 
-  updatePage() {
-    const langData = this.translations[this.currentLanguage];
-    
-    // تحديث النصوص مع التحقق من وجود العناصر
-    this.safeUpdate('.logo', 'Magnatirix');
-    this.safeUpdate('.copyright', `${langData.copyright} &copy; ${new Date().getFullYear()} Magnatirix`);
-    
-    // تحديث الأزرار مع دعم عدة أنماط للعناصر
-    this.updateButton('loginButton', langData.login);
-    this.updateButton('signupButton', langData.signup);
-    this.updateButton('learnMoreButton', langData.learnMore);
-    this.updateButton('generateButton', langData.moreDetails);
-    this.updateButton('connectButton', langData.moreDetails);
-    this.updateButton('aiLogButton', langData.moreDetails);
-    this.updateButton('nucleiButton', langData.moreDetails);
-    this.updateButton('startNowButton', langData.getStarted);
-    this.updateButton('backButton', langData.back);
-    
-    // تحديث زر اللغة مع دعم عدة أنماط
-    const toggle = document.getElementById('languageToggle') || 
-                  document.querySelector('[data-action="lang-switcher"]');
-    if (toggle) {
-      const span = toggle.querySelector('span') || toggle;
-      span.textContent = langData.language;
-      toggle.setAttribute('aria-label', `Switch to ${langData.language}`);
-    }
-    
-    // تحديث النصوص الأخرى
-    this.safeUpdate('.hero h1', langData.heroTitle);
-    this.safeUpdate('.hero p', langData.heroText);
-  },
-
-  switchLanguage() {
+  handleLanguageToggle() {
     this.currentLanguage = this.currentLanguage === 'ar' ? 'en' : 'ar';
-    document.documentElement.lang = this.currentLanguage;
-    document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
-    
-    localStorage.setItem('preferredLang', this.currentLanguage);
+    this.applyLanguage();
     this.updatePage();
     
     const url = new URL(window.location.href);
@@ -143,74 +98,59 @@ const AppManager = {
     window.history.pushState({}, '', url);
   },
 
+  updatePage() {
+    const langData = this.translations[this.currentLanguage];
+    
+    // تحديث النصوص
+    this.updateText('.logo', 'Magnatirix');
+    this.updateText('.copyright', `${langData.copyright} &copy; ${new Date().getFullYear()} Magnatirix`);
+    this.updateText('.hero h1', langData.heroTitle);
+    this.updateText('.hero p', langData.heroText);
+    
+    // تحديث الأزرار
+    this.updateButtonText('loginButton', langData.login);
+    this.updateButtonText('signupButton', langData.signup);
+    this.updateButtonText('learnMoreButton', langData.learnMore);
+    this.updateButtonText('generateButton', langData.moreDetails);
+    this.updateButtonText('connectButton', langData.moreDetails);
+    this.updateButtonText('aiLogButton', langData.moreDetails);
+    this.updateButtonText('nucleiButton', langData.moreDetails);
+    this.updateButtonText('startNowButton', langData.getStarted);
+    
+    // تحديث زر اللغة
+    const toggle = document.getElementById('languageToggle');
+    if (toggle) {
+      const span = toggle.querySelector('span');
+      if (span) span.textContent = langData.language;
+    }
+  },
+
+  updateText(selector, text) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(el => el.textContent = text);
+  },
+
+  updateButtonText(buttonId, text) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+      const textElement = button.querySelector('.btn-text') || button;
+      textElement.textContent = text;
+    }
+  },
+
   navigateTo(page) {
-    console.log(`التوجه إلى: ${page}.html?lang=${this.currentLanguage}`);
     window.location.href = `${page}.html?lang=${this.currentLanguage}`;
   },
 
-  safeUpdate(selector, text) {
-    const elements = document.querySelectorAll(selector);
-    elements.forEach(el => {
-      try {
-        if (el.textContent !== text) el.textContent = text;
-      } catch (e) {
-        console.error(`Error updating ${selector}:`, e);
-      }
+  debug() {
+    console.log('حالة التطبيق:');
+    console.log('اللغة الحالية:', this.currentLanguage);
+    console.log('الأزرار:');
+    ['loginButton', 'signupButton', 'languageToggle'].forEach(id => {
+      console.log(`- ${id}:`, document.getElementById(id) ? 'موجود' : 'غير موجود');
     });
-  },
-
-  updateButton(buttonId, text) {
-    const button = document.getElementById(buttonId) || 
-                   document.querySelector(`[data-action="${buttonId}"]`);
-    if (button) {
-      const textElement = button.querySelector('.btn-text') || button;
-      if (textElement.textContent !== text) {
-        textElement.textContent = text;
-      }
-    } else {
-      console.warn(`Button not found: ${buttonId}`);
-    }
-  },
-
-  debugButtons() {
-    const importantButtons = [
-      'loginButton', 'signupButton', 'learnMoreButton',
-      'generateButton', 'connectButton', 'aiLogButton',
-      'nucleiButton', 'startNowButton', 'languageToggle', 'backButton'
-    ];
-    
-    console.group('AppManager Debug');
-    console.log('Current Language:', this.currentLanguage);
-    
-    importantButtons.forEach(id => {
-      const exists = document.getElementById(id) || 
-                    document.querySelector(`[data-action="${id}"]`);
-      console.log(`Button ${id}:`, exists ? 'Found' : 'NOT FOUND');
-    });
-    
-    console.groupEnd();
   }
 };
 
-// طريقة تحميل آمنة
-function initializeApp() {
-  try {
-    if (typeof AppManager === 'object' && AppManager.init) {
-      AppManager.init();
-    } else {
-      console.error('AppManager is not properly defined');
-    }
-  } catch (e) {
-    console.error('Initialization error:', e);
-  }
-}
-
-// تحميل الصفحة بطرق متعددة للتأكد من التشغيل
-if (document.readyState === 'complete') {
-  setTimeout(initializeApp, 100);
-} else if (document.readyState === 'interactive') {
-  initializeApp();
-} else {
-  document.addEventListener('DOMContentLoaded', initializeApp);
-  window.addEventListener('load', initializeApp);
-}
+// التهيئة بعد تحميل DOM
+document.addEventListener('DOMContentLoaded', () => AppManager.init());
