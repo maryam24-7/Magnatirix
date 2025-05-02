@@ -1,0 +1,103 @@
+/* =========== أساسيات التجاوب =========== */
+@media (max-width: 768px) {
+  /* ------ إعادة ضبط الهيكل العام ------ */
+  body {
+    overflow-x: hidden; /* منع التمرير الأفقي */
+  }
+
+  /* ------ الشريط العلوي (Navbar) ------ */
+  .navbar {
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+
+  .navbar-logo {
+    margin-bottom: 1rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 1rem;
+    display: none; /* إخفاء القائمة في الجوال */
+  }
+
+  /* ------ النماذج (Forms) ------ */
+  .form-container {
+    width: 90%;
+    margin: 1rem auto;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  button[type="submit"] {
+    width: 100%;
+  }
+
+  /* ------ البطاقات (Cards) ------ */
+  .card {
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  /* ------ الصور ------ */
+  .responsive-img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* =========== أجهزة متوسطة (أجهزة لوحية) =========== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+
+  .card {
+    width: 48%;
+    margin: 1%;
+  }
+}
+
+/* =========== أجهزة صغيرة جدًا (هواتف عمودية) =========== */
+@media (max-width: 480px) {
+  /* ------ النصوص ------ */
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  /* ------ القوائم المنزلقة ------ */
+  .mobile-menu-icon {
+    display: block; /* إظهار أيقونة القائمة */
+  }
+
+  .nav-links.active {
+    display: flex; /* إظهار القائمة عند النقر */
+  }
+
+  /* ------ تعديلات خاصة للهواتف ------ */
+  .hero-section {
+    padding: 2rem 0;
+  }
+}
+
+/* =========== تحسينات للشاشات العريضة =========== */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
+/* =========== التوجيه الأفقي للهواتف =========== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .navbar {
+    padding: 0.5rem 0;
+  }
+  
+  .hero-section {
+    padding: 1rem 0;
+  }
+}
