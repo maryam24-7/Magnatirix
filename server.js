@@ -70,8 +70,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('خطأ في الخادم');
 });
 
-// تشغيل الخادم
+// تشغيل الخادم مع دعم الاستماع على جميع الواجهات
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ الخادم يعمل على المنفذ ${PORT}`);
 });
