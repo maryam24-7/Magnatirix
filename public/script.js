@@ -1,7 +1,7 @@
-// كائن إدارة التطبيق المحسن
+// كائن إدارة التطبيق
 const AppManager = {
   currentLanguage: 'ar',
-  previousLanguage: null,
+  previousTranslations: {},
   
   translations: {
     ar: {
@@ -43,58 +43,56 @@ const AppManager = {
     this.updatePage();
   },
 
-  // تحميل اللغة المحفوظة مع تحسينات
+  // تحميل اللغة المحفوظة
   loadLanguage() {
     const savedLang = localStorage.getItem('preferredLang');
     const urlParams = new URLSearchParams(window.location.search);
     const urlLang = urlParams.get('lang');
     
-    this.previousLanguage = this.currentLanguage;
     this.currentLanguage = urlLang || savedLang || 'ar';
-    
-    // تحديث DOM فقط إذا تغيرت اللغة
-    if (this.previousLanguage !== this.currentLanguage) {
-      document.documentElement.lang = this.currentLanguage;
-      document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
-      localStorage.setItem('preferredLang', this.currentLanguage);
-    }
+    document.documentElement.lang = this.currentLanguage;
+    document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    localStorage.setItem('preferredLang', this.currentLanguage);
   },
 
-  // إعداد مستمعي الأحداث مع تحسينات
+  // إعداد مستمعي الأحداث
   setupEventListeners() {
-    // استخدام事件委托 لجميع الأزرار
+    // أزرار التنقل
     document.addEventListener('click', (e) => {
       const button = e.target.closest('button');
       if (!button) return;
 
-      // إضافة تأثير النقر
-      button.classList.add('active');
-      setTimeout(() => button.classList.remove('active'), 200);
-
       switch(button.id) {
-        case 'loginButton': this.navigateTo('login'); break;
-        case 'signupButton': this.navigateTo('signup'); break;
-        case 'learnMoreButton': this.navigateTo('about'); break;
-        case 'generateButton': this.navigateTo('generate'); break;
-        case 'connectButton': this.navigateTo('connect'); break;
-        case 'aiLogButton': this.navigateTo('ai-log-analyzer'); break;
-        case 'nucleiButton': this.navigateTo('nuclei-analyzer'); break;
-        case 'startNowButton': this.navigateTo('signup'); break;
-        case 'languageToggle': this.switchLanguage(); break;
-        case 'backButton': window.history.back(); break;
-      }
-    });
-
-    // تحسين إمكانية الوصول بلوحة المفاتيح
-    document.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'BUTTON' && (e.key === 'Enter' || e.key === ' ')) {
-        e.target.classList.add('keyboard-active');
-      }
-    });
-
-    document.addEventListener('keyup', (e) => {
-      if (e.target.tagName === 'BUTTON') {
-        e.target.classList.remove('keyboard-active');
+        case 'loginButton':
+          this.navigateTo('login');
+          break;
+        case 'signupButton':
+          this.navigateTo('signup');
+          break;
+        case 'learnMoreButton':
+          this.navigateTo('about');
+          break;
+        case 'generateButton':
+          this.navigateTo('generate');
+          break;
+        case 'connectButton':
+          this.navigateTo('connect');
+          break;
+        case 'aiLogButton':
+          this.navigateTo('ai-log-analyzer');
+          break;
+        case 'nucleiButton':
+          this.navigateTo('nuclei-analyzer');
+          break;
+        case 'startNowButton':
+          this.navigateTo('signup');
+          break;
+        case 'languageToggle':
+          this.switchLanguage();
+          break;
+        case 'backButton':
+          window.history.back();
+          break;
       }
     });
   },
@@ -106,50 +104,55 @@ const AppManager = {
            key;
   },
 
-  // تحديث الصفحة حسب اللغة مع تحسينات الأداء
+  // تحديث الصفحة حسب اللغة
   updatePage() {
-    // تحديث العناصر فقط إذا تغيرت اللغة
-    if (this.previousLanguage === this.currentLanguage) return;
-
     const langData = this.translations[this.currentLanguage];
     
-    // العناصر العامة
-    this.updateElementIfExists('.logo', 'Magnatirix');
-    this.updateElementIfExists('.copyright', `${this.getTranslation('copyright')} &copy; ${new Date().getFullYear()} Magnatirix`);
+    // حفظ الترجمات السابقة للمقارنة
+    const previousLangData = this.previousTranslations;
+    this.previousTranslations = JSON.parse(JSON.stringify(langData));
     
-    // الأزرار
-    this.updateButtonTextIfExists('loginButton', langData.login);
-    this.updateButtonTextIfExists('signupButton', langData.signup);
-    this.updateButtonTextIfExists('learnMoreButton', langData.learnMore);
-    this.updateButtonTextIfExists('generateButton', langData.moreDetails);
-    this.updateButtonTextIfExists('connectButton', langData.moreDetails);
-    this.updateButtonTextIfExists('aiLogButton', langData.moreDetails);
-    this.updateButtonTextIfExists('nucleiButton', langData.moreDetails);
-    this.updateButtonTextIfExists('startNowButton', langData.getStarted);
-    this.updateButtonTextIfExists('backButton', langData.back);
+    // تحديث العناصر العامة فقط إذا تغيرت
+    if (previousLangData.copyright !== langData.copyright) {
+      this.updateElement('.logo', 'Magnatirix');
+      this.updateElement('.copyright', `${langData.copyright} &copy; ${new Date().getFullYear()} Magnatirix`);
+    }
     
-    // زر تبديل اللغة
+    // تحديث الأزرار
+    this.updateButtonTextIfChanged('loginButton', langData.login, previousLangData.login);
+    this.updateButtonTextIfChanged('signupButton', langData.signup, previousLangData.signup);
+    this.updateButtonTextIfChanged('learnMoreButton', langData.learnMore, previousLangData.learnMore);
+    this.updateButtonTextIfChanged('generateButton', langData.moreDetails, previousLangData.moreDetails);
+    this.updateButtonTextIfChanged('connectButton', langData.moreDetails, previousLangData.moreDetails);
+    this.updateButtonTextIfChanged('aiLogButton', langData.moreDetails, previousLangData.moreDetails);
+    this.updateButtonTextIfChanged('nucleiButton', langData.moreDetails, previousLangData.moreDetails);
+    this.updateButtonTextIfChanged('startNowButton', langData.getStarted, previousLangData.getStarted);
+    this.updateButtonTextIfChanged('backButton', langData.back, previousLangData.back);
+    
+    // تحديث زر تبديل اللغة
     const toggle = document.getElementById('languageToggle');
     if (toggle) {
       const span = toggle.querySelector('span');
-      if (span) span.textContent = langData.language;
-      toggle.setAttribute('aria-label', `Switch to ${this.currentLanguage === 'ar' ? 'English' : 'Arabic'}`);
+      if (span && span.textContent !== langData.language) {
+        span.textContent = langData.language;
+      }
+      toggle.setAttribute('aria-label', this.getTranslation('switchLanguage'));
     }
     
-    // النصوص الخاصة بالصفحة الرئيسية
-    this.updateElementIfExists('.hero h1', langData.heroTitle);
-    this.updateElementIfExists('.hero p', langData.heroText);
-
-    this.previousLanguage = this.currentLanguage;
+    // تحديث النصوص الخاصة بالصفحة الرئيسية
+    if (document.querySelector('.hero h1')) {
+      this.updateElementIfChanged('.hero h1', langData.heroTitle, previousLangData.heroTitle);
+      this.updateElementIfChanged('.hero p', langData.heroText, previousLangData.heroText);
+    }
   },
 
-  // تبديل اللغة مع تأثيرات انتقالية
+  // تبديل اللغة مع تأثيرات انتقال
   async switchLanguage() {
     // تأثير fade-out
-    document.body.style.transition = 'opacity 0.3s ease';
-    document.body.style.opacity = '0.7';
+    document.body.style.transition = 'opacity 0.2s ease';
+    document.body.style.opacity = '0.5';
     
-    await new Promise(resolve => setTimeout(resolve, 150));
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     this.currentLanguage = this.currentLanguage === 'ar' ? 'en' : 'ar';
     document.documentElement.lang = this.currentLanguage;
@@ -157,45 +160,56 @@ const AppManager = {
     
     localStorage.setItem('preferredLang', this.currentLanguage);
     
-    // تحديث URL بدون إعادة تحميل
+    // تحديث معلمة اللغة في URL بدون إعادة تحميل الصفحة
     const url = new URL(window.location.href);
     url.searchParams.set('lang', this.currentLanguage);
     window.history.pushState({}, '', url);
     
-    // إشعار تقنيات المساعدة
-    this.announceLanguageChange();
+    // إعلام تقنيات المساعدة بالتغيير
+    const langAlert = document.createElement('div');
+    langAlert.textContent = `Language switched to ${this.currentLanguage}`;
+    langAlert.setAttribute('role', 'alert');
+    langAlert.style.position = 'absolute';
+    langAlert.style.left = '-9999px';
+    document.body.appendChild(langAlert);
+    setTimeout(() => document.body.removeChild(langAlert), 1000);
     
-    // تحديث الصفحة
     this.updatePage();
     
     // تأثير fade-in
     document.body.style.opacity = '1';
-    setTimeout(() => document.body.style.transition = '', 300);
   },
 
-  // إعلام تقنيات المساعدة بتغيير اللغة
-  announceLanguageChange() {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('role', 'status');
-    announcement.style.position = 'absolute';
-    announcement.style.left = '-9999px';
-    announcement.textContent = `Language switched to ${this.currentLanguage === 'ar' ? 'Arabic' : 'English'}`;
-    
-    document.body.appendChild(announcement);
-    setTimeout(() => document.body.removeChild(announcement), 1000);
-  },
-
-  // التنقل بين الصفحات مع التحقق من الصلاحية
+  // التنقل بين الصفحات
   navigateTo(page) {
-    const validPages = ['login', 'signup', 'about', 'generate', 'connect', 'ai-log-analyzer', 'nuclei-analyzer'];
-    if (!validPages.includes(page)) page = 'index';
-    
     window.location.href = `${page}.html?lang=${this.currentLanguage}`;
   },
 
-  // تحديث العنصر مع التحقق من الوجود
-  updateElementIfExists(selector, text) {
+  // تحديث عنصر HTML إذا تغير النص
+  updateElementIfChanged(selector, newText, oldText) {
+    if (newText === oldText) return;
+    
+    const elements = document.querySelectorAll(selector);
+    if (elements.length === 0) return;
+    
+    elements.forEach(element => {
+      element.textContent = newText;
+    });
+  },
+
+  // تحديث نص الزر إذا تغير
+  updateButtonTextIfChanged(buttonId, newText, oldText) {
+    if (newText === oldText) return;
+    
+    const button = document.getElementById(buttonId);
+    if (button) {
+      const textElement = button.querySelector('.btn-text') || button;
+      textElement.textContent = newText;
+    }
+  },
+
+  // تحديث عنصر HTML (النسخة الأصلية المحتفظ بها للتوافق)
+  updateElement(selector, text) {
     const elements = document.querySelectorAll(selector);
     if (elements.length === 0) return;
     
@@ -204,28 +218,15 @@ const AppManager = {
     });
   },
 
-  // تحديث نص الزر مع التحقق من الوجود
-  updateButtonTextIfExists(buttonId, text) {
+  // تحديث نص الزر (النسخة الأصلية المحتفظ بها للتوافق)
+  updateButtonText(buttonId, text) {
     const button = document.getElementById(buttonId);
-    if (!button) return;
-    
-    const textElement = button.querySelector('.btn-text') || button;
-    textElement.textContent = text;
+    if (button) {
+      const textElement = button.querySelector('.btn-text') || button;
+      textElement.textContent = text;
+    }
   }
 };
 
 // بدء التشغيل عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-  // إضافة فحص للوضع المظلم إذا كان مدعوماً
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.classList.add('dark-mode');
-  }
-  
-  AppManager.init();
-});
-
-// دعم التنقل عبر زر الرجوع في المتصفح
-window.addEventListener('popstate', () => {
-  AppManager.loadLanguage();
-  AppManager.updatePage();
-});
+document.addEventListener('DOMContentLoaded', () => AppManager.init());
