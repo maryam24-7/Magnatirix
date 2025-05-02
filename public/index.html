@@ -585,6 +585,15 @@
         // إضافة سنة حقوق النشر تلقائياً
         document.getElementById('year').textContent = new Date().getFullYear();
 
+        // للتأكد من تحميل الملفات
+        window.addEventListener('load', function() {
+            if (typeof AppManager === 'undefined') {
+                console.error('ملف translate.js لم يتم تحميله بنجاح');
+            } else {
+                console.log('تم تحميل جميع الملفات بنجاح');
+            }
+        });
+
         // معالجات أحداث لجميع الأزرار (احتياطية في حال عدم عمل الملفات الخارجية)
         document.addEventListener('DOMContentLoaded', function() {
             // زر تبديل اللغة
