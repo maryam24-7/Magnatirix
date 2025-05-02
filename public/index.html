@@ -476,7 +476,10 @@
                 <span class="logo">Magnatirix</span>
             </a>
             <div class="nav-actions">
-                <button class="lang" id="lang-toggle">English/العربية</button>
+                <button class="language-switcher" id="lang-toggle">
+                    <i class="fas fa-globe"></i>
+                    <span>English</span>
+                </button>
                 <button class="btn btn-primary" id="loginButton">
                     <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
@@ -597,6 +600,16 @@
             document.getElementById('lang-toggle').addEventListener('click', function() {
                 console.log('تم النقر على زر تبديل اللغة');
                 // هنا يمكنك إضافة منطق تبديل اللغة
+                const currentLang = document.documentElement.lang;
+                if (currentLang === 'ar') {
+                    document.documentElement.lang = 'en';
+                    document.documentElement.dir = 'ltr';
+                    this.querySelector('span').textContent = 'العربية';
+                } else {
+                    document.documentElement.lang = 'ar';
+                    document.documentElement.dir = 'rtl';
+                    this.querySelector('span').textContent = 'English';
+                }
             });
 
             // زر تسجيل الدخول
