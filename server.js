@@ -1,10 +1,12 @@
 require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
+const express      = require('express');
+const mongoose     = require('mongoose');
+const cors         = require('cors');
+const helmet       = require('helmet');
+const rateLimit    = require('express-rate-limit');
+const path         = require('path');
+const morgan       = require('morgan');
+const fs           = require('fs');
 
 const app = express();
 
@@ -16,7 +18,7 @@ mongoose.connect(process.env.MONGO_URL, {
 .then(() => console.log("✅ تم الاتصال بقاعدة البيانات بنجاح"))
 .catch(err => console.error("❌ خطأ في الاتصال بقاعدة البيانات:", err));
 
-// Middleware
+// Middleware أساسية
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
@@ -24,10 +26,21 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rate Limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 1000, // 15 دقيقة
   max: 100
 });
 app.use(limiter);
+
+// Logging Middleware
+// أنشئ تيار كتابة إلى ملف access.log
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+// سجّل بجنسيّة "combined" في الملف
+app.use(morgan('combined', { stream: accessLogStream }));
+// ميدل وير بسيط يطبع السجلات إلى الكونصول
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));
