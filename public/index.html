@@ -329,45 +329,139 @@
             align-items: center;
         }
 
-        .footer-logo {display: flex;align-items: center;margin-bottom: 1.5rem;font-size: 1.5rem;font-weight: 700;gap: 10px;}
-        .footer-logo i {font-size: 1.5rem;}
-        .footer-links {display: flex;gap: 2rem;margin-bottom: 2rem;flex-wrap: wrap;justify-content: center;}
-        .footer-link {color: rgba(255, 255, 255, 0.8);text-decoration: none;transition: var(--transition);}
-        .footer-link:hover {color: white;transform: translateX(-5px);}
-        .footer-social {display: flex;gap: 1.5rem;margin-bottom: 2rem;}
-        .social-icon {color: white;font-size: 1.5rem;transition: var(--transition);}
-        .social-icon:hover {transform: translateY(-5px) scale(1.1);}
-        .copyright {color: rgba(255, 255, 255, 0.6);font-size: 0.9rem;margin-top: 1.5rem;}
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            gap: 10px;
+        }
+
+        .footer-logo i {
+            font-size: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-icon {
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+        }
 
         /* Responsive Design */
         @media (max-width: 992px) {
-            .hero h1 {font-size: 2.8rem;}
-        }
-        @media (max-width: 768px) {
-            .header-content {flex-direction: column;gap: 1.5rem;text-align: center;}
-            .nav-actions {flex-direction: column;width: 100%;}
-            .btn {width: 100%;}
-            .hero {padding: 4rem 0 3rem;}
-            .hero h1 {font-size: 2.4rem;}
-            .features {grid-template-columns: 1fr;}
-        }
-        @media (max-width: 576px) {
-            .hero h1 {font-size: 2rem;}
-            .hero p {font-size: 1.1rem;}
-            .feature-card {padding: 2rem;}
-            .feature-card h3 {font-size: 1.5rem;}
+            .hero h1 {
+                font-size: 2.8rem;
+            }
         }
 
-        @keyframes fadeInUp {
-            from {opacity: 0;transform: translateY(30px);}
-            to {opacity: 1;transform: translateY(0);}
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .hero {
+                padding: 4rem 0 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
         }
-        .hero-content {animation: fadeInUp 0.8s ease forwards;}
-        .feature-card {opacity: 0;animation: fadeInUp 0.8s ease forwards;}
-        .feature-card:nth-child(1) {animation-delay: 0.2s;}
-        .feature-card:nth-child(2) {animation-delay: 0.4s;}
-        .feature-card:nth-child(3) {animation-delay: 0.6s;}
-        .feature-card:nth-child(4) {animation-delay: 0.8s;}
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .feature-card {
+                padding: 2rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .feature-card {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.2s; }
+        .feature-card:nth-child(2) { animation-delay: 0.4s; }
+        .feature-card:nth-child(3) { animation-delay: 0.6s; }
+        .feature-card:nth-child(4) { animation-delay: 0.8s; }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -483,35 +577,81 @@
         </div>
     </footer>
 
-    <!-- ملفات JavaScript -->
     <script>
-        // ضبط اللغة والاتجاه بناءً على بارامتر ?lang
-        const urlParams = new URLSearchParams(window.location.search);
-        const lang = urlParams.get('lang') || document.documentElement.lang || 'ar';
-        document.documentElement.lang = lang;
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-
         // إضافة سنة حقوق النشر تلقائياً
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // زر تبديل اللغة
-            document.getElementById('lang-toggle').addEventListener('click', function() {
-                const current = document.documentElement.lang;
-                const next = current === 'ar' ? 'en' : 'ar';
-                // إعادة تحميل الصفحة بالبارامتر الجديد
-                window.location.search = '?lang=' + next;
-            });
+        // معالجة زر تبديل اللغة
+        document.getElementById('lang-toggle').addEventListener('click', function() {
+            const currentLang = document.documentElement.getAttribute('lang');
+            const currentDir = document.documentElement.getAttribute('dir');
+            
+            if (currentLang === 'ar') {
+                // التبديل إلى الإنجليزية
+                document.documentElement.setAttribute('lang', 'en');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.body.style.textAlign = 'left';
+                this.querySelector('span').textContent = 'العربية';
+                
+                // تغيير النصوص في الصفحة
+                document.querySelector('.logo').textContent = 'Magnatirix';
+                document.querySelector('.hero h1').textContent = 'Secure Encrypted Messaging System';
+                document.querySelector('.hero p').textContent = 'Protect your privacy with Magnatirix end-to-end encrypted messaging that secures your communications using the latest encryption technologies';
+                document.getElementById('loginButton').querySelector('.btn-text').textContent = 'Login';
+                document.getElementById('signupButton').querySelector('.btn-text').textContent = 'Sign Up';
+                document.getElementById('learnMoreButton').querySelector('.btn-text').textContent = 'Learn More';
+                document.querySelector('.features-title').textContent = 'AI-Powered Cybersecurity Tools';
+                
+                // يمكنك إضافة المزيد من التغييرات للنصوص الأخرى حسب الحاجة
+            } else {
+                // التبديل إلى العربية
+                document.documentElement.setAttribute('lang', 'ar');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.body.style.textAlign = 'right';
+                this.querySelector('span').textContent = 'English';
+                
+                // إعادة النصوص إلى العربية
+                document.querySelector('.logo').textContent = 'Magnatirix';
+                document.querySelector('.hero h1').textContent = 'نظام التراسل المشفر الآمن';
+                document.querySelector('.hero p').textContent = 'حافظ على خصوصيتك مع نظام Magnatirix للتراسل المشفر من طرف إلى طرف الذي يحمي اتصالاتك باستخدام أحدث تقنيات التشفير';
+                document.getElementById('loginButton').querySelector('.btn-text').textContent = 'تسجيل الدخول';
+                document.getElementById('signupButton').querySelector('.btn-text').textContent = 'إنشاء حساب';
+                document.getElementById('learnMoreButton').querySelector('.btn-text').textContent = 'تعرف أكثر';
+                document.querySelector('.features-title').textContent = 'أدوات الأمن السيبراني المدعومة بالذكاء الاصطناعي';
+            }
+        });
 
-            // أزرار أخرى (سجّل الدخول، إنشاء حساب، إلخ)
-            document.getElementById('loginButton').addEventListener('click', () => console.log('تم النقر على زر تسجيل الدخول'));
-            document.getElementById('signupButton').addEventListener('click', () => console.log('تم النقر على زر إنشاء حساب'));
-            document.getElementById('learnMoreButton').addEventListener('click', () => console.log('تم النقر على زر تعرف أكثر'));
-            document.getElementById('generateButton').addEventListener('click', () => console.log('تم النقر على زر VirusTotal API'));
-            document.getElementById('connectButton').addEventListener('click', () => console.log('تم النقر على زر IBM X-Force Exchange'));
-            document.getElementById('aiLogButton').addEventListener('click', () => console.log('تم النقر على زر AI Log Analyzer'));
-            document.getElementById('nucleiButton').addEventListener('click', () => console.log('تم النقر على زر Nuclei + AI Analyzer'));
-            document.getElementById('startNowButton').addEventListener('click', () => console.log('تم النقر على زر ابدأ الآن'));
+        // معالجات أحداث لجميع الأزرار
+        document.getElementById('loginButton').addEventListener('click', function() {
+            alert('سيتم توجيهك إلى صفحة تسجيل الدخول');
+        });
+
+        document.getElementById('signupButton').addEventListener('click', function() {
+            alert('سيتم توجيهك إلى صفحة إنشاء حساب');
+        });
+
+        document.getElementById('learnMoreButton').addEventListener('click', function() {
+            alert('سيتم عرض المزيد من المعلومات حول النظام');
+        });
+
+        document.getElementById('generateButton').addEventListener('click', function() {
+            alert('سيتم عرض تفاصيل VirusTotal API');
+        });
+
+        document.getElementById('connectButton').addEventListener('click', function() {
+            alert('سيتم عرض تفاصيل IBM X-Force Exchange');
+        });
+
+        document.getElementById('aiLogButton').addEventListener('click', function() {
+            alert('سيتم عرض تفاصيل AI Log Analyzer');
+        });
+
+        document.getElementById('nucleiButton').addEventListener('click', function() {
+            alert('سيتم عرض تفاصيل Nuclei + AI Analyzer');
+        });
+
+        document.getElementById('startNowButton').addEventListener('click', function() {
+            alert('سيتم توجيهك إلى صفحة البدء');
         });
     </script>
 </body>
