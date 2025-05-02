@@ -27,11 +27,21 @@ mongoose.connect(process.env.MONGO_URL, {
 .then(() => console.log("✅ تم الاتصال بقاعدة البيانات بنجاح"))
 .catch(err => console.error("❌ خطأ في الاتصال:", err));
 
-// تعريف نموذج المستخدم
+// تعريف نموذج المستخدم (مُحسّن)
 const UserSchema = new mongoose.Schema({
-  email: { type: String, unique: true },
-  password: String
+  email: { 
+    type: String, 
+    unique: true,
+    required: [true, 'البريد الإلكتروني مطلوب'],
+    match: [/^\S+@\S+\.\S+$/, 'بريد إلكتروني غير صالح']
+  },
+  password: {
+    type: String,
+    required: [true, 'كلمة المرور مطلوبة'],
+    minlength: [8, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل']
+  }
 });
+
 const User = mongoose.model('User', UserSchema);
 
 // Middleware الأساسية
@@ -43,37 +53,66 @@ app.use(express.urlencoded({ extended: true }));
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100
+  max: 100,
+  message: 'لقد تجاوزت عدد الطلبات المسموح بها'
 });
 app.use(limiter);
 
 // ملفات ثابتة
 app.use(express.static(path.join(__dirname, 'public')));
 
-// مسارات API
+// مسارات API (مُحسّنة)
 app.post('/api/signup', async (req, res) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).send('البريد الإلكتروني مستخدم مسبقًا');
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
     const user = new User({
       email: req.body.email,
       password: hashedPassword
     });
+
     await user.save();
-    res.status(201).send('تم إنشاء الحساب بنجاح');
+    res.status(201).json({ message: 'تم إنشاء الحساب بنجاح' });
   } catch (err) {
-    res.status(500).send('خطأ في إنشاء الحساب');
+    console.error(err);
+    res.status(500).json({ error: 'خطأ في إنشاء الحساب' });
   }
 });
 
 app.post('/api/login', async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).send('البريد الإلكتروني غير صحيح');
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(401).json({ error: 'بيانات الاعتماد غير صحيحة' });
+    }
 
-  const validPass = await bcrypt.compare(req.body.password, user.password);
-  if (!validPass) return res.status(400).send('كلمة المرور غير صحيحة');
+    const validPass = await bcrypt.compare(req.body.password, user.password);
+    if (!validPass) {
+      return res.status(401).json({ error: 'بيانات الاعتماد غير صحيحة' });
+    }
 
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-  res.header('auth-token', token).send(token);
+    const token = jwt.sign(
+      { 
+        userId: user._id,
+        email: user.email
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.json({
+      token: token,
+      expiresIn: 3600,
+      userId: user._id
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'خطأ في الخادم' });
+  }
 });
 
 // مسارات الصفحات
@@ -81,10 +120,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// معالجة الأخطاء
+// معالجة الأخطاء (مُحسّنة)
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('خطأ في الخادم');
+  res.status(500).json({
+    error: 'خطأ في الخادم',
+    message: err.message
+  });
 });
 
 // تشغيل الخادم
