@@ -152,5 +152,18 @@ const AppManager = {
   }
 };
 
-// التهيئة بعد تحميل DOM
-document.addEventListener('DOMContentLoaded', () => AppManager.init());
+// التهيئة بعد تحميل DOM مع التحقق من وجود العناصر
+document.addEventListener('DOMContentLoaded', function() {
+  // التحقق من وجود زر تغيير اللغة قبل التهيئة
+  const langToggle = document.getElementById('languageToggle');
+  
+  if (langToggle) {
+    AppManager.init();
+  } else {
+    console.warn('زر تغيير اللغة غير موجود في هذه الصفحة');
+    
+    // تهيئة الميزات الأساسية حتى لو لم يكن الزر موجوداً
+    AppManager.loadLanguage();
+    AppManager.applyLanguage();
+  }
+});
