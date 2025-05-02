@@ -18,7 +18,7 @@
     "helmet": "^6.0.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.5.0",
-    "morgan": "^1.10.0" // أضف هذا السطر
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
