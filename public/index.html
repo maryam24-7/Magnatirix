@@ -476,10 +476,7 @@
                 <span class="logo">Magnatirix</span>
             </a>
             <div class="nav-actions">
-                <button class="language-switcher" id="languageToggle">
-                    <i class="fas fa-globe"></i>
-                    <span>English</span>
-                </button>
+                <button class="lang" id="lang-toggle">English/العربية</button>
                 <button class="btn btn-primary" id="loginButton">
                     <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
@@ -597,7 +594,7 @@
         // معالجات أحداث لجميع الأزرار (احتياطية في حال عدم عمل الملفات الخارجية)
         document.addEventListener('DOMContentLoaded', function() {
             // زر تبديل اللغة
-            document.getElementById('languageToggle').addEventListener('click', function() {
+            document.getElementById('lang-toggle').addEventListener('click', function() {
                 console.log('تم النقر على زر تبديل اللغة');
                 // هنا يمكنك إضافة منطق تبديل اللغة
             });
