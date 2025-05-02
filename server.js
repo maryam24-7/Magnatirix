@@ -7,39 +7,42 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
-// تسجيل جميع الطلبات إلى ملف access.log
+// Middleware للتسجيل
 const accessLogStream = fs.createWriteStream(
   path.join(__dirname, 'access.log'), 
   { flags: 'a' }
 );
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// ميدل وير للتسجيل في الكونسول
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
-
-// اتصال MongoDB
+// MongoDB Connection
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 .then(() => console.log("✅ تم الاتصال بقاعدة البيانات بنجاح"))
-.catch(err => console.error("❌ خطأ في الاتصال بقاعدة البيانات:", err));
+.catch(err => console.error("❌ خطأ في الاتصال:", err));
 
-// ميدل وير أساسية
+// تعريف نموذج المستخدم
+const UserSchema = new mongoose.Schema({
+  email: { type: String, unique: true },
+  password: String
+});
+const User = mongoose.model('User', UserSchema);
+
+// Middleware الأساسية
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// تحديد معدل الطلبات
+// Rate Limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 دقيقة
+  windowMs: 15 * 60 * 1000,
   max: 100
 });
 app.use(limiter);
@@ -47,21 +50,35 @@ app.use(limiter);
 // ملفات ثابتة
 app.use(express.static(path.join(__dirname, 'public')));
 
-// الروتات
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// مسارات API
+app.post('/api/signup', async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const user = new User({
+      email: req.body.email,
+      password: hashedPassword
+    });
+    await user.save();
+    res.status(201).send('تم إنشاء الحساب بنجاح');
+  } catch (err) {
+    res.status(500).send('خطأ في إنشاء الحساب');
+  }
 });
 
-// معالجة الصفحات مع دعم اللغات
-app.get('/:page', (req, res) => {
-  const page = req.params.page.replace('.html', '');
-  const filePath = path.join(__dirname, 'public', `${page}.html`);
+app.post('/api/login', async (req, res) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send('البريد الإلكتروني غير صحيح');
 
-  res.sendFile(filePath, {}, (err) => {
-    if (err) {
-      res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
-    }
-  });
+  const validPass = await bcrypt.compare(req.body.password, user.password);
+  if (!validPass) return res.status(400).send('كلمة المرور غير صحيحة');
+
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  res.header('auth-token', token).send(token);
+});
+
+// مسارات الصفحات
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // معالجة الأخطاء
@@ -70,7 +87,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('خطأ في الخادم');
 });
 
-// تشغيل الخادم مع دعم الاستماع على جميع الواجهات
+// تشغيل الخادم
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ الخادم يعمل على المنفذ ${PORT}`);
