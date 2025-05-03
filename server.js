@@ -61,6 +61,26 @@ app.use(limiter);
 // ملفات ثابتة
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware للتحقق من صلاحية JWT
+function authenticateToken(req, res, next) {
+  // الحصول على التوكن من رأس الطلب (Authorization header)
+  const authHeader = req.header('Authorization');
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (!token) {
+    return res.status(403).json({ error: 'تحتاج إلى تسجيل الدخول' });
+  }
+
+  // التحقق من صلاحية التوكن
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'تسجيل الدخول غير صالح' });
+    }
+    req.user = user;
+    next();
+  });
+}
+
 // مسارات API (مُحسّنة)
 app.post('/api/signup', async (req, res) => {
   try {
@@ -113,6 +133,14 @@ app.post('/api/login', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'خطأ في الخادم' });
   }
+});
+
+// مسار محمي كمثال
+app.get('/api/user/profile', authenticateToken, (req, res) => {
+  res.json({
+    message: 'مرحبًا بك في صفحتك الشخصية!',
+    user: req.user
+  });
 });
 
 // مسارات الصفحات
