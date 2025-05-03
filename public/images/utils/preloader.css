@@ -1,0 +1,22 @@
+/* أنماط التحميل المسبق للصور */
+.img-preload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* تأثير التحميل التدريجي */
+.img-fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.img-loaded {
+  opacity: 1;
+}
