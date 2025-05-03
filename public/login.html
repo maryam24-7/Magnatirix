@@ -8,6 +8,215 @@
     <link rel="stylesheet" href="/css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* إضافة أنماط أساسية في حالة عدم تحميل ملفات CSS */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-text {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .logo-text i {
+            margin-left: 10px;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .language-switcher {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        .auth-form {
+            max-width: 500px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .auth-form h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .password-toggle {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            cursor: pointer;
+            color: #777;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+        }
+        .form-check-input {
+            margin-left: 10px;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .result-message {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        .result-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .result-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        .auth-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .auth-links a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .auth-links span {
+            display: block;
+            margin-top: 10px;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            gap: 10px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .footer-link {
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+        .footer-link:hover {
+            color: #3498db;
+        }
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .social-icon {
+            color: #ecf0f1;
+            font-size: 1.2rem;
+        }
+        .social-icon:hover {
+            color: #3498db;
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            color: #bdc3c7;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -82,7 +291,7 @@
         </div>
     </footer>
 
-    <script src="/js/auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script>
         // ========== تهيئة الصفحة ========== //
         document.addEventListener('DOMContentLoaded', () => {
@@ -97,6 +306,14 @@
             
             // تهيئة نموذج تسجيل الدخول
             initLoginForm();
+            
+            // ضمان عمل روابط إنشاء حساب
+            document.querySelectorAll('[href="/signup"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = '/signup.html'; // أو المسار الصحيح لصفحة التسجيل
+                });
+            });
         });
 
         // ========== دوال مساعدة ========== //
@@ -125,6 +342,7 @@
                     forgotPassword: "نسيت كلمة المرور؟",
                     noAccount: "لا تمتلك حساباً؟",
                     signupLink: "سجل الآن",
+                    signupBtnText: "إنشاء حساب",
                     loginSuccess: "تم تسجيل الدخول بنجاح",
                     loginError: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
                 },
@@ -137,6 +355,7 @@
                     forgotPassword: "Forgot password?",
                     noAccount: "Don't have an account?",
                     signupLink: "Sign up now",
+                    signupBtnText: "Sign up",
                     loginSuccess: "Logged in successfully",
                     loginError: "Invalid email or password"
                 }
@@ -178,6 +397,7 @@
             document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${t.loginBtn}</span>`;
             document.getElementById('forgot-password-link').textContent = t.forgotPassword;
             document.getElementById('signup-link').textContent = t.signupLink;
+            document.getElementById('signupBtnText').textContent = t.signupBtnText;
             document.querySelector('.auth-links span').innerHTML = `${t.noAccount} <a href="/signup">${t.signupLink}</a>`;
         }
 
@@ -201,8 +421,9 @@
                 }
                 
                 try {
-                    // إرسال طلب تسجيل الدخول
-                    const response = await login(email, password);
+                    // هنا يجب استبدال هذا الجزء بوظيفة تسجيل الدخول الفعلية
+                    // هذه مجرد محاكاة للوظيفة
+                    const response = await mockLogin(email, password);
                     
                     if (response.success) {
                         // تخزين التوكن
@@ -218,7 +439,7 @@
                         
                         // التوجيه إلى لوحة التحكم بعد ثانية
                         setTimeout(() => {
-                            window.location.href = '/dashboard';
+                            window.location.href = '/dashboard.html';
                         }, 1000);
                     } else {
                         showResult('error', response.message);
@@ -227,6 +448,27 @@
                     console.error('Login error:', error);
                     showResult('error', 'حدث خطأ أثناء تسجيل الدخول');
                 }
+            });
+        }
+
+        // وظيفة محاكاة تسجيل الدخول (لأغراض العرض فقط)
+        async function mockLogin(email, password) {
+            // هذه مجرد محاكاة - في التطبيق الحقيقي ستكون هناك طلبات AJAX إلى الخادم
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    if (email === 'test@example.com' && password === '123456') {
+                        resolve({
+                            success: true,
+                            message: 'تم تسجيل الدخول بنجاح',
+                            token: 'mock_token_123456'
+                        });
+                    } else {
+                        resolve({
+                            success: false,
+                            message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
+                        });
+                    }
+                }, 1000);
             });
         }
 
