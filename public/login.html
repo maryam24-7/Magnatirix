@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول | Magnatirix</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header class="header">
         <div class="container header-content">
-            <a href="index.html" class="logo-text">
+            <a href="/" class="logo-text">
                 <i class="fas fa-lock"></i>
                 <span class="logo">Magnatirix</span>
             </a>
@@ -20,7 +21,7 @@
                     <i class="fas fa-globe"></i>
                     <span>English</span>
                 </button>
-                <a href="signup.html" class="btn btn-secondary">
+                <a href="/signup" class="btn btn-secondary">
                     <i class="fas fa-user-plus"></i> <span class="btn-text" id="signupBtnText">إنشاء حساب</span>
                 </a>
             </div>
@@ -32,20 +33,28 @@
             <h2 id="login-title">تسجيل الدخول</h2>
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="login-username" id="username-label">اسم المستخدم</label>
-                    <input type="text" id="login-username" class="form-control" required>
+                    <label for="login-email" id="email-label">البريد الإلكتروني</label>
+                    <input type="email" id="login-email" class="form-control" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label for="login-password" id="password-label">كلمة المرور</label>
-                    <input type="password" id="login-password" class="form-control" required>
+                    <input type="password" id="login-password" class="form-control" required autocomplete="current-password">
+                    <div class="password-toggle">
+                        <i class="fas fa-eye" id="togglePassword"></i>
+                    </div>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" id="remember-me" class="form-check-input">
+                    <label for="remember-me" id="remember-label">تذكرني</label>
                 </div>
                 <button type="submit" class="btn btn-primary" id="login-btn">
                     <i class="fas fa-sign-in-alt"></i> <span class="btn-text">تسجيل الدخول</span>
                 </button>
             </form>
-            <div id="login-result" class="result" style="display: none;"></div>
-            <div class="text-center" style="margin-top: 1rem;">
-                <a href="forgot-password.html" id="forgot-password-link">نسيت كلمة المرور؟</a>
+            <div id="login-result" class="result-message"></div>
+            <div class="auth-links">
+                <a href="/forgot-password" id="forgot-password-link">نسيت كلمة المرور؟</a>
+                <span>لا تمتلك حساباً؟ <a href="/signup" id="signup-link">سجل الآن</a></span>
             </div>
         </section>
     </main>
@@ -57,11 +66,11 @@
                 <span>Magnatirix</span>
             </div>
             <div class="footer-links">
-                <a href="#" class="footer-link">الشروط والأحكام</a>
-                <a href="#" class="footer-link">سياسة الخصوصية</a>
-                <a href="#" class="footer-link">عن النظام</a>
-                <a href="#" class="footer-link">الأسئلة الشائعة</a>
-                <a href="#" class="footer-link">اتصل بنا</a>
+                <a href="/terms" class="footer-link">الشروط والأحكام</a>
+                <a href="/privacy" class="footer-link">سياسة الخصوصية</a>
+                <a href="/about" class="footer-link">عن النظام</a>
+                <a href="/faq" class="footer-link">الأسئلة الشائعة</a>
+                <a href="/contact" class="footer-link">اتصل بنا</a>
             </div>
             <div class="footer-social">
                 <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
@@ -73,83 +82,166 @@
         </div>
     </footer>
 
+    <script src="/js/auth.js"></script>
     <script>
-        // Set current year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Translations object
-        const translations = {
-            ar: {
-                loginTitle: "تسجيل الدخول",
-                usernameLabel: "اسم المستخدم",
-                passwordLabel: "كلمة المرور",
-                loginBtn: "تسجيل الدخول",
-                forgotPassword: "نسيت كلمة المرور؟",
-                loginSuccess: "تم تسجيل الدخول بنجاح",
-                loginError: "اسم المستخدم أو كلمة المرور غير صحيحة",
-                languageToggle: "English",
-                signupBtn: "إنشاء حساب"
-            },
-            en: {
-                loginTitle: "Login",
-                usernameLabel: "Username",
-                passwordLabel: "Password",
-                loginBtn: "Login",
-                forgotPassword: "Forgot password?",
-                loginSuccess: "Logged in successfully",
-                loginError: "Invalid username or password",
-                languageToggle: "العربية",
-                signupBtn: "Sign Up"
-            }
-        };
-
-        // Language switching function
-        document.getElementById('languageToggle').addEventListener('click', function() {
-            const html = document.documentElement;
-            const currentLang = html.lang;
-            const newLang = currentLang === 'ar' ? 'en' : 'ar';
-
-            // Update HTML attributes
-            html.lang = newLang;
-            html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-
-            // Update all translatable elements
-            document.getElementById('login-title').textContent = translations[newLang].loginTitle;
-            document.getElementById('username-label').textContent = translations[newLang].usernameLabel;
-            document.getElementById('password-label').textContent = translations[newLang].passwordLabel;
-            document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${translations[newLang].loginBtn}</span>`;
-            document.getElementById('forgot-password-link').textContent = translations[newLang].forgotPassword;
-            document.getElementById('languageToggle').innerHTML = `<i class="fas fa-globe"></i><span>${translations[newLang].languageToggle}</span>`;
-            document.getElementById('signupBtnText').textContent = translations[newLang].signupBtn;
-
-            // Save preference to localStorage
-            localStorage.setItem('preferredLang', newLang);
+        // ========== تهيئة الصفحة ========== //
+        document.addEventListener('DOMContentLoaded', () => {
+            // تعيين سنة حقوق النشر
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // تهيئة تبديل كلمة المرور
+            setupPasswordToggle();
+            
+            // تهيئة اللغة
+            initLanguage();
+            
+            // تهيئة نموذج تسجيل الدخول
+            initLoginForm();
         });
 
-        // Check for saved language preference
-        const savedLang = localStorage.getItem('preferredLang');
-        if (savedLang && savedLang !== document.documentElement.lang) {
-            document.getElementById('languageToggle').click();
+        // ========== دوال مساعدة ========== //
+
+        // تبديل عرض كلمة المرور
+        function setupPasswordToggle() {
+            const toggle = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('login-password');
+            
+            toggle.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                toggle.classList.toggle('fa-eye-slash');
+            });
         }
 
-        // Login form handling
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // تهيئة اللغة
+        function initLanguage() {
+            const translations = {
+                ar: {
+                    loginTitle: "تسجيل الدخول",
+                    emailLabel: "البريد الإلكتروني",
+                    passwordLabel: "كلمة المرور",
+                    rememberLabel: "تذكرني",
+                    loginBtn: "تسجيل الدخول",
+                    forgotPassword: "نسيت كلمة المرور؟",
+                    noAccount: "لا تمتلك حساباً؟",
+                    signupLink: "سجل الآن",
+                    loginSuccess: "تم تسجيل الدخول بنجاح",
+                    loginError: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+                },
+                en: {
+                    loginTitle: "Login",
+                    emailLabel: "Email",
+                    passwordLabel: "Password",
+                    rememberLabel: "Remember me",
+                    loginBtn: "Login",
+                    forgotPassword: "Forgot password?",
+                    noAccount: "Don't have an account?",
+                    signupLink: "Sign up now",
+                    loginSuccess: "Logged in successfully",
+                    loginError: "Invalid email or password"
+                }
+            };
+
+            // تبديل اللغة
+            document.getElementById('languageToggle').addEventListener('click', () => {
+                const html = document.documentElement;
+                const currentLang = html.lang;
+                const newLang = currentLang === 'ar' ? 'en' : 'ar';
+                
+                // تحديث سمات HTML
+                html.lang = newLang;
+                html.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+                
+                // تطبيق الترجمات
+                applyTranslations(newLang, translations);
+                
+                // حفظ التفضيل
+                localStorage.setItem('preferredLang', newLang);
+            });
+
+            // تطبيق اللغة المحفوظة
+            const savedLang = localStorage.getItem('preferredLang') || 'ar';
+            if (savedLang !== document.documentElement.lang) {
+                document.documentElement.lang = savedLang;
+                document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+                applyTranslations(savedLang, translations);
+            }
+        }
+
+        // تطبيق الترجمات
+        function applyTranslations(lang, translations) {
+            const t = translations[lang];
+            document.getElementById('login-title').textContent = t.loginTitle;
+            document.getElementById('email-label').textContent = t.emailLabel;
+            document.getElementById('password-label').textContent = t.passwordLabel;
+            document.getElementById('remember-label').textContent = t.rememberLabel;
+            document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${t.loginBtn}</span>`;
+            document.getElementById('forgot-password-link').textContent = t.forgotPassword;
+            document.getElementById('signup-link').textContent = t.signupLink;
+            document.querySelector('.auth-links span').innerHTML = `${t.noAccount} <a href="/signup">${t.signupLink}</a>`;
+        }
+
+        // تهيئة نموذج تسجيل الدخول
+        function initLoginForm() {
+            const form = document.getElementById('loginForm');
             const resultElement = document.getElementById('login-result');
             
-            // Simulate login process
-            setTimeout(() => {
-                const lang = document.documentElement.lang;
-                resultElement.textContent = translations[lang].loginSuccess;
-                resultElement.className = 'result success';
-                resultElement.style.display = 'block';
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
                 
-                // Redirect to dashboard after successful login
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }, 1000);
-        });
+                // جمع بيانات النموذج
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+                const rememberMe = document.getElementById('remember-me').checked;
+                
+                // التحقق من المدخلات
+                if (!email || !password) {
+                    showResult('error', 'الرجاء ملء جميع الحقول');
+                    return;
+                }
+                
+                try {
+                    // إرسال طلب تسجيل الدخول
+                    const response = await login(email, password);
+                    
+                    if (response.success) {
+                        // تخزين التوكن
+                        if (rememberMe) {
+                            localStorage.setItem('auth_token', response.token);
+                            localStorage.setItem('user_email', email);
+                        } else {
+                            sessionStorage.setItem('auth_token', response.token);
+                        }
+                        
+                        // عرض رسالة النجاح
+                        showResult('success', response.message);
+                        
+                        // التوجيه إلى لوحة التحكم بعد ثانية
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                    } else {
+                        showResult('error', response.message);
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showResult('error', 'حدث خطأ أثناء تسجيل الدخول');
+                }
+            });
+        }
+
+        // عرض رسالة النتيجة
+        function showResult(type, message) {
+            const resultElement = document.getElementById('login-result');
+            resultElement.textContent = message;
+            resultElement.className = `result-message ${type}`;
+            resultElement.style.display = 'block';
+            
+            // إخفاء الرسالة بعد 5 ثواني
+            setTimeout(() => {
+                resultElement.style.display = 'none';
+            }, 5000);
+        }
     </script>
 </body>
 </html>
