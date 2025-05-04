@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const Schema = mongoose.Schema;
 
-// 1. تعريف نموذج المستخدم
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -13,7 +12,8 @@ const UserSchema = new Schema({
     unique: true,
     trim: true,
     minlength: [3, 'اسم المستخدم يجب أن يكون 3 أحرف على الأقل'],
-    maxlength: [30, 'اسم المستخدم يجب ألا يتجاوز 30 حرفاً']
+    maxlength: [30, 'اسم المستخدم يجب ألا يتجاوز 30 حرفاً'],
+    match: [/^[a-zA-Z0-9_]+$/, 'اسم المستخدم يجب أن يحتوي على أحرف لاتينية وأرقام فقط']
   },
   email: {
     type: String,
@@ -21,13 +21,13 @@ const UserSchema = new Schema({
     unique: true,
     trim: true,
     lowercase: true,
-    match: [/^\S+@\S+\.\S+$/, 'بريد إلكتروني غير صالح']
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'بريد إلكتروني غير صالح']
   },
   password: {
     type: String,
     required: [true, 'كلمة المرور مطلوبة'],
     minlength: [8, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل'],
-    select: false // لا تُرجَع كلمة المرور عند الاستعلام
+    select: false
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
@@ -38,6 +38,11 @@ const UserSchema = new Schema({
   privateKey: {
     type: String,
     required: [true, 'المفتاح الخاص مطلوب'],
+    select: false,
+    encrypt: true // تشفير المفتاح الخاص في قاعدة البيانات
+  },
+  twoFASecret: {
+    type: String,
     select: false
   },
   isVerified: {
@@ -47,14 +52,26 @@ const UserSchema = new Schema({
   lastActive: {
     type: Date,
     default: Date.now
-  }
+  },
+  failedLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  accountLockedUntil: Date
 }, {
-  timestamps: true, // إضافة created_at و updated_at تلقائياً
-  toJSON: { virtuals: true },
+  timestamps: true,
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      delete ret.privateKey;
+      delete ret.twoFASecret;
+      return ret;
+    }
+  },
   toObject: { virtuals: true }
 });
 
-// 2. تشفير كلمة المرور قبل الحفظ
+// تشفير الباسوورد قبل الحفظ
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
@@ -63,89 +80,104 @@ UserSchema.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (err) {
-    next(err);
+    next(new Error('فشل في تشفير كلمة المرور'));
   }
 });
 
-// 3. توليد التوكن للمستخدم
+// توليد التوكن
 UserSchema.methods.generateAuthToken = function() {
   return jwt.sign(
-    { id: this._id, username: this.username },
+    {
+      id: this._id,
+      username: this.username,
+      publicKey: this.publicKey
+    },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+      algorithm: 'HS512'
+    }
   );
 };
 
-// 4. التحقق من كلمة المرور
+// التحقق من الباسوورد
 UserSchema.methods.comparePassword = async function(candidatePassword) {
+  if (!candidatePassword || !this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// 5. إنشاء توكن إعادة تعيين كلمة المرور
+// إنشاء توكن إعادة تعيين الباسوورد
 UserSchema.methods.createPasswordResetToken = function() {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
-    .createHash('sha256')
+    .createHash('sha3-256')
     .update(resetToken)
     .digest('hex');
 
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 دقائق
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
 };
 
-// 6. تحديث وقت النشاط الأخير
-UserSchema.methods.updateLastActive = async function() {
-  this.lastActive = Date.now();
-  await this.save({ validateBeforeSave: false });
-};
-
-// 7. توليد مفاتيح التشفير
+// توليد المفاتيح التشفيرية
 UserSchema.methods.generateKeys = function() {
   const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: { type: 'spki', format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+    modulusLength: 4096,
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem'
+    },
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem',
+      cipher: 'aes-256-cbc',
+      passphrase: process.env.ENCRYPTION_PASSPHRASE
+    }
   });
 
   this.publicKey = publicKey;
   this.privateKey = privateKey;
 };
 
-// 8. المصادقة ثنائية العوامل (2FA)
-UserSchema.methods.enable2FA = function() {
-  this.twoFASecret = crypto.randomBytes(20).toString('hex');
-  return this.twoFASecret;
-};
-
-// 9. التحقق من صحة التوكن
-UserSchema.statics.verifyToken = async function(token) {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return await this.findById(decoded.id).select('+privateKey');
-  } catch (err) {
-    throw new Error('توكن غير صالح أو منتهي الصلاحية');
+// إدارة قفل الحساب
+UserSchema.methods.handleFailedLogin = async function() {
+  this.failedLoginAttempts += 1;
+  
+  if (this.failedLoginAttempts >= 5) {
+    this.accountLockedUntil = Date.now() + 30 * 60 * 1000; // 30 دقيقة
   }
+  
+  await this.save();
 };
 
-// 10. البحث عن مستخدم بالبريد أو اسم المستخدم
+// التحقق من حالة القفل
+UserSchema.methods.isAccountLocked = function() {
+  return this.accountLockedUntil && this.accountLockedUntil > Date.now();
+};
+
+// البحث عن المستخدم
 UserSchema.statics.findByCredentials = async function(identifier, password) {
   const user = await this.findOne({
     $or: [
-      { email: identifier },
-      { username: identifier }
+      { email: identifier.toLowerCase() },
+      { username: identifier.toLowerCase() }
     ]
-  }).select('+password +privateKey');
+  }).select('+password +privateKey +failedLoginAttempts +accountLockedUntil');
 
-  if (!user) {
-    throw new Error('بيانات الاعتماد غير صحيحة');
+  if (!user || await user.isAccountLocked()) {
+    throw new Error('الحساب مقفل أو بيانات غير صحيحة');
   }
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
+    await user.handleFailedLogin();
     throw new Error('بيانات الاعتماد غير صحيحة');
   }
+
+  user.failedLoginAttempts = 0;
+  user.accountLockedUntil = null;
+  await user.save();
 
   return user;
 };
