@@ -1,5 +1,13 @@
-/node_modules
-.env
+# ملفات النظام
 .DS_Store
-/ssl
+
+# مجلدات التبعيات
+node_modules/
+.env
+
+# ملفات السجلات
 *.log
+
+# مجلدات البناء
+dist/
+coverage/
