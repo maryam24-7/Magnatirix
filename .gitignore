@@ -1,4 +1,5 @@
-node_modules/
-ssl/
+/node_modules
 .env
 .DS_Store
+/ssl
+*.log
