@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- إضافة مكتبة الأمان -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 </head>
 <body>
     <header class="header">
@@ -33,10 +35,10 @@
             
             <div class="message-header">
                 <div class="message-sender" id="message-sender">
-                    <i class="fas fa-user"></i> <span id="from-label">من:</span> <span id="sender-name">أحمد</span>
+                    <i class="fas fa-user"></i> <span id="from-label">من:</span> <span id="sender-name"></span>
                 </div>
                 <div class="message-date" id="message-date">
-                    <i class="fas fa-clock"></i> <span id="date-label">التاريخ:</span> <span id="date-value">١٠ يونيو ٢٠٢٣ - ١٠:٣٠ ص</span>
+                    <i class="fas fa-clock"></i> <span id="date-label">التاريخ:</span> <span id="date-value"></span>
                 </div>
                 <div class="message-actions">
                     <button class="btn btn-small" id="reply-btn">
@@ -52,26 +54,13 @@
             </div>
             
             <div class="message-subject" id="message-subject">
-                <i class="fas fa-tag"></i> <span id="subject-label">الموضوع:</span> <span id="subject-value">اجتماع فريق العمل</span>
+                <i class="fas fa-tag"></i> <span id="subject-label">الموضوع:</span> <span id="subject-value"></span>
             </div>
             
-            <div class="message-body" id="message-body">
-                <p>مرحباً،</p>
-                <p>نود تذكيركم باجتماع فريق العمل المقرر يوم غد الثلاثاء في تمام الساعة العاشرة صباحاً.</p>
-                <p>يرجى إحضار جميع المستندات والمقترحات المتعلقة بالمشروع.</p>
-                <p>شكراً لكم،</p>
-                <p>أحمد</p>
-            </div>
+            <div class="message-body" id="message-body"></div>
             
             <div class="message-attachments" id="message-attachments">
                 <h3 id="attachments-title">المرفقات:</h3>
-                <div class="attachment-item">
-                    <i class="fas fa-file-pdf"></i>
-                    <span class="attachment-name">جدول الاجتماع.pdf</span>
-                    <a href="#" class="btn btn-small" id="download-btn">
-                        <i class="fas fa-download"></i> <span id="download-text">تحميل</span>
-                    </a>
-                </div>
             </div>
         </section>
     </main>
@@ -166,13 +155,47 @@
             document.getElementById('languageToggle').click();
         }
 
-        // Load message details from URL parameters
+        // Dynamic data loading
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const from = urlParams.get('from');
             
-            if (from) {
-                document.getElementById('sender-name').textContent = decodeURIComponent(from);
+            const updateField = (param, elementId, isHTML = false) => {
+                const value = urlParams.get(param);
+                if (value && document.getElementById(elementId)) {
+                    const sanitized = DOMPurify.sanitize(decodeURIComponent(value));
+                    if (isHTML) {
+                        document.getElementById(elementId).innerHTML = sanitized;
+                    } else {
+                        document.getElementById(elementId).textContent = sanitized;
+                    }
+                }
+            };
+
+            // Update main fields
+            updateField('from', 'sender-name');
+            updateField('subject', 'subject-value');
+            updateField('date', 'date-value');
+            updateField('body', 'message-body', true);
+
+            // Handle attachments
+            const attachments = urlParams.getAll('attachments');
+            const container = document.getElementById('message-attachments');
+            if (attachments.length > 0) {
+                attachments.forEach(att => {
+                    const div = document.createElement('div');
+                    div.className = 'attachment-item';
+                    div.innerHTML = `
+                        <i class="fas fa-file-pdf"></i>
+                        <span class="attachment-name">${DOMPurify.sanitize(att)}</span>
+                        <a href="/uploads/${att}" class="btn btn-small">
+                            <i class="fas fa-download"></i> 
+                            <span id="download-text">تحميل</span>
+                        </a>
+                    `;
+                    container.appendChild(div);
+                });
+            } else {
+                container.style.display = 'none';
             }
         });
 
@@ -188,7 +211,15 @@
 
         document.getElementById('delete-btn').addEventListener('click', function() {
             if (confirm('هل أنت متأكد من حذف هذه الرسالة؟')) {
-                window.location.href = 'receiver.html';
+                const messageId = new URLSearchParams(window.location.search).get('id');
+                fetch(`/api/messages/${messageId}`, { 
+                    method: 'DELETE' 
+                })
+                .then(response => {
+                    if (response.ok) window.location.href = 'receiver.html';
+                    else alert('فشل الحذف!');
+                })
+                .catch(error => console.error('Error:', error));
             }
         });
     </script>
