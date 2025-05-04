@@ -8,121 +8,6 @@
     <link rel="stylesheet" href="/css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* إضافة بعض الأنماط الأساسية في حال عدم توفر ملفات CSS */
-        body {
-            font-family: 'Tajawal', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .header {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo-text {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #333;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        .logo-text i {
-            margin-left: 10px;
-        }
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            font-weight: 500;
-        }
-        .btn-secondary {
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-        .btn-primary {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-        }
-        .auth-form {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 2rem auto;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: inherit;
-        }
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            margin-top: 2rem;
-        }
-        .footer-links {
-            margin: 1rem 0;
-        }
-        .footer-link {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        .social-icon {
-            color: white;
-            margin: 0 10px;
-            font-size: 1.2rem;
-        }
-        .password-toggle {
-            position: relative;
-        }
-        .password-toggle i {
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            cursor: pointer;
-        }
-        .result-message {
-            padding: 10px;
-            margin: 1rem 0;
-            border-radius: 4px;
-            display: none;
-        }
-        .result-message.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .result-message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-    </style>
 </head>
 <body>
     <header class="header">
@@ -197,6 +82,7 @@
         </div>
     </footer>
 
+    <script src="/js/auth.js"></script>
     <script>
         // ========== تهيئة الصفحة ========== //
         document.addEventListener('DOMContentLoaded', () => {
@@ -211,14 +97,6 @@
             
             // تهيئة نموذج تسجيل الدخول
             initLoginForm();
-            
-            // ضمان عمل روابط إنشاء الحساب
-            document.querySelectorAll('[href="/signup"]').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.location.href = '/signup.html'; // أو المسار الصحيح لصفحة التسجيل
-                });
-            });
         });
 
         // ========== دوال مساعدة ========== //
@@ -247,7 +125,6 @@
                     forgotPassword: "نسيت كلمة المرور؟",
                     noAccount: "لا تمتلك حساباً؟",
                     signupLink: "سجل الآن",
-                    signupBtnText: "إنشاء حساب",
                     loginSuccess: "تم تسجيل الدخول بنجاح",
                     loginError: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
                 },
@@ -260,7 +137,6 @@
                     forgotPassword: "Forgot password?",
                     noAccount: "Don't have an account?",
                     signupLink: "Sign up now",
-                    signupBtnText: "Sign up",
                     loginSuccess: "Logged in successfully",
                     loginError: "Invalid email or password"
                 }
@@ -302,7 +178,6 @@
             document.getElementById('login-btn').innerHTML = `<i class="fas fa-sign-in-alt"></i> <span class="btn-text">${t.loginBtn}</span>`;
             document.getElementById('forgot-password-link').textContent = t.forgotPassword;
             document.getElementById('signup-link').textContent = t.signupLink;
-            document.getElementById('signupBtnText').textContent = t.signupBtnText;
             document.querySelector('.auth-links span').innerHTML = `${t.noAccount} <a href="/signup">${t.signupLink}</a>`;
         }
 
@@ -326,8 +201,8 @@
                 }
                 
                 try {
-                    // إرسال طلب تسجيل الدخول (وهمي للتوضيح)
-                    const response = await fakeLogin(email, password);
+                    // إرسال طلب تسجيل الدخول
+                    const response = await login(email, password);
                     
                     if (response.success) {
                         // تخزين التوكن
@@ -355,28 +230,6 @@
             });
         }
 
-        // دالة تسجيل دخول وهمية للتوضيح
-        async function fakeLogin(email, password) {
-            // هذه دالة وهمية لأغراض التوضيح فقط
-            // في التطبيق الحقيقي، ستقوم بإرسال طلب إلى الخادم
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    if (email === 'test@example.com' && password === 'password') {
-                        resolve({
-                            success: true,
-                            message: 'تم تسجيل الدخول بنجاح',
-                            token: 'fake-jwt-token-123456'
-                        });
-                    } else {
-                        resolve({
-                            success: false,
-                            message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
-                        });
-                    }
-                }, 1000);
-            });
-        }
-
         // عرض رسالة النتيجة
         function showResult(type, message) {
             const resultElement = document.getElementById('login-result');
@@ -391,4 +244,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
