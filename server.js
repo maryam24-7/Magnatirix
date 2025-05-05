@@ -57,7 +57,7 @@ const limiter = rateLimit({
   message: 'لقد تجاوزت عدد الطلبات المسموح بها',
   trustProxy: true,
   keyGenerator: (req) => {
-    return req.headers['x-forwarded-for'] || req.ip;
+    return req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
   }
 });
 app.use(limiter);
