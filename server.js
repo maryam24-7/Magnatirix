@@ -21,6 +21,9 @@ const accessLogStream = fs.createWriteStream(
 );
 app.use(morgan('combined', { stream: accessLogStream }));
 
+// إعداد trust proxy ليعمل مع Railway
+app.set('trust proxy', 1); // تثق في البروكسي الأول
+
 // الاتصال بقاعدة البيانات
 connectDB();
 
@@ -47,11 +50,15 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rate Limiting
+// Rate Limiting معدل للعمل مع Railway
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: 'لقد تجاوزت عدد الطلبات المسموح بها'
+  message: 'لقد تجاوزت عدد الطلبات المسموح بها',
+  trustProxy: true,
+  keyGenerator: (req) => {
+    return req.headers['x-forwarded-for'] || req.ip;
+  }
 });
 app.use(limiter);
 
@@ -60,7 +67,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware للتحقق من صلاحية JWT
 function authenticateToken(req, res, next) {
-  // الحصول على التوكن من رأس الطلب (Authorization header)
   const authHeader = req.header('Authorization');
   const token = authHeader && authHeader.split(' ')[1];
   
@@ -68,7 +74,6 @@ function authenticateToken(req, res, next) {
     return res.status(403).json({ error: 'تحتاج إلى تسجيل الدخول' });
   }
 
-  // التحقق من صلاحية التوكن
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'تسجيل الدخول غير صالح' });
