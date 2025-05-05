@@ -9,6 +9,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const connectDB = require('./config/db');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -19,13 +21,8 @@ const accessLogStream = fs.createWriteStream(
 );
 app.use(morgan('combined', { stream: accessLogStream }));
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ تم الاتصال بقاعدة البيانات بنجاح"))
-.catch(err => console.error("❌ خطأ في الاتصال:", err));
+// الاتصال بقاعدة البيانات
+connectDB();
 
 // تعريف نموذج المستخدم (مُحسّن)
 const UserSchema = new mongoose.Schema({
@@ -80,6 +77,9 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
+// Routes من الملفات المنفصلة
+app.use("/api/auth", authRoutes);
 
 // مسارات API (مُحسّنة)
 app.post('/api/signup', async (req, res) => {
