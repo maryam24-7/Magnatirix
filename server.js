@@ -27,8 +27,18 @@ app.use(morgan('combined', { stream: accessLogStream }));
 // إعداد trust proxy ليعمل مع Railway
 app.set('trust proxy', 1);
 
-// الاتصال بقاعدة البيانات
-connectDB();
+// أضف هذه التحققيات في بداية التشغيل
+connectDB().then(() => {
+  console.log('✅ تم الاتصال بقاعدة البيانات بنجاح');
+}).catch(err => {
+  console.error('❌ فشل الاتصال بقاعدة البيانات:', err);
+  process.exit(1); // إنهاء التطبيق إذا فشل الاتصال
+});
+
+// أضف middleware للتعامل مع favicon.ico
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end(); // رد بحالة No Content إذا لم يوجد الملف
+});
 
 // تعريف نموذج المستخدم
 const UserSchema = new mongoose.Schema({
