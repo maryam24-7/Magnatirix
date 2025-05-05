@@ -9,6 +9,9 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const { v4: uuidv4 } = require('uuid');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 
@@ -22,12 +25,12 @@ const accessLogStream = fs.createWriteStream(
 app.use(morgan('combined', { stream: accessLogStream }));
 
 // إعداد trust proxy ليعمل مع Railway
-app.set('trust proxy', 1); // تثق في البروكسي الأول
+app.set('trust proxy', 1);
 
 // الاتصال بقاعدة البيانات
 connectDB();
 
-// تعريف نموذج المستخدم (مُحسّن)
+// تعريف نموذج المستخدم
 const UserSchema = new mongoose.Schema({
   email: { 
     type: String, 
@@ -39,18 +42,36 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'كلمة المرور مطلوبة'],
     minlength: [8, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل']
+  },
+  sessionToken: {
+    type: String,
+    default: uuidv4()
   }
 });
 
 const User = mongoose.model('User', UserSchema);
 
 // Middleware الأساسية
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  credentials: true
+}));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET || uuidv4(),
+  resave: false,
+  saveUninitialized: true,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 ساعة
+  }
+}));
 
-// Rate Limiting معدل للعمل مع Railway
+// Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -83,10 +104,10 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Routes من الملفات المنفصلة
+// Routes
 app.use("/api/auth", authRoutes);
 
-// مسارات API (مُحسّنة)
+// مسارات API
 app.post('/api/signup', async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
@@ -129,10 +150,16 @@ app.post('/api/login', async (req, res) => {
       { expiresIn: '1h' }
     );
 
+    // إنشاء جلسة جديدة
+    req.session.userId = user._id;
+    user.sessionToken = uuidv4();
+    await user.save();
+
     res.json({
       token: token,
       expiresIn: 3600,
-      userId: user._id
+      userId: user._id,
+      sessionToken: user.sessionToken
     });
   } catch (err) {
     console.error(err);
@@ -140,7 +167,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// مسار محمي كمثال
+// مسار محمي
 app.get('/api/user/profile', authenticateToken, (req, res) => {
   res.json({
     message: 'مرحبًا بك في صفحتك الشخصية!',
@@ -153,7 +180,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// معالجة الأخطاء (مُحسّنة)
+// معالجة الأخطاء
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
