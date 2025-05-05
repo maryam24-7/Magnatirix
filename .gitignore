@@ -1,13 +1,5 @@
-# ملفات النظام
-.DS_Store
-
-# مجلدات التبعيات
-node_modules/
+# .gitignore
 .env
-
-# ملفات السجلات
-*.log
-
-# مجلدات البناء
-dist/
-coverage/
+*.env
+.env*
+secrets/
