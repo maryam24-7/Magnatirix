@@ -7,8 +7,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
@@ -27,39 +25,13 @@ app.use(morgan('combined', { stream: accessLogStream }));
 // إعداد trust proxy ليعمل مع Railway
 app.set('trust proxy', 1);
 
-// أضف هذه التحققيات في بداية التشغيل
+// الاتصال بقاعدة البيانات
 connectDB().then(() => {
   console.log('✅ تم الاتصال بقاعدة البيانات بنجاح');
 }).catch(err => {
   console.error('❌ فشل الاتصال بقاعدة البيانات:', err);
-  process.exit(1); // إنهاء التطبيق إذا فشل الاتصال
+  process.exit(1);
 });
-
-// أضف middleware للتعامل مع favicon.ico
-app.get('/favicon.ico', (req, res) => {
-  res.status(204).end(); // رد بحالة No Content إذا لم يوجد الملف
-});
-
-// تعريف نموذج المستخدم
-const UserSchema = new mongoose.Schema({
-  email: { 
-    type: String, 
-    unique: true,
-    required: [true, 'البريد الإلكتروني مطلوب'],
-    match: [/^\S+@\S+\.\S+$/, 'بريد إلكتروني غير صالح']
-  },
-  password: {
-    type: String,
-    required: [true, 'كلمة المرور مطلوبة'],
-    minlength: [8, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل']
-  },
-  sessionToken: {
-    type: String,
-    default: uuidv4()
-  }
-});
-
-const User = mongoose.model('User', UserSchema);
 
 // Middleware الأساسية
 app.use(cors({
@@ -77,7 +49,7 @@ app.use(session({
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 ساعة
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
@@ -96,6 +68,9 @@ app.use(limiter);
 // ملفات ثابتة
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Routes
+app.use("/api/auth", authRoutes);
+
 // Middleware للتحقق من صلاحية JWT
 function authenticateToken(req, res, next) {
   const authHeader = req.header('Authorization');
@@ -113,69 +88,6 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
-
-// Routes
-app.use("/api/auth", authRoutes);
-
-// مسارات API
-app.post('/api/signup', async (req, res) => {
-  try {
-    const existingUser = await User.findOne({ email: req.body.email });
-    if (existingUser) {
-      return res.status(400).send('البريد الإلكتروني مستخدم مسبقًا');
-    }
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 12);
-    const user = new User({
-      email: req.body.email,
-      password: hashedPassword
-    });
-
-    await user.save();
-    res.status(201).json({ message: 'تم إنشاء الحساب بنجاح' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'خطأ في إنشاء الحساب' });
-  }
-});
-
-app.post('/api/login', async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return res.status(401).json({ error: 'بيانات الاعتماد غير صحيحة' });
-    }
-
-    const validPass = await bcrypt.compare(req.body.password, user.password);
-    if (!validPass) {
-      return res.status(401).json({ error: 'بيانات الاعتماد غير صحيحة' });
-    }
-
-    const token = jwt.sign(
-      { 
-        userId: user._id,
-        email: user.email
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // إنشاء جلسة جديدة
-    req.session.userId = user._id;
-    user.sessionToken = uuidv4();
-    await user.save();
-
-    res.json({
-      token: token,
-      expiresIn: 3600,
-      userId: user._id,
-      sessionToken: user.sessionToken
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'خطأ في الخادم' });
-  }
-});
 
 // مسار محمي
 app.get('/api/user/profile', authenticateToken, (req, res) => {
