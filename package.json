@@ -11,7 +11,7 @@
     "prepare": "",
     "healthcheck": "curl -f http://localhost:$PORT/api/health || exit 1",
     "install-prod": "npm install --omit=dev",
-    "build": "echo \"No build required\""
+    "build": "echo 'No build step defined.'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
