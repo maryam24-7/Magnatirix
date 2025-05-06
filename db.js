@@ -1,21 +1,20 @@
 const mongoose = require('mongoose');
 
-const username = encodeURIComponent(process.env.MONGOUSER);
-const password = encodeURIComponent(process.env.MONGOPASSWORD);
-const host = process.env.MONGOHOST;
-const port = process.env.MONGOPORT;
-const database = process.env.MONGODATABASE || 'myDatabase'; // اسم قاعدة البيانات الافتراضي
-
-const uri = `mongodb://${username}:${password}@${host}:${port}/${database}?authSource=admin&retryWrites=true&w=majority`;
-
 const connectDB = async () => {
   try {
+    // استخدام MONGO_URL مباشرة من متغيرات Railway
+    const uri = process.env.MONGO_URL;
+    
+    if (!uri) {
+      throw new Error('❌ لم يتم تعريف MONGO_URL في متغيرات البيئة');
+    }
+
     await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      connectTimeoutMS: 10000, // 10 ثواني انتظار للاتصال
-      socketTimeoutMS: 45000, // 45 ثانية انتظار للعمليات
-      serverSelectionTimeoutMS: 5000, // محاولة اختيار السيرفر لمدة 5 ثواني
+      connectTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 5000,
     });
     
     console.log('✅ تم الاتصال بقاعدة البيانات MongoDB بنجاح');
@@ -38,7 +37,7 @@ const connectDB = async () => {
   } catch (err) {
     console.error('❌ حدث خطأ أثناء الاتصال بقاعدة البيانات:', err.message);
     console.error('🔧 تفاصيل الخطأ:', err.stack);
-    process.exit(1); // الخروج مع رمز خطأ
+    process.exit(1);
   }
 };
 
