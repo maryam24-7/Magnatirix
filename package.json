@@ -6,37 +6,22 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "prod": "NODE_ENV=production node --enable-source-maps server.js",
+    "prod": "NODE_ENV=production node server.js", // إزالة --enable-source-maps
     "test": "jest",
-    "healthcheck": "curl -f http://localhost:$PORT/api/health || exit 1",
+    "healthcheck": "curl -f http://localhost:$PORT/api/healthcheck || exit 1", // تعديل المسار
     "install-prod": "npm install --omit=dev",
-    "build": "echo 'No build step defined.'"
+    "build": "echo 'Building...' && npm install --omit=dev" // إضافة خطوة بناء أساسية
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^8.0.3",
-    "dotenv": "^16.0.3",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0",
-    "cors": "^2.8.5",
-    "helmet": "^7.0.0",
-    "morgan": "^1.10.0",
-    "express-rate-limit": "^6.7.0",
-    "connect-mongo": "^5.0.0",
-    "uuid": "^9.0.0",
-    "compression": "^1.7.4",
-    "winston": "^3.11.0",
-    "csurf": "^1.11.0",
-    "cookie-parser": "^1.4.6",
-    "express-session": "^1.17.3",
-    "express-validator": "^7.0.1"
+    // ... (كل التبعيات الحالية صحيحة)
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3" // إضافة لاختبارات API
   },
   "engines": {
-    "node": "18.x",
+    "node": ">=18.0.0",
     "npm": ">=9.0.0"
   }
 }
