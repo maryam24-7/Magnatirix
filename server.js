@@ -16,11 +16,10 @@ const authRoutes = require('./routes/auth.v2');
 const app = express();
 
 // التحقق من المتغيرات البيئية
-console.log('🔍 تحقق من المتغيرات البيئية:');
-console.log('🔗 MONGO_URL:', process.env.MONGO_URL ? '***** موجود *****' : 'غير موجود!');
-console.log('🔑 JWT_SECRET:', process.env.JWT_SECRET ? '***** موجود *****' : 'غير موجود!');
-console.log('🚪 PORT:', process.env.PORT || '3000 (افتراضي)');
-console.log('🌐 CORS_ORIGIN:', process.env.CORS_ORIGIN || '* (افتراضي)');
+console.log('تحقق من المتغيرات:');
+console.log('MONGO_URL:', process.env.MONGO_URL ? '***** موجود *****' : 'غير موجود!');
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? '***** موجود *****' : 'غير موجود!');
+console.log('PORT:', process.env.PORT);
 
 // Middleware للتسجيل
 const accessLogStream = fs.createWriteStream(
@@ -122,5 +121,4 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ الخادم يعمل على المنفذ ${PORT}`);
-  console.log(`🌐 البيئة: ${process.env.NODE_ENV || 'development'}`);
 });
