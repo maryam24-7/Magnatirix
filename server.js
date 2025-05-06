@@ -1,7 +1,6 @@
-require('dotenv').config();
+// server.js
 const express = require('express');
 const morgan = require('morgan');
-const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -16,9 +15,20 @@ const bcrypt = require('bcryptjs');
 const compression = require('compression');
 const winston = require('winston');
 const csrf = require('csurf');
-const connectDB = require('./db');
 
 const app = express();
+
+// =============================================
+// إعدادات الثوابت والمتغيرات البيئية
+// =============================================
+const CONFIG = {
+  MONGO_URL: process.env.MONGO_URL || 'mongodb://mongo:abnpXblTiqYAemNnMsPOXrKpnBsdhanZ@metro.proxy.rlwy.net:17285/magnatirix',
+  JWT_SECRET: process.env.JWT_SECRET || 'mySuperSecretKey123',
+  SESSION_SECRET: process.env.SESSION_SECRET || '9f8b6c0a-3e2d-4f8a-bc9e-2d1f4e5a6c7d',
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'https://magnatirix-production.up.railway.app',
+  PORT: process.env.PORT || 3000,
+  NODE_ENV: process.env.NODE_ENV || 'development'
+};
 
 // =============================================
 // إعدادات Winston للتسجيل
@@ -35,7 +45,7 @@ const logger = winston.createLogger({
   ],
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (CONFIG.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),
@@ -45,20 +55,15 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // =============================================
-// التحقق من المتغيرات البيئية
-// =============================================
-logger.info('التحقق من المتغيرات البيئية:');
-logger.info(`MONGO_URL: ${process.env.MONGO_URL ? '***** موجود *****' : 'غير موجود!'}`);
-logger.info(`JWT_SECRET: ${process.env.JWT_SECRET ? '***** موجود *****' : 'غير موجود!'}`);
-logger.info(`PORT: ${process.env.PORT}`);
-logger.info(`NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
-
-// =============================================
 // الاتصال بقاعدة البيانات
 // =============================================
-connectDB().then(() => {
-  logger.info('✅ تم الاتصال بقاعدة البيانات بنجاح');
-}).catch(err => {
+mongoose.connect(CONFIG.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  retryWrites: true
+})
+.then(() => logger.info('✅ تم الاتصال بقاعدة البيانات بنجاح'))
+.catch(err => {
   logger.error('❌ فشل الاتصال بقاعدة البيانات:', err);
   process.exit(1);
 });
@@ -66,45 +71,25 @@ connectDB().then(() => {
 // =============================================
 // Middleware الأساسية
 // =============================================
-
-// إعداد trust proxy ليعمل مع Railway/Heroku
 app.set('trust proxy', 1);
 
-// CORS مع أصول محددة
-const allowedOrigins = [
-  'http://localhost:3000',
-  process.env.CLIENT_URL,
-].filter(Boolean);
-
+// CORS
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: CONFIG.CORS_ORIGIN,
   credentials: true
 }));
 
-// Helmet مع إعدادات مخصصة
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:"],
-      },
+// Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:"],
     },
-    hsts: {
-      maxAge: 63072000,
-      includeSubDomains: true,
-      preload: true,
-    },
-  })
-);
+  }
+}));
 
 // ضغط الردود
 app.use(compression());
@@ -114,18 +99,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// إدارة الجلسات مع MongoDB Store
+// الجلسات
 app.use(session({
-  secret: process.env.SESSION_SECRET || uuidv4(),
+  secret: CONFIG.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URL,
-    ttl: 24 * 60 * 60,
-    autoRemove: 'native'
+    mongoUrl: CONFIG.MONGO_URL,
+    ttl: 24 * 60 * 60
   }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: CONFIG.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'strict',
     maxAge: 24 * 60 * 60 * 1000
@@ -137,16 +121,12 @@ const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
 
 // Rate Limiting
-const limiter = rateLimit({
+app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: 'لقد تجاوزت عدد الطلبات المسموح بها',
-  trustProxy: true,
-  keyGenerator: (req) => {
-    return req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
-  }
-});
-app.use(limiter);
+  trustProxy: true
+}));
 
 // ملفات ثابتة
 app.use(express.static(path.join(__dirname, 'public')));
@@ -166,63 +146,44 @@ const User = mongoose.model('User', UserSchema);
 // =============================================
 // Middleware للمصادقة
 // =============================================
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies?.jwt || req.headers.authorization?.split(' ')[1];
+  
+  if (!token) return res.status(401).json({ error: 'الوصول غير مصرح به' });
 
-  if (!token) {
-    return res.status(401).json({ error: 'تحتاج إلى تسجيل الدخول' });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'تسجيل الدخول غير صالح' });
-    }
+  jwt.verify(token, CONFIG.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'رمز وصول غير صالح' });
     req.user = user;
     next();
   });
-}
+};
 
 // =============================================
 // Routes
 // =============================================
-
-// تسجيل الدخول
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-
-    // التحقق من وجود المستخدم
     const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(400).json({ error: 'اسم المستخدم أو كلمة المرور غير صحيحة' });
+    
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: 'بيانات الاعتماد غير صحيحة' });
     }
 
-    // التحقق من كلمة المرور
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: 'اسم المستخدم أو كلمة المرور غير صحيحة' });
-    }
-
-    // إنشاء JWT
     const token = jwt.sign(
       { id: user._id, username: user.username },
-      process.env.JWT_SECRET,
+      CONFIG.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // إنشاء Refresh Token
-    const refreshToken = jwt.sign(
-      { id: user._id },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: '7d' }
-    );
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: CONFIG.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 3600000
+    });
 
-    // إرسال الرد
     res.json({
-      message: 'تم تسجيل الدخول بنجاح',
-      token,
-      refreshToken,
       user: {
         id: user._id,
         username: user.username,
@@ -230,53 +191,28 @@ app.post('/api/auth/login', async (req, res) => {
       }
     });
   } catch (err) {
-    logger.error('خطأ في تسجيل الدخول:', err);
+    logger.error('خطأ تسجيل الدخول:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
   }
 });
 
-// إنشاء حساب جديد
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
-    // التحقق من وجود المستخدم مسبقاً
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    
     if (existingUser) {
-      return res.status(400).json({ error: 'اسم المستخدم أو البريد الإلكتروني موجود مسبقاً' });
+      return res.status(409).json({ error: 'المستخدم موجود مسبقاً' });
     }
 
-    // تشفير كلمة المرور
     const hashedPassword = await bcrypt.hash(password, 12);
-
-    // إنشاء مستخدم جديد
-    const newUser = new User({
+    const newUser = await User.create({
       username,
       email,
       password: hashedPassword
     });
 
-    await newUser.save();
-
-    // إنشاء JWT
-    const token = jwt.sign(
-      { id: newUser._id, username: newUser.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // إنشاء Refresh Token
-    const refreshToken = jwt.sign(
-      { id: newUser._id },
-      process.env.JWT_REFRESH_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    // إرسال الرد
     res.status(201).json({
-      message: 'تم إنشاء الحساب بنجاح',
-      token,
-      refreshToken,
       user: {
         id: newUser._id,
         username: newUser.username,
@@ -284,67 +220,26 @@ app.post('/api/auth/register', async (req, res) => {
       }
     });
   } catch (err) {
-    logger.error('خطأ في إنشاء الحساب:', err);
+    logger.error('خطأ التسجيل:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
   }
 });
 
-// تجديد Token
-app.post('/api/auth/refresh-token', async (req, res) => {
-  try {
-    const { refreshToken } = req.body;
-
-    if (!refreshToken) {
-      return res.status(401).json({ error: 'Refresh Token مطلوب' });
-    }
-
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    const user = await User.findById(decoded.id);
-
-    if (!user) {
-      return res.status(404).json({ error: 'المستخدم غير موجود' });
-    }
-
-    // إنشاء JWT جديد
-    const newToken = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.json({
-      message: 'تم تجديد Token بنجاح',
-      token: newToken
-    });
-  } catch (err) {
-    logger.error('خطأ في تجديد Token:', err);
-    res.status(403).json({ error: 'Refresh Token غير صالح' });
-  }
-});
-
-// مسار محمي
 app.get('/api/user/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ error: 'المستخدم غير موجود' });
-    }
-    res.json({
-      message: 'مرحبًا بك في صفحتك الشخصية!',
-      user
-    });
+    res.json(user);
   } catch (err) {
-    logger.error('خطأ في جلب بيانات الملف:', err);
+    logger.error('خطأ جلب الملف:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
   }
 });
 
-// مسار للحصول على CSRF Token
 app.get('/api/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-// مسارات الصفحات
+// Serve frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -352,22 +247,14 @@ app.get('*', (req, res) => {
 // =============================================
 // معالجة الأخطاء
 // =============================================
-app.use((req, res, next) => {
-  res.status(404).json({ error: 'Not Found' });
-});
-
 app.use((err, req, res, next) => {
   logger.error(err.stack);
-  res.status(500).json({
-    error: 'خطأ في الخادم',
-    message: err.message
-  });
+  res.status(500).json({ error: 'خطأ في الخادم' });
 });
 
 // =============================================
 // تشغيل الخادم
 // =============================================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  logger.info(`✅ الخادم يعمل على المنفذ ${PORT}`);
+app.listen(CONFIG.PORT, () => {
+  logger.info(`✅ الخادم يعمل على المنفذ ${CONFIG.PORT}`);
 });
