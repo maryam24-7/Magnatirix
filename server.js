@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
-const connectDB = require('./config/db');
+const connectDB = require('./db'); // تم التعديل هنا ليكون المسار مباشرًا
 const authRoutes = require('./routes/auth.v2');
 
 const app = express();
