@@ -1,0 +1,49 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Ruby and Node.js
+      uses: ruby/setup-ruby@v1.175.0
+      with:
+        ruby-version: 3.3.0
+        bundler-cache: true
+        node-version: 20
+        yarn-cache: true
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -yqq install libpq-dev
+
+    - name: Install gems
+      run: bundle install --jobs 4 --retry 3
+
+    - name: Run tests
+      run: bundle exec rspec
+
+    - name: Build assets and database
+      run: |
+        bundle exec rails assets:precompile
+        bundle exec rails db:create db:migrate
+
+    - name: Deploy to Railway
+      uses: abatilo/actions-railway@v2.2.0
+      with:
+        service-id: ${{ secrets.RAILWAY_SERVICE_ID }}
+        railway-token: ${{ secrets.RAILWAY_TOKEN }}
+        command: deploy
+      env:
+        RAILWAY_ENVIRONMENT: production
