@@ -1,4 +1,11 @@
-require('dotenv').config();
+require('dotenv').config(); 
+
+// التحقق من المتغيرات البيئية
+console.log('تحقق من المتغيرات:');
+console.log('MONGO_URI:', process.env.MONGO_URI);
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? '***** موجود *****' : 'غير موجود!');
+console.log('PORT:', process.env.PORT);
+
 const express = require('express');
 const morgan = require('morgan');
 const fs = require('fs');
@@ -17,7 +24,7 @@ const app = express();
 
 // Middleware للتسجيل
 const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, 'access.log'), 
+  path.join(__dirname, 'access.log'),
   { flags: 'a' }
 );
 app.use(morgan('combined', { stream: accessLogStream }));
@@ -46,7 +53,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || uuidv4(),
   resave: false,
   saveUninitialized: true,
-  cookie: { 
+  cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000
@@ -75,7 +82,7 @@ app.use("/api/auth", authRoutes);
 function authenticateToken(req, res, next) {
   const authHeader = req.header('Authorization');
   const token = authHeader && authHeader.split(' ')[1];
-  
+
   if (!token) {
     return res.status(403).json({ error: 'تحتاج إلى تسجيل الدخول' });
   }
