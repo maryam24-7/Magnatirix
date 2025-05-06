@@ -1,4 +1,3 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
@@ -27,7 +26,7 @@ const CONFIG = {
   JWT_SECRET: process.env.JWT_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  PORT: process.env.PORT || 3000, // تم التعديل هنا للتأكيد على المنفذ 3000
+  PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV || 'production'
 };
 
@@ -112,7 +111,7 @@ app.use(session({
   cookie: {
     secure: CONFIG.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: CONFIG.NODE_ENV === 'production' ? 'none' : 'strict', // التعديل المهم هنا
+    sameSite: CONFIG.NODE_ENV === 'production' ? 'none' : 'strict',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
@@ -149,7 +148,7 @@ const User = mongoose.model('User', UserSchema);
 // =============================================
 const authenticateToken = (req, res, next) => {
   const token = req.cookies?.jwt || req.headers.authorization?.split(' ')[1];
-
+  
   if (!token) return res.status(401).json({ error: 'الوصول غير مصرح به' });
 
   jwt.verify(token, CONFIG.JWT_SECRET, (err, user) => {
@@ -180,7 +179,7 @@ app.post('/api/auth/login', async (req, res) => {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === 'production',
-      sameSite: 'none', // التعديل المهم هنا
+      sameSite: 'none',
       maxAge: 3600000
     });
 
@@ -240,6 +239,11 @@ app.get('/api/user/profile', authenticateToken, async (req, res) => {
 
 app.get('/api/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
+});
+
+// تم إضافة Health Check هنا قبل معالجة الأخطاء
+app.get('/api/healthcheck', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
 // Serve frontend
