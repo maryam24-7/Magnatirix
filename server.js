@@ -1,4 +1,5 @@
 // server.js
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
@@ -22,10 +23,10 @@ const app = express();
 // إعدادات الثوابت والمتغيرات البيئية
 // =============================================
 const CONFIG = {
-  MONGO_URL: process.env.MONGO_URL || 'mongodb://mongo:abnpXblTiqYAemNnMsPOXrKpnBsdhanZ@metro.proxy.rlwy.net:17285/magnatirix',
+  MONGO_URL: process.env.MONGO_URL || 'mongodb://localhost:27017/magnatirix',
   JWT_SECRET: process.env.JWT_SECRET || 'mySuperSecretKey123',
   SESSION_SECRET: process.env.SESSION_SECRET || '9f8b6c0a-3e2d-4f8a-bc9e-2d1f4e5a6c7d',
-  CORS_ORIGIN: process.env.CORS_ORIGIN || 'https://magnatirix-production.up.railway.app',
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV || 'development'
 };
