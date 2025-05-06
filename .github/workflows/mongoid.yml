@@ -1,7 +1,0 @@
-production:
-  clients:
-    default:
-      uri: <%= ENV['MONGO_URL'] %>
-      options:
-        connect_timeout: 15
-        ssl: true
