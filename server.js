@@ -27,7 +27,7 @@ const CONFIG = {
   JWT_SECRET: process.env.JWT_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  PORT: process.env.PORT || 3000,
+  PORT: process.env.PORT || 3000, // تم التعديل هنا للتأكيد على المنفذ 3000
   NODE_ENV: process.env.NODE_ENV || 'production'
 };
 
@@ -112,7 +112,7 @@ app.use(session({
   cookie: {
     secure: CONFIG.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: CONFIG.NODE_ENV === 'production' ? 'none' : 'strict', // التعديل المهم هنا
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
@@ -149,7 +149,7 @@ const User = mongoose.model('User', UserSchema);
 // =============================================
 const authenticateToken = (req, res, next) => {
   const token = req.cookies?.jwt || req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) return res.status(401).json({ error: 'الوصول غير مصرح به' });
 
   jwt.verify(token, CONFIG.JWT_SECRET, (err, user) => {
@@ -166,7 +166,7 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'بيانات الاعتماد غير صحيحة' });
     }
@@ -180,7 +180,7 @@ app.post('/api/auth/login', async (req, res) => {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: CONFIG.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'none', // التعديل المهم هنا
       maxAge: 3600000
     });
 
@@ -191,6 +191,7 @@ app.post('/api/auth/login', async (req, res) => {
         email: user.email
       }
     });
+
   } catch (err) {
     logger.error('خطأ تسجيل الدخول:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
@@ -201,7 +202,7 @@ app.post('/api/auth/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    
+
     if (existingUser) {
       return res.status(409).json({ error: 'المستخدم موجود مسبقاً' });
     }
@@ -220,6 +221,7 @@ app.post('/api/auth/register', async (req, res) => {
         email: newUser.email
       }
     });
+
   } catch (err) {
     logger.error('خطأ التسجيل:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
@@ -254,7 +256,7 @@ app.use((err, req, res, next) => {
 });
 
 // =============================================
-// تشغيل الخادم (التعديل الأساسي هنا)
+// تشغيل الخادم
 // =============================================
 app.listen(CONFIG.PORT, '0.0.0.0', () => {
   logger.info(`✅ الخادم يعمل على المنفذ ${CONFIG.PORT}`);
