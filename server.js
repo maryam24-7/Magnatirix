@@ -26,7 +26,7 @@ const CONFIG = {
   MONGO_URL: process.env.MONGO_URL,
   JWT_SECRET: process.env.JWT_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
-  CORS_ORIGIN: process.env.CORS_ORIGIN,
+  CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV || 'production'
 };
@@ -254,8 +254,8 @@ app.use((err, req, res, next) => {
 });
 
 // =============================================
-// تشغيل الخادم
+// تشغيل الخادم (التعديل الأساسي هنا)
 // =============================================
-app.listen(CONFIG.PORT, () => {
+app.listen(CONFIG.PORT, '0.0.0.0', () => {
   logger.info(`✅ الخادم يعمل على المنفذ ${CONFIG.PORT}`);
 });
