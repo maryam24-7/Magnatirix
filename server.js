@@ -161,6 +161,10 @@ const authenticateToken = (req, res, next) => {
 // =============================================
 // Routes
 // =============================================
+app.get('/api/healthcheck', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -239,11 +243,6 @@ app.get('/api/user/profile', authenticateToken, async (req, res) => {
 
 app.get('/api/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
-});
-
-// تم إضافة Health Check هنا قبل معالجة الأخطاء
-app.get('/api/healthcheck', (req, res) => {
-  res.status(200).json({ status: 'ok' });
 });
 
 // Serve frontend
