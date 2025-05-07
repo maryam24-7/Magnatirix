@@ -32,6 +32,8 @@
         <section class="auth-form">
             <h2 id="login-title">تسجيل الدخول</h2>
             <form id="loginForm">
+                <!-- حقل CSRF المخفي -->
+                <input type="hidden" name="csrfToken" id="csrfToken">
                 <div class="form-group">
                     <label for="login-email" id="email-label">البريد الإلكتروني</label>
                     <input type="email" id="login-email" class="form-control" required autocomplete="username">
@@ -97,9 +99,32 @@
             
             // تهيئة نموذج تسجيل الدخول
             initLoginForm();
+            
+            // جلب CSRF token عند تحميل الصفحة
+            fetchCSRFToken();
         });
 
         // ========== دوال مساعدة ========== //
+
+        // جلب CSRF token من الخادم
+        async function fetchCSRFToken() {
+            try {
+                const response = await fetch('/csrf-token', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (response.ok && data.csrfToken) {
+                    document.getElementById('csrfToken').value = data.csrfToken;
+                    return data.csrfToken;
+                }
+                throw new Error('Failed to get CSRF token');
+            } catch (error) {
+                console.error('CSRF Token Error:', error);
+                showResult('error', 'حدث خطأ في تحميل نظام الحماية');
+                return null;
+            }
+        }
 
         // تبديل عرض كلمة المرور
         function setupPasswordToggle() {
@@ -193,6 +218,7 @@
                 const email = document.getElementById('login-email').value.trim();
                 const password = document.getElementById('login-password').value;
                 const rememberMe = document.getElementById('remember-me').checked;
+                const csrfToken = document.getElementById('csrfToken').value;
                 
                 // التحقق من المدخلات
                 if (!email || !password) {
@@ -200,28 +226,48 @@
                     return;
                 }
                 
+                if (!csrfToken) {
+                    showResult('error', 'حدث خطأ في نظام الحماية، يرجى تحديث الصفحة');
+                    return;
+                }
+                
                 try {
                     // إرسال طلب تسجيل الدخول
-                    const response = await login(email, password);
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': csrfToken
+                        },
+                        body: JSON.stringify({
+                            email,
+                            password,
+                            rememberMe,
+                            csrfToken
+                        }),
+                        credentials: 'include'
+                    });
                     
-                    if (response.success) {
+                    const data = await response.json();
+                    
+                    if (response.ok) {
                         // تخزين التوكن
                         if (rememberMe) {
-                            localStorage.setItem('auth_token', response.token);
+                            localStorage.setItem('auth_token', data.token);
                             localStorage.setItem('user_email', email);
                         } else {
-                            sessionStorage.setItem('auth_token', response.token);
+                            sessionStorage.setItem('auth_token', data.token);
                         }
                         
                         // عرض رسالة النجاح
-                        showResult('success', response.message);
+                        showResult('success', data.message || 'تم تسجيل الدخول بنجاح');
                         
                         // التوجيه إلى لوحة التحكم بعد ثانية
                         setTimeout(() => {
                             window.location.href = '/dashboard';
                         }, 1000);
                     } else {
-                        showResult('error', response.message);
+                        showResult('error', data.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
                     }
                 } catch (error) {
                     console.error('Login error:', error);
@@ -244,4 +290,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
