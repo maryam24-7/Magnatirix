@@ -12,7 +12,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "healthcheck": "node healthcheck.js",
-    "build": "node server.js"  // أضف هذا السكربت
+    "build": "node server.js"
   },
   "config": {
     "legacy-peer-deps": true
