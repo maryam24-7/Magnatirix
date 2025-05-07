@@ -8,44 +8,37 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    env:  # المتغيرات السرية المتوفرة لكل خطوات المهمة
+    env:
       MONGO_URL: ${{ secrets.MONGO_URL }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
       PORT: ${{ secrets.PORT }}
-      NODE_ENV: ${{ secrets.NODE_ENV }}
+      NODE_ENV: production  # الأفضل تحديدها مباشرة بدلاً من استخدام secret
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # الترقية إلى الإصدار الأحدث
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'  # إضافة التخزين المؤقت لتسريع العملية
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci  # الأفضل من npm install للبيئات الإنتاجية
 
-      - name: Create connect.js with MongoDB connection
+      - name: Verify MongoDB connection
         run: |
-          mkdir -p db
-          echo "const mongoose = require('mongoose');" > db/connect.js
-          echo "const MONGODB_URI = process.env.MONGO_URL;" >> db/connect.js
-          echo "const connectDB = async () => {" >> db/connect.js
-          echo "  try {" >> db/connect.js
-          echo "    await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });" >> db/connect.js
-          echo "    console.log('✅ تم الاتصال بقاعدة البيانات');" >> db/connect.js
-          echo "    mongoose.connection.on('disconnected', () => console.warn('⚠️ تم قطع الاتصال مع MongoDB'));" >> db/connect.js
-          echo "    mongoose.connection.on('error', err => console.error('❌ خطأ في الاتصال:', err.message));" >> db/connect.js
-          echo "  } catch (err) {" >> db/connect.js
-          echo "    console.error('❌ فشل الاتصال بقاعدة البيانات:', err.message);" >> db/connect.js
-          echo "    process.exit(1);" >> db/connect.js
-          echo "  }" >> db/connect.js
-          echo "};" >> db/connect.js
-          echo "module.exports = connectDB;" >> db/connect.js
+          npm install -g mongosh
+          mongosh "$MONGO_URL" --eval "db.runCommand({ ping: 1 })" || exit 1
+
+      - name: Build project (if needed)
+        run: npm run build --if-present
+
+      - name: Run tests (if available)
+        run: npm test --if-present
 
       - name: Start the application
         run: npm start
