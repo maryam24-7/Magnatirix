@@ -1,29 +1,39 @@
-name: Deploy
+name: Deploy to Production
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
+    env:  # المتغيرات السرية المتوفرة لكل خطوات المهمة
+      MONGO_URL: ${{ secrets.MONGO_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+      PORT: ${{ secrets.PORT }}
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: إعداد Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
 
-      - name: تثبيت الحزم
+      - name: Install dependencies
         run: npm install
 
-      - name: إنشاء ملف config.js برابط MongoDB السري
+      - name: Create connect.js with MongoDB connection
         run: |
+          mkdir -p db
           echo "const mongoose = require('mongoose');" > db/connect.js
-          echo "const MONGODB_URI = '${{ secrets.MONGODB_URI }}';" >> db/connect.js
+          echo "const MONGODB_URI = process.env.MONGO_URL;" >> db/connect.js
           echo "const connectDB = async () => {" >> db/connect.js
           echo "  try {" >> db/connect.js
           echo "    await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });" >> db/connect.js
@@ -37,5 +47,5 @@ jobs:
           echo "};" >> db/connect.js
           echo "module.exports = connectDB;" >> db/connect.js
 
-      - name: تشغيل التطبيق أو نشره
-        run: npm start # أو node index.js حسب مشروعك
+      - name: Start the application
+        run: npm start
