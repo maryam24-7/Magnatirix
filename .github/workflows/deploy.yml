@@ -31,8 +31,8 @@ jobs:
 
       - name: Verify MongoDB connection
         run: |
-          npm install -g mongosh
-          mongosh "$MONGO_URL" --eval "db.runCommand({ ping: 1 })" || exit 1
+          npm install -g mongodb
+          node -e "require('mongodb').MongoClient.connect('$MONGO_URL', { useNewUrlParser: true, useUnifiedTopology: true }).then(() => { console.log('MongoDB connection successful'); }).catch(err => { console.error('MongoDB connection failed:', err); process.exit(1); });"
 
       - name: Build project (if needed)
         run: npm run build --if-present
