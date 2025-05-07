@@ -1,13 +1,27 @@
-// auth.js - الإصدار النهائي
+// auth.js - الإصدار النهائي مع CSRF Protection
+
+// متغير لحفظ CSRF token
+let csrfToken = null;
+
+// ========== دوال المساعدة ========== //
+async function fetchCSRFToken() {
+  try {
+    const response = await fetch('/csrf-token', {
+      credentials: 'same-origin'
+    });
+    const data = await response.json();
+    
+    if (!response.ok) throw new Error('Failed to get CSRF token');
+    
+    csrfToken = data.csrfToken;
+    return csrfToken;
+  } catch (error) {
+    console.error('[CSRF] Token Error:', error);
+    throw error;
+  }
+}
 
 // ========== دوال المصادقة ========== //
-
-/**
- * تسجيل مستخدم جديد
- * @param {string} username - اسم المستخدم أو البريد الإلكتروني
- * @param {string} password - كلمة المرور
- * @returns {Promise<object>} - بيانات الاستجابة
- */
 async function register(username, password) {
   try {
     // التحقق من المدخلات
@@ -15,10 +29,9 @@ async function register(username, password) {
       throw new Error('الرجاء تعبئة جميع الحقول المطلوبة');
     }
 
-    // التحقق من صيغة البريد الإلكتروني إذا كان المستخدم يستخدم البريد
-    const isEmail = username.includes('@');
-    if (isEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
-      throw new Error('صيغة البريد الإلكتروني غير صالحة');
+    // الحصول على CSRF token إذا لم يكن موجودًا
+    if (!csrfToken) {
+      await fetchCSRFToken();
     }
 
     // إرسال طلب التسجيل
@@ -26,11 +39,13 @@ async function register(username, password) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({
         username: username.trim(),
-        password: password.trim()
+        password: password.trim(),
+        csrfToken: csrfToken
       }),
       credentials: 'same-origin'
     });
@@ -56,12 +71,6 @@ async function register(username, password) {
   }
 }
 
-/**
- * تسجيل الدخول
- * @param {string} username - اسم المستخدم أو البريد
- * @param {string} password - كلمة المرور
- * @returns {Promise<object>} - بيانات الاستجابة
- */
 async function login(username, password) {
   try {
     // التحقق من المدخلات
@@ -69,16 +78,23 @@ async function login(username, password) {
       throw new Error('الرجاء إدخال اسم المستخدم وكلمة المرور');
     }
 
+    // الحصول على CSRF token إذا لم يكن موجودًا
+    if (!csrfToken) {
+      await fetchCSRFToken();
+    }
+
     // إرسال طلب تسجيل الدخول
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({
         username: username.trim(),
-        password: password.trim()
+        password: password.trim(),
+        csrfToken: csrfToken
       }),
       credentials: 'same-origin'
     });
@@ -94,7 +110,10 @@ async function login(username, password) {
     const token = data?.token;
     if (token) {
       localStorage.setItem('auth_token', token);
-      localStorage.setItem('token_expiry', Date.now() + 3600000); // صلاحية ساعة
+      localStorage.setItem('token_expiry', Date.now() + 3600000);
+      
+      // توليد CSRF token جديد بعد تسجيل الدخول الناجح
+      await fetchCSRFToken();
     }
 
     return {
@@ -111,14 +130,18 @@ async function login(username, password) {
   }
 }
 
-/**
- * تجديد التوكن
- * @returns {Promise<object>} - بيانات الاستجابة
- */
 async function refreshToken() {
   try {
+    // الحصول على CSRF token إذا لم يكن موجودًا
+    if (!csrfToken) {
+      await fetchCSRFToken();
+    }
+
     const response = await fetch('/api/auth/refresh', {
       method: 'POST',
+      headers: {
+        'X-CSRF-Token': csrfToken
+      },
       credentials: 'same-origin'
     });
 
@@ -145,10 +168,6 @@ async function refreshToken() {
   }
 }
 
-/**
- * الحصول على التوكن مع التحقق من الصلاحية
- * @returns {string|null} - التوكن أو null
- */
 function getValidToken() {
   try {
     const token = localStorage.getItem('auth_token');
@@ -168,19 +187,12 @@ function getValidToken() {
   }
 }
 
-/**
- * تسجيل الخروج
- */
 function logout() {
   localStorage.removeItem('auth_token');
   localStorage.removeItem('token_expiry');
   window.location.href = '/login';
 }
 
-/**
- * الحصول على المستخدمين النشطين
- * @returns {Promise<object>} - بيانات الاستجابة
- */
 async function getActiveUsers() {
   try {
     const token = getValidToken();
@@ -188,10 +200,16 @@ async function getActiveUsers() {
       throw new Error('الجلسة منتهية، يرجى تسجيل الدخول مرة أخرى');
     }
 
+    // الحصول على CSRF token إذا لم يكن موجودًا
+    if (!csrfToken) {
+      await fetchCSRFToken();
+    }
+
     const response = await fetch('/api/users/active', {
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       }
     });
 
@@ -220,6 +238,15 @@ async function getActiveUsers() {
   }
 }
 
+// جلب CSRF token عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    await fetchCSRFToken();
+  } catch (error) {
+    console.error('Failed to initialize CSRF token:', error);
+  }
+});
+
 // تصدير الدوال للاستخدام
 export {
   register,
@@ -227,5 +254,6 @@ export {
   refreshToken,
   getValidToken,
   logout,
-  getActiveUsers
+  getActiveUsers,
+  fetchCSRFToken
 };
