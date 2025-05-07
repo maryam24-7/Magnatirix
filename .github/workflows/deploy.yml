@@ -27,10 +27,8 @@ jobs:
           cache: 'npm'
 
       - name: Install production dependencies
-        run: |
-          npm install --production
-          npm install mongodb mongoose connect-mongo
-          
+        run: npm ci --only=production
+
       - name: Verify MongoDB connection
         run: |
           node -e "
@@ -43,10 +41,10 @@ jobs:
               })
               .then(() => {
                 console.log('✅ تم التحقق من ping بنجاح');
-                process.exit(0);
+                return client.close();
               })
               .catch(err => {
-                console.error('❌ فشل الاتصال:', err);
+                console.error('❌ فشل الاتصال بـ MongoDB:', err);
                 process.exit(1);
               });
           "
