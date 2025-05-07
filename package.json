@@ -27,7 +27,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
-    "connect-mongo": "^5.0.0",
+    "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -36,12 +36,13 @@
     "express-session": "^1.17.3",
     "helmet": "^6.0.1",
     "jsonwebtoken": "^9.0.0",
+    "mongodb": "^6.16.0",
     "mongoose": "^7.0.1",
     "morgan": "^1.10.0",
     "uuid": "^9.0.0",
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.1.10"
   }
 }
