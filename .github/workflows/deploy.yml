@@ -14,31 +14,45 @@ jobs:
       SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
       PORT: ${{ secrets.PORT }}
-      NODE_ENV: production  # الأفضل تحديدها مباشرة بدلاً من استخدام secret
+      NODE_ENV: production
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # الترقية إلى الإصدار الأحدث
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'  # إضافة التخزين المؤقت لتسريع العملية
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci  # الأفضل من npm install للبيئات الإنتاجية
-
+      - name: Install production dependencies
+        run: |
+          npm install --production
+          npm install mongodb mongoose connect-mongo
+          
       - name: Verify MongoDB connection
         run: |
-          npm install -g mongodb
-          node -e "require('mongodb').MongoClient.connect('$MONGO_URL', { useNewUrlParser: true, useUnifiedTopology: true }).then(() => { console.log('MongoDB connection successful'); }).catch(err => { console.error('MongoDB connection failed:', err); process.exit(1); });"
+          node -e "
+            const { MongoClient } = require('mongodb');
+            const client = new MongoClient(process.env.MONGO_URL);
+            client.connect()
+              .then(() => {
+                console.log('✅ تم الاتصال بـ MongoDB بنجاح');
+                return client.db().admin().ping();
+              })
+              .then(() => {
+                console.log('✅ تم التحقق من ping بنجاح');
+                process.exit(0);
+              })
+              .catch(err => {
+                console.error('❌ فشل الاتصال:', err);
+                process.exit(1);
+              });
+          "
 
-      - name: Build project (if needed)
-        run: npm run build --if-present
-
-      - name: Run tests (if available)
-        run: npm test --if-present
+      - name: Run migrations (if needed)
+        run: npm run migrate --if-present
 
       - name: Start the application
         run: npm start
