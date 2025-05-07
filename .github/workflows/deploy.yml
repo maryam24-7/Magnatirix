@@ -1,38 +1,41 @@
-name: Deploy to Railway
+name: Deploy
 
 on:
   push:
     branches: [main]
 
-env:
-  RAILS_ENV: production
-  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-  MONGO_URL: ${{ secrets.MONGO_URL }}
-
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - uses: ruby/setup-ruby@v1.175.0
+      - name: إعداد Node.js
+        uses: actions/setup-node@v3
         with:
-          ruby-version: 3.3.0
-          bundler-cache: true
+          node-version: '18'
 
-      - name: Install MongoDB dependencies
+      - name: تثبيت الحزم
+        run: npm install
+
+      - name: إنشاء ملف config.js برابط MongoDB السري
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl-dev
+          echo "const mongoose = require('mongoose');" > db/connect.js
+          echo "const MONGODB_URI = '${{ secrets.MONGODB_URI }}';" >> db/connect.js
+          echo "const connectDB = async () => {" >> db/connect.js
+          echo "  try {" >> db/connect.js
+          echo "    await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });" >> db/connect.js
+          echo "    console.log('✅ تم الاتصال بقاعدة البيانات');" >> db/connect.js
+          echo "    mongoose.connection.on('disconnected', () => console.warn('⚠️ تم قطع الاتصال مع MongoDB'));" >> db/connect.js
+          echo "    mongoose.connection.on('error', err => console.error('❌ خطأ في الاتصال:', err.message));" >> db/connect.js
+          echo "  } catch (err) {" >> db/connect.js
+          echo "    console.error('❌ فشل الاتصال بقاعدة البيانات:', err.message);" >> db/connect.js
+          echo "    process.exit(1);" >> db/connect.js
+          echo "  }" >> db/connect.js
+          echo "};" >> db/connect.js
+          echo "module.exports = connectDB;" >> db/connect.js
 
-      - name: Install gems
-        run: bundle install
-
-      - name: Build assets
-        run: bundle exec rails assets:precompile
-
-      - uses: abatilo/actions-railway@v2.2.0
-        with:
-          service-id: ${{ secrets.RAILWAY_SERVICE_ID }}
-          railway-token: ${{ secrets.RAILWAY_TOKEN }}
-          command: deploy
+      - name: تشغيل التطبيق أو نشره
+        run: npm start # أو node index.js حسب مشروعك
