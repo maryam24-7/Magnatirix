@@ -1,6 +1,44 @@
-# .gitignore
+
+# ملفات البيئة
 .env
+.env.local
+.env.*.local
 *.env
-.env*
 secrets/
-node_modules
+
+# تبعيات Node
+node_modules/
+
+# ملفات نظام التشغيل
+.DS_Store
+Thumbs.db
+
+# ملفات IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ملفات السجلات والاصدارات
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# ملفات البناء
+dist/
+build/
+out/
+.next/
+
+# ملفات الاختبارات
+coverage/
+.nyc_output/
+
+# ملفات النظام
+*.pid
+*.seed
+*.pid.lock
