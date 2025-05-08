@@ -3,23 +3,27 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 
-// 1. الاتصال بـ MongoDB
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017/messages')
-  .then(() => console.log('✅ تم الاتصال بقاعدة البيانات'))
-  .catch(err => console.error('❌ فشل الاتصال:', err));
+// 1. اتصال MongoDB
+mongoose.connect(process.env.MONGO_URL, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
+.then(() => console.log('✅ تم الاتصال بـ MongoDB'))
+.catch(err => console.error('❌ خطأ في الاتصال:', err));
 
-// 2. نموذج بسيط للرسائل
+// 2. نموذج الرسالة
 const Message = mongoose.model('Message', {
-  id: String,
+  id: { type: String, unique: true },
   content: String,
-  createdAt: { type: Date, default: Date.now, expires: '1h' } // تدمير بعد ساعة
+  expiresAt: { type: Date, default: () => new Date(Date.now() + 3600000), index: { expires: 0 } }
 });
 
-// 3. إعدادات أساسية
+// 3. Middleware
 app.use(express.json());
+app.use(express.static('public'));
 
-// 4. مسار الحفظ
-app.post('/send', async (req, res) => {
+// 4. المسارات
+app.post('/api/send', async (req, res) => {
   try {
     const { id, content } = req.body;
     await Message.create({ id, content });
@@ -29,13 +33,11 @@ app.post('/send', async (req, res) => {
   }
 });
 
-// 5. مسار الاسترجاع
-app.get('/message/:id', async (req, res) => {
+app.get('/api/message/:id', async (req, res) => {
   const message = await Message.findOne({ id: req.params.id });
-  if (!message) return res.status(404).json({ error: 'لم يتم العثور على الرسالة' });
-  res.json(message);
+  message ? res.json(message) : res.status(404).json({ error: 'الرسالة غير موجودة' });
 });
 
-// 6. تشغيل الخادم
+// 5. التشغيل
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 الخادم يعمل على http://localhost:${PORT}`));
