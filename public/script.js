@@ -1,3 +1,33 @@
+// إرسال الرسالة
+async function sendMessage() {
+  const message = document.getElementById('message').value;
+  
+  // 1. توليد مفتاح AES عشوائي
+  const aesKey = crypto.getRandomValues(new Uint8Array(32));
+  
+  // 2. تشفير الرسالة بـ AES
+  const { iv, encrypted } = await encryptAES(message, aesKey);
+  
+  // 3. تشفير مفتاح AES بـ RSA (مفتاحك العام)
+  const encryptedKey = await encryptRSA(aesKey);
+  
+  // 4. إرسال البيانات للسيرفر
+  const id = generateUUID();
+  const response = await fetch('/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id,
+      encryptedMessage: { iv: Array.from(iv), data: Array.from(new Uint8Array(encrypted)) },
+      encryptedKey
+    })
+  });
+  
+  if (response.ok) {
+    alert(`تم حفظ الرسالة! المعرف: ${id}`);
+  }
+}
+
 const AppManager = {
   currentLanguage: 'ar',
   
