@@ -30,7 +30,7 @@ const CONFIG = {
   SESSION_SECRET: process.env.SESSION_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
   PORT: process.env.PORT || 3000,
-  NODE_ENV: process.env.NODE_ENV || 'development',
+  NODE_ENV: process.env.NODE_ENV || 'production',  // تم تغيير وضع التطوير إلى الإنتاج
   SSL_KEY_PATH: process.env.SSL_KEY_PATH || 'path/to/your/private.key',
   SSL_CERT_PATH: process.env.SSL_CERT_PATH || 'path/to/your/certificate.crt',
   SSL_CA_PATH: process.env.SSL_CA_PATH || 'path/to/your/ca.crt'
@@ -50,6 +50,7 @@ const logger = winston.createLogger({
   ],
 });
 
+// تم تعطيل وضع التطوير (development)
 if (CONFIG.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
