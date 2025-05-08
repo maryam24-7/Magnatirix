@@ -1,43 +1,31 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const app = express();
 
-// 1. اتصال MongoDB
-mongoose.connect(process.env.MONGO_URL, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-})
-.then(() => console.log('✅ تم الاتصال بـ MongoDB'))
-.catch(err => console.error('❌ خطأ في الاتصال:', err));
+// 1. Init DB Connection
+require('./src/core/database')();
 
-// 2. نموذج الرسالة
-const Message = mongoose.model('Message', {
-  id: { type: String, unique: true },
-  content: String,
-  expiresAt: { type: Date, default: () => new Date(Date.now() + 3600000), index: { expires: 0 } }
-});
-
-// 3. Middleware
+// 2. Middlewares
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 4. المسارات
-app.post('/api/send', async (req, res) => {
-  try {
-    const { id, content } = req.body;
-    await Message.create({ id, content });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: 'فشل في الحفظ' });
-  }
+// 3. Routes
+app.use('/api', require('./src/routes'));
+
+// 4. Frontend Routes
+app.get(['/', '/receive'], (req, res) => {
+  const page = req.path === '/' ? 'index.html' : 'receive.html';
+  res.sendFile(path.join(__dirname, 'public', page));
 });
 
-app.get('/api/message/:id', async (req, res) => {
-  const message = await Message.findOne({ id: req.params.id });
-  message ? res.json(message) : res.status(404).json({ error: 'الرسالة غير موجودة' });
+// 5. Error Handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something broke!' });
 });
 
-// 5. التشغيل
+// 6. Start Server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 الخادم يعمل على http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
