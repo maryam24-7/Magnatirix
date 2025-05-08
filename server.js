@@ -1,4 +1,3 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
@@ -16,6 +15,8 @@ const bcrypt = require('bcrypt');
 const compression = require('compression');
 const winston = require('winston');
 const crypto = require('crypto');
+const https = require('https');
+const fs = require('fs');
 
 console.log('🚀 بدء تحميل المتغيرات البيئية وتثبيت المكتبات');
 
@@ -29,7 +30,10 @@ const CONFIG = {
   SESSION_SECRET: process.env.SESSION_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
   PORT: process.env.PORT || 3000,
-  NODE_ENV: process.env.NODE_ENV || 'development'
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  SSL_KEY_PATH: process.env.SSL_KEY_PATH || 'path/to/your/private.key',
+  SSL_CERT_PATH: process.env.SSL_CERT_PATH || 'path/to/your/certificate.crt',
+  SSL_CA_PATH: process.env.SSL_CA_PATH || 'path/to/your/ca.crt'
 };
 
 // =============================================
@@ -101,6 +105,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 console.log('📦 Middleware الخاصة بالتحليل والضغط جاهزة');
 
+// =============================================
 app.use(session({
   secret: CONFIG.SESSION_SECRET,
   resave: false,
@@ -264,7 +269,20 @@ app.use((err, req, res, next) => {
 });
 
 // =============================================
-app.listen(CONFIG.PORT, '0.0.0.0', () => {
-  logger.info(`✅ الخادم يعمل على المنفذ ${CONFIG.PORT}`);
-  console.log(`✅ [Express] الخادم يعمل على http://localhost:${CONFIG.PORT}`);
-});
+if (CONFIG.NODE_ENV === 'production') {
+  const options = {
+    key: fs.readFileSync(CONFIG.SSL_KEY_PATH),
+    cert: fs.readFileSync(CONFIG.SSL_CERT_PATH),
+    ca: fs.readFileSync(CONFIG.SSL_CA_PATH)
+  };
+
+  https.createServer(options, app).listen(CONFIG.PORT, () => {
+    logger.info(`✅ الخادم يعمل على HTTPS في المنفذ ${CONFIG.PORT}`);
+    console.log(`✅ [HTTPS] الخادم يعمل على https://localhost:${CONFIG.PORT}`);
+  });
+} else {
+  app.listen(CONFIG.PORT, '0.0.0.0', () => {
+    logger.info(`✅ الخادم يعمل على HTTP في المنفذ ${CONFIG.PORT}`);
+    console.log(`✅ [Express] الخادم يعمل على http://localhost:${CONFIG.PORT}`);
+  });
+}
