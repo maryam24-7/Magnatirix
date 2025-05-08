@@ -17,23 +17,23 @@ const compression = require('compression');
 const winston = require('winston');
 const crypto = require('crypto');
 
+console.log('🚀 بدء تحميل المتغيرات البيئية وتثبيت المكتبات');
+
 const app = express();
 
 // =============================================
-// إعدادات الثوابت والمتغيرات البيئية
-// =============================================
+console.log('⚙️ تحميل إعدادات التكوين...');
 const CONFIG = {
   MONGO_URL: process.env.MONGO_URL,
   JWT_SECRET: process.env.JWT_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
   PORT: process.env.PORT || 3000,
-  NODE_ENV: process.env.NODE_ENV || 'production'
+  NODE_ENV: process.env.NODE_ENV || 'development'
 };
 
 // =============================================
-// إعدادات Winston للتسجيل
-// =============================================
+console.log('📝 إعداد Winston للتسجيل...');
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
@@ -53,34 +53,36 @@ if (CONFIG.NODE_ENV !== 'production') {
       winston.format.simple()
     ),
   }));
+  console.log('🧪 وضع التطوير مفعل - سيتم عرض السجلات في وحدة التحكم');
 }
 
 // =============================================
-// الاتصال بقاعدة البيانات
-// =============================================
+console.log('🌐 محاولة الاتصال بقاعدة البيانات...');
 mongoose.connect(CONFIG.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   retryWrites: true
 })
-.then(() => logger.info('✅ تم الاتصال بقاعدة البيانات بنجاح'))
+.then(() => {
+  logger.info('✅ تم الاتصال بقاعدة البيانات بنجاح');
+  console.log('✅ [MongoDB] تم الاتصال بقاعدة البيانات');
+})
 .catch(err => {
   logger.error('❌ فشل الاتصال بقاعدة البيانات:', err);
+  console.error('❌ [MongoDB] فشل الاتصال:', err);
   process.exit(1);
 });
 
 // =============================================
-// Middleware الأساسية
-// =============================================
+console.log('🧩 إعداد الـ Middleware...');
 app.set('trust proxy', 1);
 
-// CORS
 app.use(cors({
   origin: CONFIG.CORS_ORIGIN,
   credentials: true
 }));
+console.log('🔓 CORS مفعل لـ:', CONFIG.CORS_ORIGIN);
 
-// Helmet
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -91,16 +93,14 @@ app.use(helmet({
     },
   }
 }));
+console.log('🛡️ تم تطبيق Helmet لحماية الترويسات');
 
-// ضغط الردود
 app.use(compression());
-
-// تحليل الطلبات
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+console.log('📦 Middleware الخاصة بالتحليل والضغط جاهزة');
 
-// الجلسات
 app.use(session({
   secret: CONFIG.SESSION_SECRET,
   resave: false,
@@ -116,8 +116,9 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
+console.log('🗝️ تم تفعيل الجلسات باستخدام MongoStore');
 
-// CSRF Protection البديل
+// =============================================
 app.use((req, res, next) => {
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
     const clientToken = req.headers['x-csrf-token'] || req.body.csrfToken;
@@ -128,42 +129,38 @@ app.use((req, res, next) => {
   next();
 });
 
-// توليد وتوزيع رمز CSRF
 app.get('/api/csrf-token', (req, res) => {
   const token = crypto.randomBytes(32).toString('hex');
   req.session.csrfToken = token;
   res.json({ csrfToken: token });
+  console.log('🔐 تم إصدار رمز CSRF جديد');
 });
 
-// Rate Limiting
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: 'لقد تجاوزت عدد الطلبات المسموح بها',
   trustProxy: true
 }));
+console.log('🚦 تم تفعيل Rate Limiting');
 
-// ملفات ثابتة
+// =============================================
 app.use(express.static(path.join(__dirname, 'public')));
+console.log('📁 تم تحميل الملفات الثابتة من مجلد public');
 
 // =============================================
-// نماذج MongoDB
-// =============================================
+console.log('🧬 إنشاء نموذج User...');
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
-
 const User = mongoose.model('User', UserSchema);
 
 // =============================================
-// Middleware للمصادقة
-// =============================================
 const authenticateToken = (req, res, next) => {
   const token = req.cookies?.jwt || req.headers.authorization?.split(' ')[1];
-
   if (!token) return res.status(401).json({ error: 'الوصول غير مصرح به' });
 
   jwt.verify(token, CONFIG.JWT_SECRET, (err, user) => {
@@ -174,8 +171,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // =============================================
-// Routes
-// =============================================
+console.log('📡 إعداد المسارات');
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -205,6 +201,8 @@ app.post('/api/auth/login', async (req, res) => {
         email: user.email
       }
     });
+
+    console.log(`✅ تسجيل دخول ناجح للمستخدم: ${user.username}`);
 
   } catch (err) {
     logger.error('خطأ تسجيل الدخول:', err);
@@ -236,6 +234,8 @@ app.post('/api/auth/register', async (req, res) => {
       }
     });
 
+    console.log(`🆕 تم تسجيل مستخدم جديد: ${newUser.username}`);
+
   } catch (err) {
     logger.error('خطأ التسجيل:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
@@ -246,19 +246,17 @@ app.get('/api/user/profile', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);
+    console.log(`👤 تم استرجاع بيانات المستخدم: ${user.username}`);
   } catch (err) {
     logger.error('خطأ جلب الملف:', err);
     res.status(500).json({ error: 'خطأ في الخادم' });
   }
 });
 
-// Serve frontend
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// =============================================
-// معالجة الأخطاء
 // =============================================
 app.use((err, req, res, next) => {
   logger.error(err.stack);
@@ -266,8 +264,7 @@ app.use((err, req, res, next) => {
 });
 
 // =============================================
-// تشغيل الخادم
-// =============================================
 app.listen(CONFIG.PORT, '0.0.0.0', () => {
   logger.info(`✅ الخادم يعمل على المنفذ ${CONFIG.PORT}`);
+  console.log(`✅ [Express] الخادم يعمل على http://localhost:${CONFIG.PORT}`);
 });
